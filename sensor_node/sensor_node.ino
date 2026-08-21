@@ -43,8 +43,10 @@ struct SensorDef {
 };
 
 const SensorDef SENSORS[] = {
-  { "S1", 7 },
-  { "S2", 3 },
+  { "S1", 0 },
+  { "S2", 1 },
+  { "S3", 2 },
+  { "S4", 4 },
 };
 const uint8_t NUM_SENSORS = sizeof(SENSORS) / sizeof(SENSORS[0]);
 

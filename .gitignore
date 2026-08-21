@@ -1,2 +1,3 @@
 .env
 MPU6050Test/secrets.h
+http-features/secrets.h

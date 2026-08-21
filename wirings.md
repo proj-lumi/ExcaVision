@@ -1,6 +1,6 @@
 # Wiring for MPU6050 with ESP32
 
-blue: 3v3 - vcc
-purple: ground - ground
-green: d22 - scl
-gray: d21 - sda
+red: 3v3 - vcc
+black: ground - ground
+orange: d22 - scl
+yellow: d21 - sda

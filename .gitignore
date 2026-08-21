@@ -1,7 +1,7 @@
 .env
+.aliases
 MPU6050Test/secrets.h
 http-features/
 http-features/*
 supabase/
 supabase/*
-

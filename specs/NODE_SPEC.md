@@ -59,9 +59,15 @@ is needed.
 
 ### 2.3 GPIO map (defaults — confirm per board)
 - SDA = 21, SCL = 22 (I²C to the TCA9548A).
-- Button = GPIO 0 (the onboard BOOT button on most devkits — zero extra hw).
-- LED = GPIO 2 (the onboard blue LED on most devkits).
+- **Button = GPIO 16** (external momentary button; `INPUT_PULLUP` — HIGH when
+  open, LOW when pressed).
+- **LED = GPIO 23** (external LED; anode → 220 Ω → GND).
+- **Buzzer = free pin (suggested GPIO 17 or 18)** — added with the threshold
+  alert step.
 - RS485 transceiver DE/RE = a free GPIO (e.g., GPIO 4); RO/DI to a UART.
+- **Bench-only alternative:** the onboard BOOT button (GPIO 0) and onboard
+  blue LED (GPIO 2) work with zero external hardware — only the constants in
+  `Config.h` (`BUTTON_PIN` / `LED_PIN`) change.
 
 ## 3. Sensor configuration
 

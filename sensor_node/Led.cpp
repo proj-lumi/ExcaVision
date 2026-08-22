@@ -7,9 +7,16 @@
 static LedState ledState    = LED_OFF;
 static bool     isGateway  = false;
 
-// Set by the long-press (a later step). When true, the LED shows the
-// heartbeat instead of plain solid.
+// The 4-state LED machine. No error state. When isGateway is true and
+// baselines are loaded, the LED shows the heartbeat instead of plain solid.
 void setGateway(bool v) { isGateway = v; }
+
+// Flip the gateway flag (used by the long-press). Returns the new state so
+// the caller can print "ON" or "OFF".
+bool toggleGateway() {
+  isGateway = !isGateway;
+  return isGateway;
+}
 
 // Derive the LED state from the node states. Called every loop() so it stays
 // in sync with baseline/zero changes.

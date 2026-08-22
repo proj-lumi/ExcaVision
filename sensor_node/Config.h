@@ -22,6 +22,7 @@
 #define BUTTON_PIN 16        // external momentary button (INPUT_PULLUP: HIGH=open, LOW=pressed)
 #define LED_PIN    23        // external LED (anode -> 220R -> GND)
 #define SHORT_PRESS_MS 1000  // < 1 s = short press = set baseline
+#define GATEWAY_HOLD_MS 3000  // hold >= 3 s = long press = set gateway
 #define BASELINE_COLLECT_SECONDS 30  // how long the press collects before zeroing (configurable)
 
 // ---------------------------------------------------------------------------

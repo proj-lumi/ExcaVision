@@ -14,6 +14,7 @@ enum LedState {
 
 void updateLed();          // call every loop(): drive the LED for the current state
 void recomputeLedState();  // call when baseline/node state changes
-void setGateway(bool);    // set by the long-press (a later step)
+void setGateway(bool);    // set/clear the gateway flag (e.g. restore from NVS)
+bool toggleGateway();     // flip the gateway flag; returns the new state
 
 #endif

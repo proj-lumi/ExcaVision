@@ -15,12 +15,14 @@
 //    atan2(|cross|, dot) — mounting-independent and safe for tiny angles
 //    (acos is not), so it works no matter how each sensor is mounted.
 //
-// v1 limitations still apply: baselines are RAM-only (a reboot loses them all;
-// flash persistence is the next step), no WiFi/Supabase/sleep/alarm logic.
+// Baselines persist across reboots (ESP32 NVS flash) — a reboot restores the
+// reference instead of losing it. Still no WiFi/Supabase/sleep/alarm logic
+// yet, and no gateway persistence (that's a later step).
 
 #include <stdio.h>   // snprintf
 #include <Wire.h>
 #include <math.h>
+#include <Preferences.h>   // ESP32 NVS flash storage (Step 3)
 #include "MPU6050.h"
 
 // --- Tuning ---
@@ -105,6 +107,9 @@ bool isGateway = false;
 bool          baselineCollecting = false;
 unsigned long baselineCollectStart = 0;
 
+// NVS access for baseline persistence (Step 3).
+Preferences prefs;
+
 // ---------------------------------------------------------------------------
 // Report table helpers
 // ---------------------------------------------------------------------------
@@ -168,6 +173,53 @@ void startBaselineCapture() {
   Serial.println(" s (LED fast-blinks during collection)...");
 }
 
+// Persist each present sensor's baseline to ESP32 flash (NVS) so a reboot
+// restores the reference instead of losing it. Keys are channel-based so
+// they survive SENSORS[] reordering.
+void saveBaselinesToFlash() {
+  prefs.begin("baselines", false);   // RW namespace
+  for (uint8_t i = 0; i < NUM_SENSORS; i++) {
+    if (nodes[i].present && nodes[i].hasBaseline) {
+      char key[12];
+      snprintf(key, sizeof key, "bx%u", SENSORS[i].channel);
+      prefs.putFloat(key, nodes[i].bx);
+      snprintf(key, sizeof key, "by%u", SENSORS[i].channel);
+      prefs.putFloat(key, nodes[i].by);
+      snprintf(key, sizeof key, "bz%u", SENSORS[i].channel);
+      prefs.putFloat(key, nodes[i].bz);
+    }
+  }
+  prefs.end();   // commit to flash
+}
+
+// Restore baselines from flash at boot. Only applied to sensors that are
+// physically present (a missing sensor can't be monitored regardless).
+// This LOADS an existing reference — it never auto-re-zeroes. If the box was
+// moved while off, tilt will correctly show the movement against the old
+// reference; a reboot is not permission to silently reset it.
+void loadBaselinesFromFlash() {
+  prefs.begin("baselines", true);    // read-only
+  uint8_t loaded = 0;
+  for (uint8_t i = 0; i < NUM_SENSORS; i++) {
+    char key[12];
+    snprintf(key, sizeof key, "bx%u", SENSORS[i].channel);
+    if (!nodes[i].present || !prefs.isKey(key)) continue;
+    nodes[i].bx = prefs.getFloat(key, 0.0f);
+    snprintf(key, sizeof key, "by%u", SENSORS[i].channel);
+    nodes[i].by = prefs.getFloat(key, 0.0f);
+    snprintf(key, sizeof key, "bz%u", SENSORS[i].channel);
+    nodes[i].bz = prefs.getFloat(key, 0.0f);
+    nodes[i].hasBaseline = true;
+    loaded++;
+    Serial.print("baseline "); Serial.print(SENSORS[i].name);
+    Serial.println(" loaded from flash");
+  }
+  prefs.end();
+  if (loaded > 0) {
+    Serial.print(loaded); Serial.println(" baseline(s) restored from flash — monitoring resumes");
+  }
+}
+
 // Called when the collection period elapses: average each sensor's
 // accumulated samples into its baseline unit vector.
 void finalizeBaselineCapture() {
@@ -187,6 +239,7 @@ void finalizeBaselineCapture() {
     Serial.print(") — averaged over "); Serial.print(nodes[i].bcount);
     Serial.println(" samples");
   }
+  saveBaselinesToFlash();   // persist so a reboot keeps this reference (Step 3)
   baselineCollecting = false;
 }
 
@@ -272,7 +325,9 @@ void setup() {
     Serial.println(nodes[i].present ? "present" : "MISSING");
   }
 
-  Serial.println("MPU6050 ready. Send 'z' to set baseline (applies on next report).");
+  loadBaselinesFromFlash();   // restore the reference if one was saved (Step 3)
+
+  Serial.println("MPU6050 ready. Send 'z' (or short-press the button) to start a 30 s baseline collection.");
 
   // Field interface (Step 1)
   pinMode(BUTTON_PIN, INPUT_PULLUP);  // button: HIGH when open, LOW when pressed

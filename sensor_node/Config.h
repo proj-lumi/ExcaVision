@@ -1,0 +1,65 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+#include <Arduino.h>
+#include "MPU6050.h"
+
+// ---------------------------------------------------------------------------
+// Tuning constants — change these to adjust behavior.
+// ---------------------------------------------------------------------------
+
+// --- Sampling & reporting ---
+#define SAMPLE_INTERVAL_MS   10          // 10 ms = 100 Hz sampling per sensor
+#define REPORT_INTERVAL_MS   1000        // 1 s = report once per second (bench mode)
+#define COUNTS_PER_G         16384.0     // accelerometer sensitivity at ±2 g
+
+// --- Report table layout (fixed-width fields keep columns aligned) ---
+#define TIME_W    7   // "  time " column width
+#define BLOCK_W  28   // per-sensor block width: " tilt   |g|    T   n/fail "
+#define HEADER_EVERY 20   // reprint the header every N rows so it stays visible
+
+// --- Field interface: external button + LED ---
+#define BUTTON_PIN 16        // external momentary button (INPUT_PULLUP: HIGH=open, LOW=pressed)
+#define LED_PIN    23        // external LED (anode -> 220R -> GND)
+#define SHORT_PRESS_MS 1000  // < 1 s = short press = set baseline
+#define BASELINE_COLLECT_SECONDS 30  // how long the press collects before zeroing (configurable)
+
+// ---------------------------------------------------------------------------
+// Sensor definition table — the scalability knob.
+// Each entry: { name, TCA channel }. Add a line to add a sensor.
+// ---------------------------------------------------------------------------
+struct SensorDef {
+  const char* name;
+  uint8_t channel;
+};
+
+const SensorDef SENSORS[] = {
+  { "S1", 7 },
+  { "S2", 5 },
+  { "S3", 3 },
+  { "S4", 1 },
+};
+const uint8_t NUM_SENSORS = sizeof(SENSORS) / sizeof(SENSORS[0]);
+
+// ---------------------------------------------------------------------------
+// Per-sensor runtime state (parallel to SENSORS[]).
+// Each sensor keeps its own accumulators and its own baseline, so they're
+// fully independent — zeroing or losing one never affects another.
+// ---------------------------------------------------------------------------
+struct SensorNode {
+  MPU6050 mpu;                   // owns this sensor's TCA channel
+  bool     present      = false; // set by the boot scan; missing sensors are skipped
+  int32_t  sumX = 0, sumY = 0, sumZ = 0;   // 1 s report-window sums (reset each report)
+  uint32_t sampleCount = 0;
+  uint32_t failCount   = 0;
+  // Baseline collection sums — SEPARATE from the report window above and NOT
+  // reset each report; they span the full BASELINE_COLLECT_SECONDS window.
+  int32_t  bsumX = 0, bsumY = 0, bsumZ = 0;
+  uint32_t bcount = 0;
+  float    bx = 0, by = 0, bz = 0;         // this sensor's baseline (unit vector)
+  bool     hasBaseline = false;
+};
+
+extern SensorNode nodes[];   // defined in sensor_node.ino
+
+#endif

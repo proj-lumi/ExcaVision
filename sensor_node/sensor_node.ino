@@ -93,7 +93,6 @@ enum LedState {
   LED_FAST_BLINK,   // baseline capture in progress
   LED_SOLID,        // baseline loaded, monitoring normally
   LED_HEARTBEAT,    // baseline loaded AND this box is the gateway (Step 4)
-  LED_SLOW_BLINK,   // error (e.g., no sensors responding)
 };
 LedState ledState = LED_OFF;
 
@@ -204,12 +203,10 @@ void recomputeLedState() {
 
   if (baselineCollecting) {
     ledState = LED_FAST_BLINK;      // busy capturing a baseline
-  } else if (presentCount == 0) {
-    ledState = LED_SLOW_BLINK;      // no sensors responding — error
-  } else if (allHaveBase) {
-    ledState = isGateway ? LED_HEARTBEAT : LED_SOLID;
+  } else if (presentCount == 0 || !allHaveBase) {
+    ledState = LED_OFF;             // no sensors, or some still need a baseline
   } else {
-    ledState = LED_OFF;             // some sensors still need a baseline
+    ledState = isGateway ? LED_HEARTBEAT : LED_SOLID;
   }
 }
 
@@ -222,7 +219,6 @@ void updateLed() {
     case LED_OFF:        on = false;                          break;
     case LED_SOLID:      on = true;                           break;
     case LED_FAST_BLINK: on = (now % 200)  < 100;             break; // ~5 Hz
-    case LED_SLOW_BLINK: on = (now % 1000) < 500;             break; // ~1 Hz
     case LED_HEARTBEAT:  on = (now % 2000) < 1900;            break; // solid w/ dip
   }
   digitalWrite(LED_PIN, on ? HIGH : LOW);

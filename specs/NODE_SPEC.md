@@ -167,11 +167,21 @@ fallback → seamless. **No operator action on a normal reboot.**
 
 | LED state | Meaning |
 |---|---|
-| Off | no baseline loaded (not ready, press the button) |
-| Fast blink | busy — capturing/uploading/downloading baseline, or becoming gateway |
+| Off | no baseline loaded, or no sensors present (not ready, press the button) |
+| Fast blink | busy — collecting / uploading / downloading baseline |
 | Solid on | baseline loaded, monitoring normally (normal sensor node) |
 | Solid + heartbeat flicker | baseline loaded AND this box is the gateway |
-| Slow blink | error (no WiFi when expected, no baseline in DB, config problem) |
+
+> **No error LED state (deliberate).** A runtime "sensor died / bus dead"
+> signal was considered and scrapped: a boot-only latched error is misleading
+> (it can't detect mid-run failures and won't clear until reboot), and doing
+> it right (continuous evaluation + hysteresis + resolution) duplicates what
+> the app already does better. So:
+> - **Install-time diagnostics** = the boot scan's per-channel `MISSING`
+>   serial prints (installer is on a laptop).
+> - **Runtime health** = the app, which alarms when a sensor stops reporting.
+> - **Local "this box is dead"** = a future buzzer pattern (Step 7), not an
+>   LED state.
 
 **One momentary button, two actions by hold duration:**
 - **Short press (tap, < 1 s)** → SET BASELINE (this box only): begin

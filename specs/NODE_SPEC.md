@@ -174,8 +174,11 @@ fallback → seamless. **No operator action on a normal reboot.**
 | Slow blink | error (no WiFi when expected, no baseline in DB, config problem) |
 
 **One momentary button, two actions by hold duration:**
-- **Short press (tap, < 1 s)** → SET BASELINE (this box only): capture,
-  cache to NVS, upload to Supabase.
+- **Short press (tap, < 1 s)** → SET BASELINE (this box only): begin
+  collecting samples for `BASELINE_COLLECT_SECONDS` (default 30 s,
+  configurable); at the end, average the accumulated samples into the
+  baseline, cache to NVS, upload to Supabase. LED fast-blinks during the
+  collection.
 - **Long press (hold ≥ 3 s)** → SET GATEWAY (this box becomes the master):
   persist `is_gateway` flag to NVS, start the relay module.
 - 1–3 s hold → dead zone (can't mis-time; you tap or you commit to the long
@@ -183,12 +186,21 @@ fallback → seamless. **No operator action on a normal reboot.**
 - The 3 s hold is the safety guard against accidental bumps — same principle
   as the baseline button. You can't accidentally hold a button for 3 seconds.
 
+**Baseline collection window (configurable):** `BASELINE_COLLECT_SECONDS`
+controls how long samples are collected before the baseline is averaged and
+committed (default **30 s** → ~3000 samples at 100 Hz → ~55× noise reduction,
+a much cleaner reference than a 1 s snapshot). During collection the baseline
+is held in a dedicated per-sensor accumulator, separate from the 1 s report
+window. Change the value to trade accuracy vs. install time. Note: the 1 s
+"averaging window" in §5 is for *reporting* only; the *baseline* uses this
+separate, longer collection window.
+
 ### 7.4 Global baseline capture (the inaccessible-slaves fix)
 Pressing SET GATEWAY (long press) on the master **also** broadcasts a
-"capture baseline now" command down the RS485 chain. Every slave captures its
-own gravity vector simultaneously, caches to its own NVS, and uploads via the
-master. The master captures its own too. **One human action at the top zeros
-the whole pipe.**
+"capture baseline now" command down the RS485 chain. Every node (master
+included) then runs its own `BASELINE_COLLECT_SECONDS` collection window,
+averages its samples into its baseline, caches to its own NVS, and uploads
+via the master. **One human action at the top zeros the whole pipe.**
 
 This is safe because the project scope is **after digging**: the wall is
 settled and unloaded when the button is pressed, so simultaneous capture is a

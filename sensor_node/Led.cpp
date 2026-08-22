@@ -11,10 +11,12 @@ static bool     isGateway  = false;
 // baselines are loaded, the LED shows the heartbeat instead of plain solid.
 void setGateway(bool v) { isGateway = v; }
 
-// Flip the gateway flag (used by the long-press). Returns the new state so
-// the caller can print "ON" or "OFF".
+// Flip the gateway flag (used by the long-press and serial 'g'). Returns the
+// new state and prints ON/OFF so both input methods share one feedback path.
 bool toggleGateway() {
   isGateway = !isGateway;
+  if (isGateway) Serial.println("gateway mode ON — this box is now the master");
+  else           Serial.println("gateway mode OFF — this box is a normal sensor node");
   return isGateway;
 }
 

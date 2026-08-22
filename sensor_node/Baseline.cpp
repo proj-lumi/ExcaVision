@@ -78,6 +78,7 @@ void loadBaselinesFromFlash() {
 // Called when the collection period elapses: average each sensor's
 // accumulated samples into its baseline unit vector.
 void finalizeBaselineCapture() {
+  uint8_t collected = 0;
   for (uint8_t i = 0; i < NUM_SENSORS; i++) {
     if (!nodes[i].present || nodes[i].bcount == 0) continue;
     float gx = (float)nodes[i].bsumX / nodes[i].bcount / COUNTS_PER_G;
@@ -86,6 +87,7 @@ void finalizeBaselineCapture() {
     float mag = sqrt(gx*gx + gy*gy + gz*gz);
     nodes[i].bx = gx/mag;  nodes[i].by = gy/mag;  nodes[i].bz = gz/mag;
     nodes[i].hasBaseline = true;
+    collected++;
     Serial.print("baseline "); Serial.print(SENSORS[i].name);
     Serial.print(" set: (");
     Serial.print(nodes[i].bx, 4); Serial.print(", ");
@@ -96,4 +98,7 @@ void finalizeBaselineCapture() {
   }
   saveBaselinesToFlash();   // persist so a reboot keeps this reference
   baselineCollecting = false;
+  if (collected == 0) {
+    Serial.println("WARNING: no samples collected during the baseline window — check sensors/bus");
+  }
 }

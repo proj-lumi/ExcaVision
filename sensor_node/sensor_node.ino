@@ -57,7 +57,7 @@ void setup() {
 
   loadBaselinesFromFlash();   // restore the reference if one was saved
 
-  Serial.println("MPU6050 ready. Send 'z' (or short-press the button) to start a 30 s baseline collection.");
+  Serial.println("MPU6050 ready. 'z' = baseline (or short-press), 'g' = toggle gateway (or long-press ≥ 3 s).");
 
   pinMode(BUTTON_PIN, INPUT_PULLUP);  // button: HIGH when open, LOW when pressed
   pinMode(LED_PIN, OUTPUT);           // LED (the Led module drives its states)
@@ -93,9 +93,17 @@ void loop() {
     }
   }
 
-  // ── Serial zero command: 'z' starts baseline collection (same as the button) ──
-  if (Serial.available() && Serial.read() == 'z') {
-    startBaselineCapture();
+  // ── Serial commands: 'z' = start baseline collection, 'g' = toggle gateway.
+  // Reads EVERY available byte so it works regardless of the serial monitor's
+  // line-ending setting — the old single-byte pattern could swallow a command.
+  // Same actions as the button: short press (baseline) / long press (gateway).
+  while (Serial.available() > 0) {
+    char c = Serial.read();
+    if (c == 'z') {
+      startBaselineCapture();
+    } else if (c == 'g') {
+      toggleGateway();   // prints ON/OFF itself
+    }
   }
 
   // ── Report block: every 1 s → one TABLE ROW, sensors as columns ──
@@ -125,7 +133,13 @@ void loop() {
 
   // ── Baseline collection completion: after BASELINE_COLLECT_SECONDS, average
   //   the accumulated samples and set each sensor's baseline.
-  if (baselineCollecting && (now - baselineCollectStart) >= BASELINE_COLLECT_SECONDS * 1000UL) {
+  // Use a FRESH millis() here — `now` was captured at the top of loop, and
+  // a collection started mid-loop (serial 'z') sets baselineCollectStart LATER
+  // than `now`, so `now - baselineCollectStart` would wrap unsigned and look
+  // like 30 s had already elapsed, firing the completion instantly.
+  unsigned long t = millis();
+  if (baselineCollecting && t >= baselineCollectStart &&
+      (t - baselineCollectStart) >= BASELINE_COLLECT_SECONDS * 1000UL) {
     finalizeBaselineCapture();
   }
 

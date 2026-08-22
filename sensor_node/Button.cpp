@@ -46,10 +46,6 @@ void pollButton() {
   if (btnStable == LOW && !longPressFired &&
       (millis() - pressStart) >= GATEWAY_HOLD_MS) {
     longPressFired = true;
-    if (toggleGateway()) {
-      Serial.println("gateway mode ON — this box is now the master");
-    } else {
-      Serial.println("gateway mode OFF — this box is a normal sensor node");
-    }
+    toggleGateway();   // prints the new gateway state itself
   }
 }

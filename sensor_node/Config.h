@@ -23,6 +23,12 @@
 #define LED_PIN    23        // external LED (anode -> 220R -> GND)
 #define SHORT_PRESS_MS 1000  // < 1 s = short press = set baseline
 #define GATEWAY_HOLD_MS 3000  // hold >= 3 s = long press = set gateway
+
+// --- Threshold alarm (Step 7) ---
+#define BUZZER_PIN 17        // piezo buzzer (spec: suggested GPIO 17 or 18)
+#define THRESHOLD_DEG 2.0    // default alert threshold; engineer sets per pipe later (serial 't' overrides)
+#define ALARM_BEEP_MS 250    // buzzer beep duration
+#define ALARM_GAP_MS  250    // buzzer gap between beeps
 #define BASELINE_COLLECT_SECONDS 30  // how long the press collects before zeroing (configurable)
 
 // ---------------------------------------------------------------------------
@@ -59,6 +65,7 @@ struct SensorNode {
   uint32_t bcount = 0;
   float    bx = 0, by = 0, bz = 0;         // this sensor's baseline (unit vector)
   bool     hasBaseline = false;
+  float    lastTilt = 0;                   // most recent averaged tilt (°), updated by Report each cycle
 };
 
 extern SensorNode nodes[];   // defined in sensor_node.ino

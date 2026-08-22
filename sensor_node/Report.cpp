@@ -49,6 +49,7 @@ void printReportHeader() {
 void formatSensorBlock(char* buf, uint8_t i) {
   if (!nodes[i].present || nodes[i].sampleCount == 0) {
     snprintf(buf, 40, " %6s %5s %5s %4d/%-3d", "--", "--", "--", 0, nodes[i].failCount);
+    nodes[i].lastTilt = 0;   // no data this window -> no valid tilt to alarm on
   } else {
     // mean raw counts -> g
     float gx = (float)nodes[i].sumX / nodes[i].sampleCount / COUNTS_PER_G;
@@ -69,9 +70,11 @@ void formatSensorBlock(char* buf, uint8_t i) {
       float cz  = ux*nodes[i].by - uy*nodes[i].bx;
       float crossMag = sqrt(cx*cx + cy*cy + cz*cz);
       tiltDeg = atan2(crossMag, dot) * 180.0 / PI;
+      nodes[i].lastTilt = tiltDeg;   // share with the Alarm module
       snprintf(buf, 40, " %6.3f %5.3f %5.1f %4d/%-3d",
                tiltDeg, mag, tempC, nodes[i].sampleCount, nodes[i].failCount);
     } else {
+      nodes[i].lastTilt = 0;   // no baseline -> tilt unknown, don't alarm
       snprintf(buf, 40, " %6s %5.3f %5.1f %4d/%-3d",
                "--", mag, tempC, nodes[i].sampleCount, nodes[i].failCount);
     }

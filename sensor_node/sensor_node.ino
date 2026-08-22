@@ -21,6 +21,7 @@
 #include "Led.h"
 #include "Baseline.h"
 #include "Identity.h"
+#include "Alarm.h"
 #include "Report.h"
 
 // ---------------------------------------------------------------------------
@@ -59,12 +60,20 @@ void setup() {
 
   loadBaselinesFromFlash();   // restore the reference if one was saved
   loadGatewayFromFlash();     // restore the master role if one was set (Step 5)
+  loadThresholdFromFlash();   // restore the alert threshold if one was set (Step 8)
 
   Serial.println("MPU6050 ready. 'z' = baseline (or short-press), 'g' = toggle gateway (or long-press ≥ 3 s).");
 
   pinMode(BUTTON_PIN, INPUT_PULLUP);  // button: HIGH when open, LOW when pressed
   pinMode(LED_PIN, OUTPUT);           // LED (the Led module drives its states)
   digitalWrite(LED_PIN, LOW);         // start off
+
+  // Threshold alarm (Step 7): buzzer pin + a 100 ms power-on self-test beep
+  // so the installer knows the alarm is wired and working.
+  pinMode(BUZZER_PIN, OUTPUT);
+  digitalWrite(BUZZER_PIN, HIGH);
+  delay(100);
+  digitalWrite(BUZZER_PIN, LOW);
 }
 
 // ---------------------------------------------------------------------------
@@ -76,6 +85,7 @@ void loop() {
 
   pollButton();      // field interface: button edge detection
   updateLed();       // drive the LED for the current state
+  updateAlarm();     // drive the buzzer for the current alarm state (Step 7)
 
   // ── Sample block: every 10 ms, read each present sensor and accumulate ──
   if (now - lastSample >= SAMPLE_INTERVAL_MS) {
@@ -106,6 +116,11 @@ void loop() {
       startBaselineCapture();
     } else if (c == 'g') {
       toggleGateway();   // prints ON/OFF itself
+    } else if (c == 't') {
+      // 't' alone prints the current threshold; 't2.5' sets it.
+      float v = Serial.parseFloat();
+      if (v > 0) setThresholdDeg(v);
+      else       Serial.print("threshold = "), Serial.print(getThresholdDeg(), 2), Serial.println("°");
     }
   }
 
@@ -132,6 +147,8 @@ void loop() {
       Serial.print(blocks[i]);
     }
     Serial.println();
+
+    evaluateAlarms();   // check each sensor's tilt vs the threshold (Step 7)
   }
 
   // ── Baseline collection completion: after BASELINE_COLLECT_SECONDS, average

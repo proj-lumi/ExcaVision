@@ -1,0 +1,8 @@
+.env
+.aliases
+sensor_node/archive
+sensor_node/archive/*
+http-features/
+http-features/*
+supabase/
+supabase/*

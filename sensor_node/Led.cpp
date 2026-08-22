@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <Preferences.h>   // gateway flag persistence (Step 5)
 #include "Config.h"      // tuning constants, pins, SensorNode, nodes[]
 #include "Led.h"
 #include "Baseline.h"   // baselineCollecting (extern)
@@ -7,14 +8,40 @@
 static LedState ledState    = LED_OFF;
 static bool     isGateway  = false;
 
+// NVS access for the gateway flag (internal).
+static Preferences gwPrefs;
+
+// Persist the gateway flag to ESP32 flash so a reboot restores the role.
+void saveGatewayToFlash() {
+  gwPrefs.begin("gateway", false);
+  gwPrefs.putBool("is_gateway", isGateway);
+  gwPrefs.end();
+}
+
+// Restore the gateway flag from flash at boot. Prints the restored role so
+// the operator knows this box is the master before any button is needed.
+void loadGatewayFromFlash() {
+  gwPrefs.begin("gateway", true);
+  isGateway = gwPrefs.getBool("is_gateway", false);
+  gwPrefs.end();
+  Serial.print("gateway: ");
+  Serial.println(isGateway ? "ON (from flash) — this box is the master"
+                           : "OFF (from flash) — normal sensor node");
+}
+
 // The 4-state LED machine. No error state. When isGateway is true and
 // baselines are loaded, the LED shows the heartbeat instead of plain solid.
-void setGateway(bool v) { isGateway = v; }
+void setGateway(bool v) {
+  isGateway = v;
+  saveGatewayToFlash();   // programmatic set also persists
+}
 
-// Flip the gateway flag (used by the long-press and serial 'g'). Returns the
-// new state and prints ON/OFF so both input methods share one feedback path.
+// Flip the gateway flag (used by the long-press and serial 'g') and persist.
+// Returns the new state and prints ON/OFF so both input methods share one
+// feedback path.
 bool toggleGateway() {
   isGateway = !isGateway;
+  saveGatewayToFlash();
   if (isGateway) Serial.println("gateway mode ON — this box is now the master");
   else           Serial.println("gateway mode OFF — this box is a normal sensor node");
   return isGateway;

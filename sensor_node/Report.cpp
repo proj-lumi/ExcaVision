@@ -1,6 +1,7 @@
 #include <stdio.h>    // snprintf
 #include <math.h>     // sqrt, atan2, PI
 #include "Config.h"      // tuning constants, SENSORS[], SensorNode, nodes[]
+#include "Identity.h"    // nodeMac — tag the report with the node identity
 #include "Report.h"
 
 // Center a string in a fixed width (for the header's sensor-name row).
@@ -14,7 +15,10 @@ static void printCentered(const char* s, uint8_t w) {
 }
 
 // Print the 3-line table header (names, labels, separator). Scales with N.
+// Prefixed with the node MAC so every chunk of data is visibly tagged with
+// who produced it (the backend joins on this identity).
 void printReportHeader() {
+  Serial.print("mac "); Serial.println(nodeMac);
   // names row
   printCentered("time", TIME_W);
   for (uint8_t i = 0; i < NUM_SENSORS; i++) {

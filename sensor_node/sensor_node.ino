@@ -20,6 +20,7 @@
 #include "Button.h"
 #include "Led.h"
 #include "Baseline.h"
+#include "Identity.h"
 #include "Report.h"
 
 // ---------------------------------------------------------------------------
@@ -39,6 +40,7 @@ uint16_t      rowCount   = 0;
 // ---------------------------------------------------------------------------
 void setup() {
   Serial.begin(115200);
+  initIdentity();                 // node MAC: the backend's join key (Step 6)
   Wire.begin(21, 22);              // SDA 21, SCL 22 — called ONCE here
   delay(500);
 
@@ -56,6 +58,7 @@ void setup() {
   }
 
   loadBaselinesFromFlash();   // restore the reference if one was saved
+  loadGatewayFromFlash();     // restore the master role if one was set (Step 5)
 
   Serial.println("MPU6050 ready. 'z' = baseline (or short-press), 'g' = toggle gateway (or long-press ≥ 3 s).");
 

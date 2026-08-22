@@ -112,16 +112,20 @@ A guided, step-by-step flow — this is what makes field install foolproof:
 2. **"Add nodes"** — for each physical box:
    1. Tap "Scan node QR" → camera scans the MAC QR → MAC auto-fills.
    2. Pick position (1/2/3/4 from the top).
-   3. Toggle "This is the gateway" for the top one.
-   4. Tap "Add." Repeat for each box.
+   3. Tap "Add." Repeat for each box.
+   (No gateway toggle here — the master is set by a physical button
+   long-press on the box itself, outside the app. The app just records
+   position.)
 3. **"Review"** — show the pipe with its nodes; confirm.
 4. **"Power on"** — instruct the crew to power the boxes; the app watches for
    each MAC to report in (via Supabase Realtime subscription on
    `sensor_nodes`/`readings`) and checks them off as they appear.
-5. **"Settle & zero"** — instruct: wait for the wall to settle (operational
-   rule); when ready, long-press the master button on the top box. The app
-   watches for baselines to arrive for each sensor and checks them off.
-   Pipes goes green when all baselines are in.
+5. **"Settle & zero (physical step)"** — instruct: wait for the wall to
+   settle (operational rule), then **long-press the top box's button for
+   ≥3 s**. This is a physical action on the box, not in the app. The app
+   watches for: (a) the top MAC to report `is_gateway: true`, and (b)
+   baselines to arrive for each sensor — checks both off as they arrive. Pipe
+   goes green when the gateway is set and all baselines are in.
 6. **"Set threshold"** — engineer enters the alert threshold degrees for the
    pipe; backend stores it on `pipes` and pushes it to the nodes.
 7. **Done** — monitoring live.

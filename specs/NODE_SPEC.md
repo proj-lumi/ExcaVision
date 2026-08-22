@@ -29,7 +29,10 @@ is needed.
 - 1× momentary button (baseline / gateway).
 - 1× LED (status).
 - 1× RS485 transceiver (e.g., MAX485) for bus chaining.
-- (Optional) buzzer/siren for the local alert.
+- **1× buzzer/siren PER NODE** — one audible alarm on every box, for
+  maximum sound output along the whole wall. A crew working in the trench
+  near a lower box hears that box's buzzer, not just the distant surface one;
+  every box screaming = loudest coverage.
 
 ### 2.2 Wiring (critical for reading quality — see [PHYSICAL_ARCHITECTURE_SPEC.md](./PHYSICAL_ARCHITECTURE_SPEC.md) for the full layout)
 - **TCA + ESP32 centered in the node's 2 m span**, with 4 sensors splayed
@@ -231,11 +234,22 @@ transport:
   Each row carries the **originating** MAC — the master is a postman, not the
   author. The master also relays slave baseline uploads/downloads.
 
-**Gateway role is assigned by the long-press, persisted to NVS.** No election
-protocol, no DIP switches — a human explicitly chose this box. Recovery: if
-the master dies, swap it and long-press the new top box. You *know* a role
-change happened because a human did it (no silent failover on a safety
-device).
+**Gateway role is assigned by the physical button long-press ONLY — never
+by the app.** The long-press sets `is_gateway = true` in this box's own NVS.
+No election protocol, no DIP switches, no app toggle — a human explicitly
+chose this box with a physical action. Recovery: if the master dies, swap
+it and long-press the new top box. You *know* a role change happened
+because a human did it (no silent failover on a safety device).
+
+**The cloud is informed, not asked.** When a box has set itself as gateway
+(NVS flag) and comes online with WiFi, it includes `is_gateway: true` in its
+regular POSTs/heartbeat to Supabase. The backend stores that on
+`sensor_nodes.is_gateway` for that MAC. So the cloud/app can *display*
+"which box is the gateway for this pipe," but the cloud never *sets* it —
+the button is the sole source of truth, and the node reports its own role
+upstream. If the cloud row and the NVS flag ever disagree, the NVS flag wins
+(the box behaves according to its own flag regardless of what the cloud
+says).
 
 ### 9.1 Master→Supabase batching
 - Bundle readings and POST every ~5 s (not one request per second) over a
@@ -248,17 +262,50 @@ device).
 - For v1 testing: `client.setInsecure()` is fine. For production: pin
   Supabase's CA cert.
 
-## 10. Local threshold alert (the safety layer)
+## 10. Threshold alert (the safety layer, evaluated on every node)
 
-- Every 1 s, each node checks `tilt > ENGINEER_SET_DEGREES` AND (for
-  multi-sensor agreement) the sensors on the node broadly agree (real wall
-  event, not a single-sensor glitch).
-- If crossed → **immediate local indicator** (LED / buzzer) + a priority
-  `alerts` row pushed to the cloud (not waiting for the 5 s batch).
-- This alert **never depends on WiFi, the cloud, or the ML.** It's the floor
-  that keeps working when everything else is down.
+**One buzzer per node — maximum sound output.** Every box (master and
+slaves) has its own buzzer, so the alarm is loud *everywhere along the
+wall*, not just at the surface. A crew working in the trench near a lower
+box hears that box's buzzer, not just the distant top one; every box
+screaming = loudest coverage and the clearest "something near you is wrong."
+
+- **Every node evaluates the alert locally, for its own 4 sensors, every 1 s.**
+  Each node checks each of its sensors' `tilt` against the engineer-set
+  threshold.
+- **If any of a node's own sensors crosses threshold** → that node fires
+  its own buzzer immediately AND pushes a priority `alerts` row to the cloud
+  (slaves push via the master relay; the master pushes its own directly),
+  tagged with the offending sensor's MAC + channel so the app can show
+  *which* sensor tripped. Not waiting for the 5 s batch — the alert row
+  goes out now.
+- This alert **never depends on WiFi, the cloud, or the ML** for the buzzer.
+  Each node fires its buzzer from local data the moment it sees a crossing.
+  (The cloud-bound `alerts` row does need WiFi/the relay, but the audible
+  alarm doesn't wait for it.)
 - The engineer-set threshold is configured per pipe/site (in the app) and
-  pushed down to nodes; nodes cache it in NVS.
+  pushed down to nodes; each node caches it in NVS and applies it to its own
+  sensors.
+
+**Why a buzzer on every node, not just the master:**
+- **Loudest coverage** — N buzzers along the wall >> 1 buzzer at the top.
+  Crew in the trench hear the box next to them, not a distant surface alarm.
+- **Locality** — the box closest to the failing panel is the one that
+  screams, giving the crew a spatial cue ("the sound is coming from below
+  me") on top of the alert itself.
+- **Resilience** — every node's buzzer fires from its own local data; no
+  dependency on the RS485 bus, the master, or WiFi to make noise. A slave
+  whose sensors cross threshold screams even if the bus to the master is
+  cut. The master's buzzer is a redundant secondary, not the sole alarm.
+- **Cost is trivial** — a piezo buzzer is ~$1 per node; the safety gain
+  is worth it.
+
+**Tradeoff to decide (team):** with per-node evaluation, do you want each
+node to alarm on **any-single-sensor** crossing (loudest, fastest, but a
+loose mount on one sensor trips the whole-box buzzer), or require
+**multi-sensor agreement within the node** before firing (suppresses
+single-sensor glitches, tiny delay)? This is the same glitch-suppression
+question as before, now applied per-node rather than pipe-wide.
 
 ## 11. File layout (current)
 

@@ -59,7 +59,9 @@ risk_scores    (id, ts, node_id, predicted_tilt, actual_tilt, anomaly_score, mod
 - `sensor_nodes.mac_addr` — the join key between the physical box and the
   database row. Unique. Set at install by scanning the box's QR label.
 - `sensor_nodes.is_gateway` — `true` for the master box of each pipe. Only
-  one per pipe. Set at install.
+  one per pipe. **Set by the node itself** (when its button is long-pressed
+  and it next reports to Supabase), NOT set by the app/install wizard. The
+  app reads this for display only.
 - `sensor_nodes.position_in_pipe` — 1, 2, 3, … from the top. Set at install.
 - `sensors.channel` — the TCA9548A channel (0–7) the sensor is on within its
   node. Together `(node.mac, sensor.channel)` uniquely identifies a sensor.
@@ -146,20 +148,28 @@ One `INSERT … SELECT … GROUP BY` + one `DELETE`. Beginner-buildable.
    2. Bob creates a pipe under his site: "North Wall." Backend creates a
       `pipes` row.
    3. For each box, Bob taps "scan node" → camera scans the QR → MAC
-      auto-fills → Bob assigns position (1/2/3) and taps "this is the
-      gateway" for the top one. Backend creates `sensor_nodes` rows.
+      auto-fills → Bob assigns position (1/2/3). Backend creates
+      `sensor_nodes` rows (with `is_gateway` left false — the app does NOT
+      set the gateway; that's a physical button action, see step 5).
    4. The backend auto-creates 4 `sensors` rows per node (channels 7, 3, 5, 1
       — matching the node's `SENSORS[]` table), or the node reports its
       channel list on first contact and the backend creates them.
-3. **Power on:** boxes boot. The master connects WiFi, fetches its baseline
-   (none yet → LED off), starts polling slaves. Slaves answer polls with
-   their MACs. The backend sees known MACs and starts accepting readings.
+3. **Power on:** boxes boot. Slaves wait for RS485 polls. The top box is
+   **long-pressed** (see step 5) to become the master — only then does it
+   connect WiFi, fetch its baseline (none yet → LED off), start polling
+   slaves, and report `is_gateway: true` to Supabase (which updates its
+   `sensor_nodes` row). The backend sees known MACs and starts accepting
+   readings.
 4. **Settle:** wall settles (operational rule: wait an hour or overnight after
    the dig finishes).
-5. **Zero:** Bob long-presses the master button → global baseline capture →
-   every box captures + uploads its 4 baselines tagged with its MAC →
-   backend stores them under the right `sensors`. LEDs go solid. Monitoring
-   begins.
+5. **Zero & set master:** the installer long-presses the top box's button
+   (≥3 s) → that box becomes the gateway (NVS flag set) AND broadcasts
+   "capture baseline now" down the RS485 chain → every box captures +
+   uploads its 4 baselines tagged with its MAC (slaves via the master) →
+   backend stores them under the right `sensors`. The master also reports
+   `is_gateway: true` for itself. LEDs go solid. Monitoring begins.
+   (This is a physical action by the installer, NOT a step in the app — it
+   happens with a button on the box, outside the phone UI.)
 
 The MAC is the handshake throughout. The box says "I'm …:…:…"; the database
 already knows where that MAC lives because Bob registered it.
@@ -194,7 +204,8 @@ are Supabase auto-generated CRUD, not custom.
 - **MAC as node identity**, QR-labeled at assembly, scanned at install.
 - **Device key auth** for nodes (v1: shared). **User JWT + RLS** for the app.
 - **1 s stream, 14-day raw retention, 1-min downsampled forever.**
-- **`is_gateway` is a boolean on `sensor_nodes`**, set at install, not
-  elected. No auto-failover.
+- **`is_gateway` is a boolean on `sensor_nodes`**, reported by the node
+  itself (originating from its button long-press → NVS → included in its
+  Supabase posts), NOT set by the app. No auto-failover.
 - **Baseline history preserved** (`supersedes_id`); current = unsuperseded.
 - **Engineer-set threshold on `pipes`**, pushed to nodes, checked locally.

@@ -189,8 +189,13 @@ fallback → seamless. **No operator action on a normal reboot.**
   configurable); at the end, average the accumulated samples into the
   baseline, cache to NVS, upload to Supabase. LED fast-blinks during the
   collection.
-- **Long press (hold ≥ 3 s)** → SET GATEWAY (this box becomes the master):
-  persist `is_gateway` flag to NVS, start the relay module.
+- **Long press (hold ≥ 3 s)** → TOGGLE GATEWAY (same deliberate hold both
+  ways): if this box is not the master it becomes the gateway; if it already
+  is the master it returns to a normal sensor node. Persist the `is_gateway`
+  flag to NVS, start/stop the relay module accordingly. Toggling off is
+  deliberate (a human holding 3 s twice), so an accidental single hold can't
+  race-
+  toggle it repeatedly.
 - 1–3 s hold → dead zone (can't mis-time; you tap or you commit to the long
   hold).
 - The 3 s hold is the safety guard against accidental bumps — same principle
@@ -206,11 +211,14 @@ window. Change the value to trade accuracy vs. install time. Note: the 1 s
 separate, longer collection window.
 
 ### 7.4 Global baseline capture (the inaccessible-slaves fix)
-Pressing SET GATEWAY (long press) on the master **also** broadcasts a
-"capture baseline now" command down the RS485 chain. Every node (master
-included) then runs its own `BASELINE_COLLECT_SECONDS` collection window,
-averages its samples into its baseline, caches to its own NVS, and uploads
-via the master. **One human action at the top zeros the whole pipe.**
+A long press (TOGGLE GATEWAY, see §7.3) becoming the master does **not**
+re-capture baselines by itself — but the classic install flow is one long
+press to take gateway on the master *plus* the short-press collection on
+master and slaves. (In practice the installer long-presses the top box to
+become gateway, then runs a global baseline capture command down the RS485
+chain. Every node, master included, runs its own `BASELINE_COLLECT_SECONDS`
+window, averages into its baseline, caches to NVS, and uploads via the
+master.) **One human action at the top zeros the whole pipe.**
 
 This is safe because the project scope is **after digging**: the wall is
 settled and unloaded when the button is pressed, so simultaneous capture is a
@@ -219,7 +227,7 @@ after the wall has settled, not the instant the dig ends."
 
 ### 7.5 Serial debug equivalents (kept)
 - `z` → SET BASELINE (same as short press).
-- `g` → SET GATEWAY (same as long press).
+- `g` → TOGGLE GATEWAY (same as long press — on becomes off, off becomes on).
 - `l` → LOAD baseline from Supabase / NVS.
 The firmware works with or without the physical button/LED attached.
 
@@ -257,11 +265,13 @@ transport:
   author. The master also relays slave baseline uploads/downloads.
 
 **Gateway role is assigned by the physical button long-press ONLY — never
-by the app.** The long-press sets `is_gateway = true` in this box's own NVS.
-No election protocol, no DIP switches, no app toggle — a human explicitly
-chose this box with a physical action. Recovery: if the master dies, swap
-it and long-press the new top box. You *know* a role change happened
-because a human did it (no silent failover on a safety device).
+by the app.** The long-press TOGGLES `is_gateway` in this box's own NVS
+(hold to become master; hold again to return to a normal node). No election
+protocol, no DIP switches, no app toggle — a human explicitly chose this
+box with a physical action. Recovery: if the master dies, swap it and
+long-press the new top box; the old master, if it ever revives, can be
+long-pressed to turn gateway OFF. You *know* a role change happened because
+a human did it (no silent failover on a safety device).
 
 **The cloud is informed, not asked.** When a box has set itself as gateway
 (NVS flag) and comes online with WiFi, it includes `is_gateway: true` in its

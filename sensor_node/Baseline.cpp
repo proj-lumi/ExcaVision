@@ -2,6 +2,8 @@
 #include <Preferences.h>   // ESP32 NVS flash storage
 #include <math.h>         // sqrt
 #include "Config.h"      // tuning constants, SENSORS[], SensorNode, nodes[]
+#include "Led.h"         // isThisGateway()  (global capture broadcasts only from the gateway)
+#include "Rs485.h"       // rs485BroadcastCapture()  (global capture on the gateway)
 
 // NVS access (internal to this module).
 static Preferences prefs;
@@ -26,6 +28,16 @@ void startBaselineCapture() {
   Serial.print("collecting baseline for ");
   Serial.print(BASELINE_COLLECT_SECONDS);
   Serial.println(" s (LED fast-blinks during collection)...");
+}
+
+// Global baseline capture (spec §7.4): "one human action at the top zeros the
+// whole pipe." Always captures THIS box's own 30 s window; on the GATEWAY it
+// also broadcasts `C` so every slave runs its window simultaneously. Each
+// slave's finished baseline returns via B; frames (Rs485) and is uploaded by
+// the master — same as this box's own.
+void doBaselineSet() {
+  startBaselineCapture();
+  if (isThisGateway()) rs485BroadcastCapture();
 }
 
 // Persist each present sensor's baseline to ESP32 flash (NVS) so a reboot

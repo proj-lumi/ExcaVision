@@ -1,12 +1,14 @@
 #include <math.h>       // isnan
 #include <string.h>     // strncpy, memset
+#include <WiFi.h>       // WiFi.status() — the task owns the WiFi lifecycle
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <freertos/queue.h>
 #include "Config.h"
 #include "Identity.h"   // nodeMac
+#include "Led.h"        // isThisGateway() — the task idles when not the gateway
 #include "Sender.h"
-#include "Cloud.h"      // cloudInit / cloudPostJson / cloudGetJson
+#include "Cloud.h"      // cloudConnectOnce / cloudStop / cloudPostJson / cloudGetJson
 #include "Alarm.h"      // setThresholdDeg()
 #include "secrets.h"
 
@@ -75,7 +77,13 @@ static void postAlertEvent(const EventMsg& ev) {
                 ",\"p_kind\":\"" + ev.s1 + "\",\"p_severity\":\"" + ev.s2 +
                 "\",\"p_value\":" + String(v, 3) + "}";
   String url = String(SUPABASE_URL) + "/rest/v1/rpc/insert_alert";
-  cloudPostJson(url.c_str(), body);
+  if (cloudPostJson(url.c_str(), body)) {
+    Serial.print("[cloud] alert posted "); Serial.print(ev.mac);
+    Serial.print(" ch"); Serial.println(ev.channel);
+  } else {
+    Serial.print("[cloud] alert POST FAILED "); Serial.print(ev.mac);
+    Serial.print(" ch"); Serial.println(ev.channel);
+  }
 }
 
 static void postBaselineEvent(const EventMsg& ev) {
@@ -87,7 +95,13 @@ static void postBaselineEvent(const EventMsg& ev) {
                 ",\"p_by\":" + String(y, 4) +
                 ",\"p_bz\":" + String(z, 4) + "}";
   String url = String(SUPABASE_URL) + "/rest/v1/rpc/upsert_baseline";
-  cloudPostJson(url.c_str(), body);
+  if (cloudPostJson(url.c_str(), body)) {
+    Serial.print("[cloud] baseline posted "); Serial.print(ev.mac);
+    Serial.print(" ch"); Serial.println(ev.channel);
+  } else {
+    Serial.print("[cloud] baseline POST FAILED "); Serial.print(ev.mac);
+    Serial.print(" ch"); Serial.println(ev.channel);
+  }
 }
 
 static void fetchThreshold() {
@@ -109,10 +123,15 @@ static void fetchThreshold() {
 // ---------------------------------------------------------------------------
 // The cloud task — owns WiFi + all HTTP. Blocking here is fine: it's a separate
 // task, so the main loop's sampling / RS-485 / button / LED / alarm never wait.
+//
+// WiFi lifecycle lives HERE, not in the main loop or in senderInit():
+//   - connect retries forever (10 s apart) until the AP answers, so wrong or
+//     temporary credentials at boot self-heal — no untoggle/retoggle needed;
+//   - a runtime AP drop is detected (WiFi.status) and reconnected;
+//   - if the box stops being the gateway (long-press off), WiFi disconnects
+//     and the task idles silently until promotion again.
 // ---------------------------------------------------------------------------
 static void cloudTask(void*) {
-  cloudInit();            // WiFi connect (blocking, but only this task)
-  fetchThreshold();
   unsigned long lastConfig = millis();
 
   ReadingMsg batch[SENDER_MAX_QUEUE];
@@ -120,6 +139,21 @@ static void cloudTask(void*) {
   unsigned long batchStart = millis();
 
   for (;;) {
+    // Role + link lifecycle (our own core — never the main loop).
+    if (!isThisGateway()) {
+      if (WiFi.status() == WL_CONNECTED) cloudStop();
+      vTaskDelay(pdMS_TO_TICKS(1000));
+      continue;
+    }
+    if (WiFi.status() != WL_CONNECTED) {
+      if (!cloudConnectOnce()) {
+        vTaskDelay(pdMS_TO_TICKS(10000));   // retry in 10 s — never give up
+        continue;
+      }
+      fetchThreshold();          // freshly connected: pull the threshold
+      lastConfig = millis();
+    }
+
     // Immediate events first (alerts / baselines).
     EventMsg ev;
     while (xQueueReceive(eventQueue, &ev, 0) == pdTRUE) {
@@ -159,7 +193,7 @@ static void cloudTask(void*) {
 void senderInit() {
   if (cloudHandle) return;   // idempotent — only start the task once
   readingQueue = xQueueCreate(SENDER_MAX_QUEUE * 2, sizeof(ReadingMsg));
-  eventQueue   = xQueueCreate(16, sizeof(EventMsg));
+  eventQueue   = xQueueCreate(32, sizeof(EventMsg));   // 32 slots for alerts/baselines (was 16)
   xTaskCreatePinnedToCore(cloudTask, "cloud", 10240, NULL, 1, &cloudHandle, 0);
 }
 
@@ -185,7 +219,10 @@ void senderPushAlert(const char* mac, uint8_t channel, const char* kind,
   strncpy(ev.s2, severity, sizeof ev.s2 - 1);
   ev.channel = channel;
   ev.a = value;
-  xQueueSendToBack(eventQueue, &ev, 0);
+  if (xQueueSendToBack(eventQueue, &ev, 0) != pdTRUE) {
+    Serial.print("[cloud] ALERT DROPPED (queue full) "); Serial.print(mac);
+    Serial.print(" ch"); Serial.println(channel);
+  }
 }
 
 void senderUploadBaseline(const char* mac, uint8_t channel,
@@ -197,5 +234,8 @@ void senderUploadBaseline(const char* mac, uint8_t channel,
   strncpy(ev.mac, mac, sizeof ev.mac - 1);
   ev.channel = channel;
   ev.a = bx; ev.b = by; ev.c = bz;
-  xQueueSendToBack(eventQueue, &ev, 0);
+  if (xQueueSendToBack(eventQueue, &ev, 0) != pdTRUE) {
+    Serial.print("[cloud] BASELINE DROPPED (queue full) "); Serial.print(mac);
+    Serial.print(" ch"); Serial.println(channel);
+  }
 }

@@ -27,6 +27,8 @@
 // --- Threshold alarm (Step 7) ---
 #define BUZZER_PIN 17        // piezo buzzer (spec: suggested GPIO 17 or 18)
 #define THRESHOLD_DEG 2.0    // default alert threshold; engineer sets per pipe later (serial 't' overrides)
+#define ALARM_HYSTERESIS_DEG 0.5   // release only after tilt drops below (threshold - this): stops chattering at the line
+#define ALARM_HOLD_SECONDS  3      // tilt must STAY above threshold this many seconds before the alarm trips: debounces single-sample spikes
 #define ALARM_BEEP_MS 250    // buzzer beep duration
 #define ALARM_GAP_MS  250    // buzzer gap between beeps
 #define BASELINE_COLLECT_SECONDS 30  // how long the press collects before zeroing (configurable)

@@ -6,6 +6,7 @@
 // auto-re-zeroes.
 
 void startBaselineCapture();     // short press / 'z': begin a 30 s collection window
+void doBaselineSet();            // global capture: own window + (on gateway) broadcast `C` to slaves
 void finalizeBaselineCapture();   // called when the window elapses: average + commit
 void saveBaselinesToFlash();       // persist to NVS (so a reboot keeps the reference)
 void loadBaselinesFromFlash();     // restore at boot (only for physically-present sensors)

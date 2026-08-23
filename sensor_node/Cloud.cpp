@@ -10,18 +10,30 @@ static WiFiClientSecure client;
 static HTTPClient        http;
 static bool              connected = false;
 
-void cloudInit() {
+void cloudStop() {
+  connected = false;
+  WiFi.disconnect();
+  Serial.println("[cloud] gateway off — WiFi disconnected");
+}
+
+// ONE connect attempt (max ~15 s). Safe to call repeatedly — retrying until
+// the AP answers is the cloud task's job, so a boot-time outage, bad
+// credentials, or a runtime AP blip all self-heal. Never gate the main loop.
+bool cloudConnectOnce() {
+  if (WiFi.status() == WL_CONNECTED) { connected = true; return true; }
+  client.setInsecure();   // bench only — pin Supabase's CA cert for production
   WiFi.mode(WIFI_STA);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  Serial.print("Connecting to WiFi");
+  Serial.print("[cloud] connecting to WiFi");
   unsigned long t0 = millis();
-  while (WiFi.status() != WL_CONNECTED && millis() - t0 < 20000) {
+  while (WiFi.status() != WL_CONNECTED && millis() - t0 < 15000) {
     delay(500);
     Serial.print(".");
   }
   connected = (WiFi.status() == WL_CONNECTED);
-  Serial.println(connected ? "\nWiFi connected!" : "\nWiFi FAILED (continuing without cloud)");
-  client.setInsecure();   // bench only — pin Supabase's CA cert for production
+  if (connected) Serial.println(" connected");
+  else           Serial.println();
+  return connected;
 }
 
 bool cloudConnected() { return connected; }

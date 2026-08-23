@@ -10,7 +10,8 @@
 // the `apikey` and `Authorization` headers. This bypasses RLS — the node is
 // trusted and only ever writes its own MAC-tagged data.
 
-void cloudInit();                                    // connect WiFi (call on the gateway at boot)
+bool cloudConnectOnce();                               // one connect attempt (~15 s max); true when linked. Retryable.
+void cloudStop();                                      // disconnect + mark not-connected (box stopped being the gateway)
 bool cloudConnected();
 bool cloudPostJson(const char* url, const String& jsonBody);  // true on 2xx
 bool cloudGetJson(const char* url, String& out);              // true on 2xx, body in out

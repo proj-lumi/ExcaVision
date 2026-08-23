@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "Config.h"
 #include "Button.h"
-#include "Baseline.h"   // startBaselineCapture()  (short press)
+#include "Baseline.h"   // doBaselineSet()  (short press) — global capture on the gateway
 #include "Led.h"        // setGateway()  (long press)
 
 // Button debounce + edge detection state (internal to this module).
@@ -12,6 +12,8 @@ static unsigned long pressStart    = 0;    // when the press began
 static bool          longPressFired = false;  // gateway already set for THIS press
 
 // Call every loop(). Debounces the button and detects press/release edges.
+// A short press triggers the global baseline capture (doBaselineSet): on the
+// gateway that also broadcasts `C` so every slave captures simultaneously.
 void pollButton() {
   bool raw = digitalRead(BUTTON_PIN);
 
@@ -33,7 +35,7 @@ void pollButton() {
       // Released — how long was it held?
       unsigned long held = millis() - pressStart;
       if (held < SHORT_PRESS_MS) {
-        startBaselineCapture();   // SHORT press -> collect baseline for 30 s
+        doBaselineSet();   // SHORT press -> capture baseline (global on the gateway)
       }
       // (holds between 1 s and 3 s do nothing — the dead zone)
     }

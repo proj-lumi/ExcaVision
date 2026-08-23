@@ -4,6 +4,7 @@
 #include "Identity.h"    // nodeMac
 #include "Led.h"         // isThisGateway()
 #include "Sender.h"      // senderAddReading() (Phase B)
+#include "Baseline.h"    // startBaselineCapture() (global-capture broadcast 'C')
 #include "Rs485.h"
 
 // ---------------------------------------------------------------------------
@@ -95,6 +96,79 @@ static void parseAndEnqueueReadings(const char* line) {
 }
 
 // ---------------------------------------------------------------------------
+// Master side: forward a spontaneous slave alert
+// ("A;<mac>;<ch>;<kind>;<sev>;<value>") to the cloud. Called only on the gateway.
+// ---------------------------------------------------------------------------
+
+static void parseAndForwardAlert(const char* line) {
+  const char* p = line + 2;   // skip "A;"
+
+  char mac[18];
+  size_t k = 0;
+  while (*p && *p != ';' && k < sizeof mac - 1) mac[k++] = *p++;
+  mac[k] = '\0';
+  if (*p++ != ';') return;
+
+  uint8_t channel = (uint8_t)atoi(p);
+  p = strchr(p, ';');
+  if (!p) return;
+  p++;
+
+  char kind[12];
+  k = 0;
+  while (*p && *p != ';' && k < sizeof kind - 1) kind[k++] = *p++;
+  kind[k] = '\0';
+  if (*p++ != ';') return;
+
+  char sev[12];
+  k = 0;
+  while (*p && *p != ';' && k < sizeof sev - 1) sev[k++] = *p++;
+  sev[k] = '\0';
+  if (*p++ != ';') return;
+
+  float value = atof(p);
+
+  Serial.print("[rs485] slave alert "); Serial.print(mac);
+  Serial.print(" ch"); Serial.print(channel);
+  Serial.print(" "); Serial.print(kind);
+  Serial.print(" "); Serial.print(sev);
+  Serial.print(" v="); Serial.println(value, 3);
+
+  senderPushAlert(mac, channel, kind, sev, value);
+}
+
+// ---------------------------------------------------------------------------
+// Master side: forward a slave baseline capture
+// ("B;<mac>;<ch>;<bx>,<by>,<bz>") to the cloud. Called only on the gateway.
+// ---------------------------------------------------------------------------
+
+static void parseAndForwardBaseline(const char* line) {
+  const char* p = line + 2;   // skip "B;"
+
+  char mac[18];
+  size_t k = 0;
+  while (*p && *p != ';' && k < sizeof mac - 1) mac[k++] = *p++;
+  mac[k] = '\0';
+  if (*p++ != ';') return;
+
+  uint8_t channel = (uint8_t)atoi(p);
+  p = strchr(p, ';');
+  if (!p) return;
+  p++;   // now at "<bx>,<by>,<bz>"
+
+  float bx = 0, by = 0, bz = 0;
+  sscanf(p, "%f,%f,%f", &bx, &by, &bz);
+
+  Serial.print("[rs485] slave baseline "); Serial.print(mac);
+  Serial.print(" ch"); Serial.print(channel);
+  Serial.print("  bx="); Serial.print(bx, 4);
+  Serial.print(" by="); Serial.print(by, 4);
+  Serial.print(" bz="); Serial.println(bz, 4);
+
+  senderUploadBaseline(mac, channel, bx, by, bz);
+}
+
+// ---------------------------------------------------------------------------
 // Receive side: dispatch one complete line according to role.
 // ---------------------------------------------------------------------------
 
@@ -102,8 +176,13 @@ static void handleLine() {
   const char* line = rxLine;
 
   if (isThisGateway()) {
-    // Master: capture hellos during discovery, print readings during a poll.
-    if (startWith(line, "H:") && rsState == 1) {
+    // Master: forward spontaneous slave alerts, capture hellos during
+    // discovery, enqueue readings during a poll.
+    if (startWith(line, "A;")) {
+      parseAndForwardAlert(line);
+    } else if (startWith(line, "B;")) {
+      parseAndForwardBaseline(line);
+    } else if (startWith(line, "H:") && rsState == 1) {
       if (slaveCount < RS485_MAX_SLAVES) {
         for (uint8_t i = 0; i < slaveCount; i++)
           if (strcmp(slaves[i], line + 2) == 0) return;   // already known
@@ -122,6 +201,11 @@ static void handleLine() {
       char h[24];
       snprintf(h, sizeof h, "H:%s", nodeMac);
       rs485Send(h);
+    } else if (strcmp(line, "C") == 0) {
+      // Global baseline capture (spec §7.4): a human action at the gateway
+      // tells EVERY node to run its own BASELINE_COLLECT_SECONDS window.
+      // When it ends, this node sends its B; frames so the master uploads it.
+      startBaselineCapture();
     } else if (startWith(line, "P:")) {
       if (strcmp(line + 2, nodeMac) == 0) {
         sendReadings();
@@ -182,6 +266,32 @@ void rs485Init() {
   digitalWrite(RS485_DE_PIN, LOW);     // start in receive mode
   Serial2.begin(RS485_BAUD, SERIAL_8N1, RS485_RX_PIN, RS485_TX_PIN);
   rxLen = 0;
+}
+
+// Slave side: relay a threshold trip to the master, which forwards it to the
+// cloud. One-line "A;<mac>;<channel>;threshold;critical;<value>" frame.
+void rs485SendAlert(uint8_t channel, float value) {
+  char line[80];
+  snprintf(line, sizeof line, "A;%s;%u;threshold;critical;%.3f",
+           nodeMac, channel, (double)value);
+  rs485Send(line);
+}
+
+// Slave side: relay a freshly captured baseline to the master (which uploads
+// it). One-line "B;<mac>;<channel>;<bx>,<by>,<bz>" frame.
+void rs485SendBaseline(uint8_t channel, float bx, float by, float bz) {
+  char line[80];
+  snprintf(line, sizeof line, "B;%s;%u;%.4f,%.4f,%.4f",
+           nodeMac, channel, (double)bx, (double)by, (double)bz);
+  rs485Send(line);
+}
+
+// Gateway: broadcast the global-baseline-capture command to every slave.
+// One-line "C", symmetric with the "D" discovery broadcast. Slaves start
+// their own collection window on receipt; when it ends they send B; frames
+// (built already) so the master uploads every node's baseline.
+void rs485BroadcastCapture() {
+  rs485Send("C");
 }
 
 void rs485Update() {

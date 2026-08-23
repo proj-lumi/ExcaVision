@@ -134,7 +134,7 @@ void loop() {
   while (Serial.available() > 0) {
     char c = Serial.read();
     if (c == 'z') {
-      startBaselineCapture();
+      doBaselineSet();   // global capture: this box + (on gateway) broadcast `C` to slaves
     } else if (c == 'g') {
       toggleGateway();   // prints ON/OFF itself
     } else if (c == 't') {
@@ -183,11 +183,13 @@ void loop() {
       }
     }
 
-    // Route an alarm trip (one-shot). Gateway -> Supabase; slave -> deferred
-    // RS-485 relay in a later slice (its local buzzer already fired).
+    // Route an alarm trip (one-shot). Gateway -> Supabase directly; slave ->
+    // relay an A: frame to the master, which forwards it to the cloud.
+    // (Either way, the tripping node's local buzzer already fired.)
     uint8_t ach; float av;
     if (alertTripPending(ach, av)) {
       if (isThisGateway()) senderPushAlert(nodeMac, ach, "threshold", "critical", av);
+      else                 rs485SendAlert(ach, av);
     }
   }
 
@@ -201,6 +203,22 @@ void loop() {
   if (baselineCollecting && t >= baselineCollectStart &&
       (t - baselineCollectStart) >= BASELINE_COLLECT_SECONDS * 1000UL) {
     finalizeBaselineCapture();
+    // Newly captured baselines must reach the cloud: the gateway POSTs its
+    // own sensors directly; a slave relays B; frames so the master uploads
+    // them. (NVS persistence already happened inside finalizeBaselineCapture.)
+    if (isThisGateway()) {
+      for (uint8_t i = 0; i < NUM_SENSORS; i++) {
+        if (!nodes[i].present || !nodes[i].hasBaseline) continue;
+        senderUploadBaseline(nodeMac, SENSORS[i].channel,
+                             nodes[i].bx, nodes[i].by, nodes[i].bz);
+      }
+    } else {
+      for (uint8_t i = 0; i < NUM_SENSORS; i++) {
+        if (!nodes[i].present || !nodes[i].hasBaseline) continue;
+        rs485SendBaseline(SENSORS[i].channel,
+                          nodes[i].bx, nodes[i].by, nodes[i].bz);
+      }
+    }
   }
 
   recomputeLedState();   // keep the LED in sync (baselines may have just applied)

@@ -7,6 +7,7 @@
 static float   thresholdDeg = THRESHOLD_DEG;
 static bool    alarmActive  = false;
 static int8_t  trippedIndex = -1;   // -1 = none
+static uint8_t aboveCount   = 0;    // consecutive report cycles a sensor stayed above threshold (debounce)
 static bool    tripPending  = false; // one-shot trip notification
 static uint8_t tripChannel  = 0;
 static float   tripValue    = 0;
@@ -56,28 +57,59 @@ void setThresholdDeg(float v) {
 float getThresholdDeg() { return thresholdDeg; }
 
 // Check every present, baselined sensor's latest tilt against the threshold.
-// Edge-triggered prints: "ALERT Sx ..." when it trips, "ALERT cleared" when it
-// drops back — so the log shows transitions, not a per-second spam.
+// Two guards stop it chattering on a sensor hovering at the line:
+//   1. HOLD: the tilt must stay ABOVE threshold for ALARM_HOLD_SECONDS before
+//      tripping (debounces a single-sample spike, e.g. a jostle).
+//   2. HYSTERESIS: once tripped, it only CLEARS when the tripped sensor drops
+//      to threshold - ALARM_HYSTERESIS_DEG — so it doesn't flap off/on the
+//      instant it wobbles across the boundary.
 void evaluateAlarms() {
-  int8_t newTripped = -1;
-  for (uint8_t i = 0; i < NUM_SENSORS; i++) {
-    if (!nodes[i].present || !nodes[i].hasBaseline) continue;
-    if (nodes[i].lastTilt > thresholdDeg) { newTripped = (int8_t)i; break; }
-  }
-
   bool wasActive = alarmActive;
-  alarmActive   = (newTripped >= 0);
-  trippedIndex  = newTripped;
 
-  if (alarmActive && !wasActive) {
-    tripPending = true;
-    tripChannel = (uint8_t)trippedIndex;
-    tripValue   = nodes[trippedIndex].lastTilt;
-    Serial.print("ALERT "); Serial.print(SENSORS[trippedIndex].name);
-    Serial.print(" tilt="); Serial.print(nodes[trippedIndex].lastTilt, 3);
-    Serial.print("° > threshold "); Serial.print(thresholdDeg, 2); Serial.println("°");
-  } else if (!alarmActive && wasActive) {
-    Serial.println("ALERT cleared — back under threshold");
+  if (alarmActive) {
+    // Already alarming: hold while the tripped sensor stays above the release
+    // threshold (threshold - hysteresis). Release only when it falls below.
+    bool held = (trippedIndex >= 0) &&
+                (nodes[trippedIndex].lastTilt >
+                 thresholdDeg - ALARM_HYSTERESIS_DEG);
+    if (!held) {
+      alarmActive   = false;
+      trippedIndex  = -1;
+      Serial.println("ALERT cleared — back under threshold");
+    }
+    // Active stays active while held — no per-second spam.
+  } else {
+    // Idle: find any sensor above threshold and require it to STAY there for
+    // ALARM_HOLD_SECONDS (one report cycle per second) before tripping.
+    int8_t crossing = -1;
+    for (uint8_t i = 0; i < NUM_SENSORS; i++) {
+      if (!nodes[i].present || !nodes[i].hasBaseline) continue;
+      if (nodes[i].lastTilt > thresholdDeg) { crossing = (int8_t)i; break; }
+    }
+
+    if (crossing >= 0) {
+      aboveCount++;
+      if (aboveCount >= ALARM_HOLD_SECONDS) {
+        alarmActive   = true;
+        trippedIndex  = crossing;
+        aboveCount    = 0;
+        tripPending   = true;
+        tripChannel   = SENSORS[crossing].channel;   // real TCA channel, NOT the array index
+        tripValue     = nodes[crossing].lastTilt;
+        Serial.print("ALERT "); Serial.print(SENSORS[crossing].name);
+        Serial.print(" tilt="); Serial.print(nodes[crossing].lastTilt, 3);
+        Serial.print("° > threshold "); Serial.print(thresholdDeg, 2);
+        Serial.print("° (held "); Serial.print(ALARM_HOLD_SECONDS);
+        Serial.println(" s)");
+      } else {
+        Serial.print(SENSORS[crossing].name);
+        Serial.print(" above threshold "); Serial.print(aboveCount);
+        Serial.print("/"); Serial.print(ALARM_HOLD_SECONDS);
+        Serial.println(" s hold...");
+      }
+    } else {
+      aboveCount = 0;   // nothing above: reset the debounce counter
+    }
   }
 }
 

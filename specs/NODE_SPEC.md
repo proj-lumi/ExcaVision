@@ -149,8 +149,11 @@ direction if ever needed later — it's a reporting change, not new hardware.
 
 - **SET:** capture → RAM → NVS → upsert to Supabase (via the master). If WiFi
   is down at SET time, NVS holds it; upload retries when WiFi returns.
-- **LOAD (manual or automatic-at-boot):** try Supabase first → refresh NVS +
-  RAM. If Supabase unreachable, fall back to NVS. If neither, "no baseline —
+- **LOAD (manual or automatic-at-boot):** **NVS first.** The node's own
+  flash is instant and works with zero network, so a normal reboot uses it
+  directly. Only if NVS is EMPTY (replacement board / wiped flash) do we
+  recover from the cloud: the master fetches directly; a slave asks the
+  master over RS-485 (it has no WiFi). If neither has it → "no baseline —
   use SET."
 - **Tilt math** always reads from RAM.
 - **Never auto-re-zero on boot.** Re-zeroing is an explicit, deliberate action
@@ -161,13 +164,14 @@ direction if ever needed later — it's a reporting change, not new hardware.
 1. Power on, LED off.
 2. Read MAC (esp_efuse / WiFi.macAddress — stable, unique, no WiFi needed).
 3. Connect WiFi (master) / wait for RS485 poll (slave).
-4. LED fast-blink → fetch baseline from Supabase (master: directly; slave:
-   via the master relay). Fall back to NVS if unreachable.
+4. Load baseline from **NVS** (instant, offline). Only if NVS is empty,
+   recover from the cloud (master: directly; slave: via the master relay).
 5. Baseline loaded → LED solid → start monitoring.
 6. No baseline anywhere → LED off → wait for SET.
 ```
-A reboot with WiFi up → seamless re-fetch. A reboot with WiFi down → NVS
-fallback → seamless. **No operator action on a normal reboot.**
+A normal reboot → NVS serves instantly, no network needed; the cloud is
+only consulted when local memory is empty. **No operator action on a
+normal reboot.**
 
 ### 7.3 The install button + LED (one of each, combined)
 
@@ -190,11 +194,13 @@ fallback → seamless. **No operator action on a normal reboot.**
 >   LED state.
 
 **One momentary button, two actions by hold duration:**
-- **Short press (tap, < 1 s)** → SET BASELINE (this box only): begin
-  collecting samples for `BASELINE_COLLECT_SECONDS` (default 30 s,
-  configurable); at the end, average the accumulated samples into the
-  baseline, cache to NVS, upload to Supabase. LED fast-blinks during the
-  collection.
+- **Short press (tap, < 1 s)** → SET BASELINE: begin collecting samples for
+  `BASELINE_COLLECT_SECONDS` (default 30 s, configurable); at the end,
+  average into the baseline, cache to NVS, upload to Supabase. LED
+  fast-blinks during collection. On a SLAVE this is this-box-only; on the
+  GATEWAY this IS the global capture (§7.4) — it also broadcasts `C` so every
+  node runs its own window simultaneously. **One action at the top zeros the
+  whole pipe.**
 - **Long press (hold ≥ 3 s)** → TOGGLE GATEWAY (same deliberate hold both
   ways): if this box is not the master it becomes the gateway; if it already
   is the master it returns to a normal sensor node. Persist the `is_gateway`
@@ -224,7 +230,10 @@ master and slaves. (In practice the installer long-presses the top box to
 become gateway, then runs a global baseline capture command down the RS485
 chain. Every node, master included, runs its own `BASELINE_COLLECT_SECONDS`
 window, averages into its baseline, caches to NVS, and uploads via the
-master.) **One human action at the top zeros the whole pipe.**
+master.) **One human action at the top zeros the whole pipe.** The trigger is
+the gateway's short press (or `z` on the gateway's serial, §7.5): it
+broadcasts the `C` frame down the RS-485 chain and starts its own window; the
+finished baselines come back via `B;` frames and are uploaded by the master.
 
 This is safe because the project scope is **after digging**: the wall is
 settled and unloaded when the button is pressed, so simultaneous capture is a
@@ -289,6 +298,39 @@ upstream. If the cloud row and the NVS flag ever disagree, the NVS flag wins
 (the box behaves according to its own flag regardless of what the cloud
 says).
 
+### 9.x RS-485 frame protocol & the spontaneous-alert caveat
+
+The wire protocol is ASCII, one `\n`-terminated line per message:
+
+| Direction | Frame | Meaning |
+|---|---|---|
+| master → | `D` | discovery broadcast — who is on the bus? |
+| slave → | `H:<mac>` | hello, I am `<mac>` |
+| master → | `P:<mac>` | poll that specific node |
+| slave → | `R;<mac>;S1@7:v,v,v,v,v;S2@3:...` | readings, name@channel, per sensor: tilt,g,T,n,fail |
+| slave → | `A;<mac>;<ch>;<kind>;<sev>;<value>` | **spontaneous** threshold alert |
+| slave → | `B;<mac>;<ch>;<bx>,<by>,<bz>` | **spontaneous** baseline capture (master uploads it) |
+
+All frames except `A;` and `B;` are **master-initiated**: the master asks, the slave
+answers, so there's exactly one transmitter at a time. The `A;`/`B;` frames are the
+exception — the slave sends them **on its own** (alert trip / finished baseline capture),
+without waiting to be asked.
+
+**Caveat (accepted for v1):** RS-485 is half-duplex — only one node may
+transmit at once. If a slave's spontaneous `A;`/`B;` happens to collide with the
+master's own poll on the wire, both frames garble and that one alert can be
+lost (it never reaches the cloud). This is acceptable because:
+
+- The **local buzzer already fired** — the frame is only "tell the app too";
+  the on-site safety floor doesn't depend on it.
+- It's rare: polls are ~1/s, and the collision window is the few ms the two
+  transmissions overlap.
+- **Readings are unaffected** — a collision just means the master's next poll
+  is garbled and retried, as it already handles.
+
+A future refinement (if wanted): a small random back-off before sending `A;`,
+or a retry-until-acked scheme — not a v1 blocker.
+
 ### 9.1 Master→Supabase batching
 - Bundle readings and POST every ~5 s (not one request per second) over a
   **reused** HTTPS connection (keep-alive). A warm batch POST is ~200 ms,
@@ -324,6 +366,16 @@ screaming = loudest coverage and the clearest "something near you is wrong."
 - The engineer-set threshold is configured per pipe/site (in the app) and
   pushed down to nodes; each node caches it in NVS and applies it to its own
   sensors.
+- **Always controllable from the app, in real time.** An engineer opens the
+  app, changes the threshold, and every node picks it up within a short
+  window — no re-flash, no field visit. Mechanism: the gateway re-polls
+  `node_config` on a short interval (tens of seconds) and relays the value to
+  slaves over RS-485 so each node's *local* evaluation uses the newest
+  number. Honest tradeoff: this is polling, not push — app→node latency is
+  one poll interval (~10–30 s), which is effectively real-time for shoring
+  (a wall moves over hours, not seconds). True push (MQTT / long-poll) is a
+  possible later refinement but adds a broker dependency — not needed for
+  v1.
 
 **Why a buzzer on every node, not just the master:**
 - **Loudest coverage** — N buzzers along the wall >> 1 buzzer at the top.

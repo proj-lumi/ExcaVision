@@ -14,8 +14,9 @@ ports, and the top-fed power pass-through.
 
 ![Single vertical node assembly](./physical_build_single_node.svg)
 
-For the chain-level view showing direct male/female mating between modules,
-see [physical_build_node_chain.svg](./physical_build_node_chain.svg).
+For the chain-level view showing direct male/female mating between modules:
+
+![Node chain assembly](./physical_build_node_chain.svg)
 
 Each node is one vertical modular section with a total pitch of approximately
 **2.667 m**. The sensing span is 2.000 m, with 33.3 cm of blank/connector
@@ -133,7 +134,7 @@ than relying only on wire colors.
 Recommended use of one Ethernet cable for a sensor drop:
 
 | Cable pair | Conductors |
-|---|---|
+| --- | --- |
 | Pair 1 | `SDA` + `GND` |
 | Pair 2 | `SCL` + `GND` |
 | Pair 3 | `+5V` + `GND` |

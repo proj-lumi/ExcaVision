@@ -35,7 +35,7 @@ is needed.
   near a lower box hears that box's buzzer, not just the distant surface one;
   every box screaming = loudest coverage.
 
-### 2.2 Wiring (critical for reading quality — see [PHYSICAL_ARCHITECTURE_SPEC.md](./PHYSICAL_ARCHITECTURE_SPEC.md) for the full layout)
+### 2.2 Wiring (critical for reading quality — see [PHYSICAL_BUILD_SPEC.md](./PHYSICAL_BUILD_SPEC.md) for the full layout)
 
 - **TCA + ESP32 centered in the node's 2 m span**, with 4 sensors splayed
   symmetrically: two at ±0.5 m, two at ±1.0 m. **Max wire run is 1 m** (down

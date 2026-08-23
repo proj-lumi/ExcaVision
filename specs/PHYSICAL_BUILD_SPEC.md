@@ -1,8 +1,7 @@
 # ExcaVision Final Physical Build Spec
 
 > This is the authoritative reproducible physical form for the current
-> prototype. It supersedes older horizontal diagrams and spacing options in
-> `PHYSICAL_ARCHITECTURE_SPEC.md` where they differ.
+> prototype. It supersedes earlier horizontal layout and spacing options.
 
 ## 1. Final vertical module geometry
 
@@ -66,6 +65,10 @@ neighboring sensor**, including sensors belonging to different nodes.
 The same module geometry works when another module is attached above or
 below. The physical orientation must remain marked with `TOP/UPSTREAM` and
 `BOTTOM/DOWNSTREAM` arrows.
+
+Each module covers one vertical pitch (~2.667 m) on its pipe. Multiple pipes
+at a site are independent chains; each pipe has its own RS-485 bus and its own
+gateway at the surface, and the backend keys them by `pipe_id` under the site.
 
 ## 2. Recommended cheap materials
 

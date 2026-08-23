@@ -16,6 +16,7 @@ void updateLed();          // call every loop(): drive the LED for the current s
 void recomputeLedState();  // call when baseline/node state changes
 void setGateway(bool);           // set/clear the gateway flag AND persist to NVS
 bool toggleGateway();            // flip the gateway flag + persist; returns new state
+bool isThisGateway();            // true if this box is the master (used by RS-485)
 void saveGatewayToFlash();       // persist isGateway to NVS (Step 5)
 void loadGatewayFromFlash();     // restore isGateway from NVS at boot (Step 5)
 

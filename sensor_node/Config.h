@@ -31,6 +31,17 @@
 #define ALARM_GAP_MS  250    // buzzer gap between beeps
 #define BASELINE_COLLECT_SECONDS 30  // how long the press collects before zeroing (configurable)
 
+// --- RS-485 transport (feat/transport Phase A) ---
+#define RS485_TX_PIN 33         // DI — ESP32 UART TX to the transceiver
+#define RS485_RX_PIN 18         // RO — transceiver output to ESP32 UART RX
+#define RS485_DE_PIN 25         // direction: HIGH = transmit, LOW = receive
+#define RS485_BAUD  115200UL
+#define RS485_POLL_MS      1000UL  // master polls one slave per second
+#define RS485_RESP_TIMEOUT_MS 120UL  // master waits this long for a reply
+#define RS485_DISCOVER_MS  800UL  // discovery window for slave hellos
+#define RS485_MAX_SLAVES   16
+#define RS485_MAX_LINE     256
+
 // ---------------------------------------------------------------------------
 // Sensor definition table — the scalability knob.
 // Each entry: { name, TCA channel }. Add a line to add a sensor.
@@ -41,10 +52,10 @@ struct SensorDef {
 };
 
 const SensorDef SENSORS[] = {
-  { "S1", 7 },
-  { "S2", 5 },
-  { "S3", 3 },
-  { "S4", 1 },
+  { "S1", 7 },   // right, near  (0.5 m)
+  { "S2", 3 },   // left,  near  (0.5 m)
+  { "S3", 5 },   // right, far   (1.0 m)
+  { "S4", 1 },   // left,  far   (1.0 m)
 };
 const uint8_t NUM_SENSORS = sizeof(SENSORS) / sizeof(SENSORS[0]);
 
@@ -65,7 +76,13 @@ struct SensorNode {
   uint32_t bcount = 0;
   float    bx = 0, by = 0, bz = 0;         // this sensor's baseline (unit vector)
   bool     hasBaseline = false;
-  float    lastTilt = 0;                   // most recent averaged tilt (°), updated by Report each cycle
+  // Latest computed reading, refreshed by Report each cycle — this is what the
+  // RS-485 slave answers a poll with (and what a future stream would send).
+  float    lastTilt = 0;
+  float    lastMag  = 0;
+  float    lastTemp = 0;
+  uint32_t lastN    = 0;
+  uint32_t lastFail = 0;
 };
 
 extern SensorNode nodes[];   // defined in sensor_node.ino

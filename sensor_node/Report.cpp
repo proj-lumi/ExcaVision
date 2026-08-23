@@ -50,6 +50,9 @@ void formatSensorBlock(char* buf, uint8_t i) {
   if (!nodes[i].present || nodes[i].sampleCount == 0) {
     snprintf(buf, 40, " %6s %5s %5s %4d/%-3d", "--", "--", "--", 0, nodes[i].failCount);
     nodes[i].lastTilt = 0;   // no data this window -> no valid tilt to alarm on
+    nodes[i].lastMag = nodes[i].lastTemp = 0;
+    nodes[i].lastN = 0;
+    nodes[i].lastFail = nodes[i].failCount;   // keep the fail count visible
   } else {
     // mean raw counts -> g
     float gx = (float)nodes[i].sumX / nodes[i].sampleCount / COUNTS_PER_G;
@@ -57,6 +60,13 @@ void formatSensorBlock(char* buf, uint8_t i) {
     float gz = (float)nodes[i].sumZ / nodes[i].sampleCount / COUNTS_PER_G;
     float mag = sqrt(gx*gx + gy*gy + gz*gz);   // |g|, should be approx 1.000
     float tempC = nodes[i].mpu.readTemperatureC();
+
+    // Remember this cycle's values for anything that needs the latest reading
+    // (the Alarm module, and the RS-485 slave when it answers a poll).
+    nodes[i].lastMag  = mag;
+    nodes[i].lastTemp = tempC;
+    nodes[i].lastN    = nodes[i].sampleCount;
+    nodes[i].lastFail = nodes[i].failCount;
 
     // Tilt = angle between current and baseline gravity directions.
     // atan2(|cross|, dot) is numerically safe for the small angles we care

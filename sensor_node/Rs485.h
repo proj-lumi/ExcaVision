@@ -1,0 +1,23 @@
+#ifndef RS485_H
+#define RS485_H
+
+// RS-485 half-duplex transport (feat/transport Phase A).
+//
+// Every node runs the same firmware; the role is decided by the gateway flag:
+//   - MASTER (gateway): discovers slaves, polls each one, prints their readings.
+//   - SLAVE: computes its own readings as usual, answers polls with a
+//            MAC-tagged line of its latest per-sensor values.
+//
+// Frame format (ASCII lines, '\n' terminated):
+//   master -> "D"                      discover: who is on the bus?
+//   slave  -> "H:<mac>"                hello, I am <mac>
+//   master -> "P:<mac>"                poll that specific node
+//   slave  -> "R;<mac>;S<ch>:<tilt>,<g>,<T>,<n>,<fail>;S<ch>:...;..."
+//
+// All timing is non-blocking (millis()-driven), so the 100 Hz sensor loop,
+// the report table, and the alarm keep running normally while on the bus.
+
+void rs485Init();      // call once in setup(): configure DE pin + UART2
+void rs485Update();    // call every loop(): receive lines + master poll schedule
+
+#endif

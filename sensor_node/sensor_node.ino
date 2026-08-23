@@ -22,6 +22,7 @@
 #include "Baseline.h"
 #include "Identity.h"
 #include "Alarm.h"
+#include "Rs485.h"
 #include "Report.h"
 
 // ---------------------------------------------------------------------------
@@ -74,6 +75,8 @@ void setup() {
   digitalWrite(BUZZER_PIN, HIGH);
   delay(100);
   digitalWrite(BUZZER_PIN, LOW);
+
+  rs485Init();   // RS-485 link (feat/transport Phase A) — DE=25, TX=33, RX=18
 }
 
 // ---------------------------------------------------------------------------
@@ -86,6 +89,7 @@ void loop() {
   pollButton();      // field interface: button edge detection
   updateLed();       // drive the LED for the current state
   updateAlarm();     // drive the buzzer for the current alarm state (Step 7)
+  rs485Update();     // RS-485: receive lines + master poll schedule (Phase A)
 
   // ── Sample block: every 10 ms, read each present sensor and accumulate ──
   if (now - lastSample >= SAMPLE_INTERVAL_MS) {

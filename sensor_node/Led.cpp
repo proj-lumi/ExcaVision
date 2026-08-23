@@ -11,6 +11,10 @@ static bool     isGateway  = false;
 // NVS access for the gateway flag (internal).
 static Preferences gwPrefs;
 
+// True if this box is the gateway — the RS-485 module uses it to decide
+// whether it's the master (polls) or a slave (answers).
+bool isThisGateway() { return isGateway; }
+
 // Persist the gateway flag to ESP32 flash so a reboot restores the role.
 void saveGatewayToFlash() {
   gwPrefs.begin("gateway", false);

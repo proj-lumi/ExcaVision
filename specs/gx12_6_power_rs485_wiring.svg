@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1450" viewBox="0 0 2200 1450">
+  <title>ExcaVision GX12-6 power and RS-485 wiring</title>
+  <desc>Physical wiring diagram showing one GX12-6 male upstream connector, one GX12-6 female downstream connector, their parallel internal wiring to a MAX485, ESP32 power and common ground, and direct mating between adjacent nodes.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#263238"/></marker>
+    <style>
+      .title{font:700 34px Arial,sans-serif;fill:#102027}.sub{font:400 19px Arial,sans-serif;fill:#455a64}
+      .head{font:700 24px Arial,sans-serif;fill:#102027}.label{font:700 19px Arial,sans-serif;fill:#102027}
+      .body{font:400 18px Arial,sans-serif;fill:#263238}.small{font:400 15px Arial,sans-serif;fill:#455a64}
+      .panel{fill:#f8fafb;stroke:#90a4ae;stroke-width:2}.connector{fill:#e0f2f1;stroke:#00695c;stroke-width:4}
+      .male{fill:#bbdefb;stroke:#1565c0;stroke-width:3}.female{fill:#ffe0b2;stroke:#ef6c00;stroke-width:3}
+      .board{fill:#e3f2fd;stroke:#1565c0;stroke-width:3}.rs{fill:#fce4ec;stroke:#ad1457;stroke-width:3}
+      .power{stroke:#2e7d32;stroke-width:5;fill:none}.gnd{stroke:#455a64;stroke-width:5;stroke-dasharray:10 7;fill:none}
+      .bus{stroke:#1565c0;stroke-width:5;fill:none}.pinA{fill:#e3f2fd;stroke:#1565c0;stroke-width:2}.pinP{fill:#e8f5e9;stroke:#2e7d32;stroke-width:2}
+      .pinG{fill:#eceff1;stroke:#455a64;stroke-width:2}.direct{stroke:#6a1b9a;stroke-width:9;fill:none}
+      .warn{fill:#ffebee;stroke:#c62828;stroke-width:2}.ok{fill:#e8f5e9;stroke:#2e7d32;stroke-width:2}
+      .dot{fill:#fff;stroke:#263238;stroke-width:2}
+    </style>
+  </defs>
+  <rect width="2200" height="1450" fill="#fff"/>
+  <text x="55" y="55" class="title">GX12-6 — RS-485 + 5 V Direct-Mating Node Connection</text>
+  <text x="55" y="90" class="sub">One combined connector at each node end • no cable between modules • one transceiver per node • all contacts are pass-through</text>
+
+  <!-- Direct mating at top -->
+  <rect x="55" y="130" width="2090" height="330" rx="16" class="panel"/>
+  <text x="80" y="170" class="head">A. How two vertical nodes connect</text>
+  <rect x="150" y="230" width="430" height="120" rx="18" class="female"/>
+  <text x="365" y="270" text-anchor="middle" class="head">UPPER NODE</text>
+  <text x="365" y="305" text-anchor="middle" class="label">DOWNSTREAM • GX12-6 FEMALE</text>
+  <text x="365" y="332" text-anchor="middle" class="small">bottom of upper node</text>
+  <rect x="820" y="230" width="560" height="120" rx="18" class="connector"/>
+  <text x="1100" y="270" text-anchor="middle" class="head">DIRECT-MATING JOINT</text>
+  <text x="1100" y="305" text-anchor="middle" class="label">female ↔ male • NO CABLE</text>
+  <text x="1100" y="332" text-anchor="middle" class="small">pins touch when the modules slide together and lock</text>
+  <rect x="1620" y="230" width="430" height="120" rx="18" class="male"/>
+  <text x="1835" y="270" text-anchor="middle" class="head">LOWER NODE</text>
+  <text x="1835" y="305" text-anchor="middle" class="label">UPSTREAM • GX12-6 MALE</text>
+  <text x="1835" y="332" text-anchor="middle" class="small">top of lower node</text>
+  <path d="M580 290 L820 290" class="direct" marker-end="url(#arrow)"/><path d="M1380 290 L1620 290" class="direct" marker-end="url(#arrow)"/>
+  <text x="365" y="405" text-anchor="middle" class="small">upper node female contacts</text><text x="1835" y="405" text-anchor="middle" class="small">lower node male contacts</text>
+
+  <!-- Pinout -->
+  <rect x="55" y="500" width="690" height="820" rx="16" class="panel"/>
+  <text x="80" y="540" class="head">B. GX12-6 pinout (same logical pins on male and female)</text>
+  <text x="80" y="575" class="small">Number the contacts according to the chosen connector manufacturer's datasheet.</text>
+  <text x="80" y="598" class="small">This table is the ExcaVision signal assignment.</text>
+  <rect x="90" y="635" width="620" height="420" rx="14" class="connector"/>
+  <text x="120" y="680" class="label">GX12-6 contact</text><text x="330" y="680" class="label">Signal</text><text x="500" y="680" class="label">Connect inside node to</text>
+  <line x1="110" y1="700" x2="690" y2="700" stroke="#90a4ae"/>
+  <rect x="110" y="720" width="580" height="48" rx="7" class="pinA"/><text x="130" y="752" class="label">Pin 1</text><text x="330" y="752" class="body">RS-485 A</text><text x="500" y="752" class="body">MAX485 A</text>
+  <rect x="110" y="778" width="580" height="48" rx="7" class="pinA"/><text x="130" y="810" class="label">Pin 2</text><text x="330" y="810" class="body">RS-485 B</text><text x="500" y="810" class="body">MAX485 B</text>
+  <rect x="110" y="836" width="580" height="48" rx="7" class="pinP"/><text x="130" y="868" class="label">Pin 3</text><text x="330" y="868" class="body">+5 V</text><text x="500" y="868" class="body">local +5 V rail</text>
+  <rect x="110" y="894" width="580" height="48" rx="7" class="pinP"/><text x="130" y="926" class="label">Pin 4</text><text x="330" y="926" class="body">+5 V</text><text x="500" y="926" class="body">parallel +5 V contact</text>
+  <rect x="110" y="952" width="580" height="48" rx="7" class="pinG"/><text x="130" y="984" class="label">Pin 5</text><text x="330" y="984" class="body">GND</text><text x="500" y="984" class="body">common GND rail</text>
+  <rect x="110" y="1010" width="580" height="48" rx="7" class="pinG"/><text x="130" y="1042" class="label">Pin 6</text><text x="330" y="1042" class="body">GND</text><text x="500" y="1042" class="body">parallel GND contact</text>
+  <rect x="90" y="1090" width="620" height="170" rx="12" class="ok"/>
+  <text x="115" y="1130" class="label">Why duplicate pins?</text>
+  <text x="115" y="1162" class="body">Pins 3+4 share +5 V; pins 5+6 share GND.</text>
+  <text x="115" y="1192" class="body">This gives the daisy-chain power path two contacts.</text>
+  <text x="115" y="1222" class="small">Use the connector's actual current rating; do not assume all GX12-6 parts are equal.</text>
+
+  <!-- one node internal -->
+  <rect x="790" y="500" width="1355" height="820" rx="16" class="panel"/>
+  <text x="820" y="540" class="head">C. Inside one node: both connectors wire in parallel</text>
+  <text x="820" y="575" class="small">The top male and bottom female are not separate communication channels.</text>
+
+  <!-- connectors -->
+  <rect x="850" y="650" width="270" height="310" rx="18" class="male"/>
+  <text x="985" y="700" text-anchor="middle" class="head">TOP</text>
+  <text x="985" y="735" text-anchor="middle" class="label">GX12-6 MALE</text>
+  <text x="900" y="790" class="body">1 A</text><text x="900" y="830" class="body">2 B</text><text x="900" y="870" class="body">3/4 +5V</text><text x="900" y="910" class="body">5/6 GND</text>
+  <rect x="850" y="1010" width="270" height="220" rx="18" class="female"/>
+  <text x="985" y="1060" text-anchor="middle" class="head">BOTTOM</text>
+  <text x="985" y="1095" text-anchor="middle" class="label">GX12-6 FEMALE</text>
+  <text x="900" y="1150" class="body">1 A</text><text x="900" y="1190" class="body">2 B</text><text x="900" y="1230" class="body">3/4 +5V • 5/6 GND</text>
+
+  <!-- distribution -->
+  <rect x="1240" y="690" width="430" height="410" rx="18" class="connector"/>
+  <text x="1455" y="735" text-anchor="middle" class="head">LOCAL DISTRIBUTION</text>
+  <text x="1275" y="790" class="label">A terminal</text><text x="1455" y="790" class="body">top pin 1 + bottom pin 1</text>
+  <text x="1275" y="835" class="label">B terminal</text><text x="1455" y="835" class="body">top pin 2 + bottom pin 2</text>
+  <text x="1275" y="880" class="label">+5 V rail</text><text x="1455" y="880" class="body">pins 3/4 on both ends</text>
+  <text x="1275" y="925" class="label">GND rail</text><text x="1455" y="925" class="body">pins 5/6 on both ends</text>
+  <line x1="1280" y1="955" x2="1630" y2="955" stroke="#90a4ae"/>
+  <text x="1275" y="995" class="body">A/B → one MAX485 transceiver</text>
+  <text x="1275" y="1030" class="body">+5 V → ESP32 5V/VIN + sensors</text>
+  <text x="1275" y="1065" class="body">GND → ESP32/TCA/MPUs/MAX485</text>
+  <path d="M1120 805 L1240 805" class="bus" marker-end="url(#arrow)"/><path d="M1120 845 L1240 845" class="bus" marker-end="url(#arrow)"/><path d="M1120 885 L1240 885" class="power" marker-end="url(#arrow)"/><path d="M1120 925 L1240 925" class="gnd" marker-end="url(#arrow)"/>
+
+  <!-- boards -->
+  <rect x="1740" y="650" width="350" height="150" rx="16" class="rs"/>
+  <text x="1915" y="695" text-anchor="middle" class="head">MAX485 MODULE</text>
+  <text x="1770" y="735" class="body">A/B ← distribution A/B</text><text x="1770" y="770" class="body">GND ← common GND</text>
+  <rect x="1740" y="860" width="350" height="150" rx="16" class="board"/>
+  <text x="1915" y="905" text-anchor="middle" class="head">ESP32</text>
+  <text x="1770" y="945" class="body">5V/VIN ← +5V rail</text><text x="1770" y="980" class="body">GND ← common GND</text>
+  <path d="M1670 825 L1740 735" class="bus" marker-end="url(#arrow)"/><path d="M1670 925 L1740 945" class="power" marker-end="url(#arrow)"/><path d="M1670 965 L1740 980" class="gnd" marker-end="url(#arrow)"/>
+
+  <!-- warning -->
+  <rect x="1740" y="1050" width="350" height="200" rx="14" class="warn"/>
+  <text x="1765" y="1090" class="label">Important</text>
+  <text x="1765" y="1122" class="small">The pictured MAX485 board may</text>
+  <text x="1765" y="1147" class="small">output 5 V on RO. Confirm it is</text>
+  <text x="1765" y="1172" class="small">3.3 V-safe before GPIO18, or</text>
+  <text x="1765" y="1197" class="small">use a 3.3 V-compatible module.</text>
+
+  <text x="55" y="1385" class="label">Assembly sequence:</text>
+  <text x="270" y="1385" class="body">align guide rails → slide modules together → GX12-6 female/male contacts mate → latch/clamp carries mechanical load → test A/B/+5V/GND continuity before power.</text>
+</svg>

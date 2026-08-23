@@ -1,0 +1,176 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1650" viewBox="0 0 2400 1650">
+  <title>ExcaVision one-node wiring schematic</title>
+  <desc>Beginner wiring schematic for one ExcaVision node: ESP32, TCA9548A, four GY-521 MPU6050 boards over Cat6, button, LED and resistor, MAX485 RS-485, GX12-6 male and female direct-mating power and bus connectors, and mechanical securing notes.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#263238"/></marker>
+    <style>
+      .title{font:700 34px Arial,sans-serif;fill:#102027}.subtitle{font:400 19px Arial,sans-serif;fill:#455a64}
+      .section{font:700 23px Arial,sans-serif;fill:#102027}.label{font:700 18px Arial,sans-serif;fill:#102027}
+      .body{font:400 17px Arial,sans-serif;fill:#263238}.small{font:400 15px Arial,sans-serif;fill:#455a64}
+      .tiny{font:400 13px Arial,sans-serif;fill:#455a64}.pin{font:600 15px Arial,sans-serif;fill:#263238}
+      .panel{fill:#f8fafb;stroke:#90a4ae;stroke-width:2}.board{fill:#e3f2fd;stroke:#1565c0;stroke-width:3}
+      .tca{fill:#e8eaf6;stroke:#3949ab;stroke-width:3}.sensor{fill:#fff3e0;stroke:#ef6c00;stroke-width:3}
+      .rs{fill:#fce4ec;stroke:#ad1457;stroke-width:3}.gx{fill:#e0f2f1;stroke:#00695c;stroke-width:3}
+      .power{stroke:#2e7d32;stroke-width:4;fill:none}.gnd{stroke:#455a64;stroke-width:4;stroke-dasharray:9 6;fill:none}
+      .i2c{stroke:#6a1b9a;stroke-width:4;fill:none}.serial{stroke:#1565c0;stroke-width:4;fill:none}
+      .control{stroke:#ef6c00;stroke-width:4;fill:none}.pass{stroke:#00897b;stroke-width:5;fill:none}
+      .guide{stroke:#90a4ae;stroke-width:2;stroke-dasharray:6 6;fill:none}.warning{fill:#fff8e1;stroke:#f9a825;stroke-width:2}
+      .danger{fill:#ffebee;stroke:#c62828;stroke-width:2}.ok{fill:#e8f5e9;stroke:#2e7d32;stroke-width:2}
+      .table{fill:#fff;stroke:#b0bec5;stroke-width:1.5}.dash{stroke:#6a1b9a;stroke-width:3;stroke-dasharray:7 6;fill:none}
+    </style>
+  </defs>
+
+  <rect width="2400" height="1650" fill="#ffffff"/>
+  <text x="60" y="55" class="title">ExcaVision — One Node Wiring Schematic</text>
+  <text x="60" y="88" class="subtitle">Beginner reference • soldered/secured wiring • one TCA9548A • four GY-521 MPU6050 boards • one MAX485 • two direct-mating GX12-6 ports</text>
+
+  <!-- TOP: ESP32, TCA, sensor drops -->
+  <rect x="50" y="125" width="440" height="650" rx="16" class="panel"/>
+  <text x="75" y="165" class="section">1. ESP32 connections</text>
+  <rect x="85" y="195" width="370" height="510" rx="14" class="board"/>
+  <text x="270" y="235" text-anchor="middle" class="section">ESP32 DEV BOARD</text>
+  <text x="110" y="280" class="label">Power</text><text x="260" y="280" class="pin">5V/VIN ← GX12 pins 3/4</text>
+  <text x="260" y="305" class="pin">GND ← common ground</text>
+  <text x="110" y="350" class="label">I²C</text><text x="260" y="350" class="pin">GPIO 21 → SDA</text>
+  <text x="260" y="375" class="pin">GPIO 22 → SCL</text>
+  <text x="110" y="420" class="label">Button</text><text x="260" y="420" class="pin">GPIO 16 → button</text>
+  <text x="260" y="445" class="pin">button other side → GND</text>
+  <text x="110" y="490" class="label">LED</text><text x="260" y="490" class="pin">GPIO 23 → 220Ω → LED → GND</text>
+  <text x="110" y="560" class="label">RS-485</text><text x="260" y="560" class="pin">GPIO 33 (TX) → DI</text>
+  <text x="260" y="585" class="pin">GPIO 18 (RX) ← RO*</text>
+  <text x="260" y="610" class="pin">GPIO 25 → DE + RE tied together</text>
+  <text x="110" y="670" class="small">*RO must be 3.3 V-safe for ESP32 RX.</text>
+  <text x="110" y="695" class="small">See the MAX485 warning below.</text>
+
+  <rect x="530" y="125" width="480" height="650" rx="16" class="panel"/>
+  <text x="555" y="165" class="section">2. TCA9548A connections</text>
+  <rect x="565" y="195" width="410" height="260" rx="14" class="tca"/>
+  <text x="770" y="235" text-anchor="middle" class="section">TCA9548A BREAKOUT</text>
+  <text x="600" y="280" class="label">VIN/VCC</text><text x="790" y="280" class="pin">→ ESP32 3V3</text>
+  <text x="600" y="315" class="label">GND</text><text x="790" y="315" class="pin">→ common GND</text>
+  <text x="600" y="350" class="label">SDA</text><text x="790" y="350" class="pin">→ ESP32 GPIO 21</text>
+  <text x="600" y="385" class="label">SCL</text><text x="790" y="385" class="pin">→ ESP32 GPIO 22</text>
+  <text x="600" y="420" class="label">Address</text><text x="790" y="420" class="pin">0x70</text>
+  <text x="600" y="480" class="small">Host side: use VIN/VCC exactly as your</text>
+  <text x="600" y="502" class="small">breakout's datasheet specifies.</text>
+  <rect x="565" y="490" width="410" height="235" rx="14" class="ok"/>
+  <text x="585" y="525" class="label">TCA channel mapping</text>
+  <text x="600" y="565" class="pin">S1: SD7 + SC7 → MPU S1 SDA + SCL</text>
+  <text x="600" y="600" class="pin">S2: SD3 + SC3 → MPU S2 SDA + SCL</text>
+  <text x="600" y="635" class="pin">S3: SD5 + SC5 → MPU S3 SDA + SCL</text>
+  <text x="600" y="670" class="pin">S4: SD1 + SC1 → MPU S4 SDA + SCL</text>
+  <text x="600" y="705" class="small">SD = data (SDA) • SC = clock (SCL)</text>
+
+  <!-- sensor cables / board rows -->
+  <rect x="1050" y="125" width="690" height="650" rx="16" class="panel"/>
+  <text x="1075" y="165" class="section">3. TCA → MPU6050 sensor drops</text>
+  <text x="1075" y="195" class="small">One custom Cat6 cable per sensor • maximum 1 m • every cable carries SDA + SCL + VCC + GND</text>
+  <g>
+    <rect x="1080" y="225" width="630" height="100" rx="10" class="sensor"/>
+    <text x="1100" y="258" class="label">S1 / TCA ch7</text><text x="1100" y="286" class="body">SD7→SDA • SC7→SCL • +5V→VCC • GND→GND</text>
+    <text x="1100" y="310" class="small">GY-521: leave XDA, XCL, AD0, INT open</text>
+  </g>
+  <g>
+    <rect x="1080" y="345" width="630" height="100" rx="10" class="sensor"/>
+    <text x="1100" y="378" class="label">S2 / TCA ch3</text><text x="1100" y="406" class="body">SD3→SDA • SC3→SCL • +5V→VCC • GND→GND</text>
+    <text x="1100" y="430" class="small">GY-521: leave XDA, XCL, AD0, INT open</text>
+  </g>
+  <g>
+    <rect x="1080" y="465" width="630" height="100" rx="10" class="sensor"/>
+    <text x="1100" y="498" class="label">S3 / TCA ch5</text><text x="1100" y="526" class="body">SD5→SDA • SC5→SCL • +5V→VCC • GND→GND</text>
+    <text x="1100" y="550" class="small">GY-521: leave XDA, XCL, AD0, INT open</text>
+  </g>
+  <g>
+    <rect x="1080" y="585" width="630" height="100" rx="10" class="sensor"/>
+    <text x="1100" y="618" class="label">S4 / TCA ch1</text><text x="1100" y="646" class="body">SD1→SDA • SC1→SCL • +5V→VCC • GND→GND</text>
+    <text x="1100" y="670" class="small">GY-521: leave XDA, XCL, AD0, INT open</text>
+  </g>
+  <path d="M975 565 L1080 275" class="i2c"/><path d="M975 600 L1080 395" class="i2c"/><path d="M975 635 L1080 515" class="i2c"/><path d="M975 670 L1080 635" class="i2c"/>
+
+  <!-- Cat6 inset -->
+  <rect x="1760" y="125" width="590" height="650" rx="16" class="panel"/>
+  <text x="1785" y="165" class="section">4. Example Cat6 sensor pinout</text>
+  <text x="1785" y="195" class="small">Example T568B conductor colors; verify your cable before soldering.</text>
+  <rect x="1790" y="225" width="530" height="355" rx="12" class="table"/>
+  <text x="1810" y="260" class="label">Conductor</text><text x="2070" y="260" class="label">Signal</text><text x="2200" y="260" class="label">GY-521 pin</text>
+  <line x1="1805" y1="275" x2="2305" y2="275" stroke="#b0bec5"/>
+  <text x="1810" y="310" class="body">Orange/white</text><text x="2070" y="310" class="body">SDA</text><text x="2200" y="310" class="body">SDA</text>
+  <text x="1810" y="345" class="body">Orange</text><text x="2070" y="345" class="body">GND</text><text x="2200" y="345" class="body">one GND pad</text>
+  <text x="1810" y="380" class="body">Green/white</text><text x="2070" y="380" class="body">SCL</text><text x="2200" y="380" class="body">SCL</text>
+  <text x="1810" y="415" class="body">Green</text><text x="2070" y="415" class="body">GND</text><text x="2200" y="415" class="body">one GND pad</text>
+  <text x="1810" y="450" class="body">Blue/white</text><text x="2070" y="450" class="body">+5V</text><text x="2200" y="450" class="body">VCC</text>
+  <text x="1810" y="485" class="body">Blue</text><text x="2070" y="485" class="body">GND</text><text x="2200" y="485" class="body">one GND pad</text>
+  <text x="1810" y="520" class="body">Brown pair</text><text x="2070" y="520" class="body">spare</text><text x="2200" y="520" class="body">leave open</text>
+  <rect x="1790" y="605" width="530" height="120" rx="10" class="ok"/>
+  <text x="1810" y="640" class="label">Three GND wires → one GND pin</text>
+  <text x="1810" y="670" class="body">Join them in a soldered pigtail/terminal</text>
+  <text x="1810" y="697" class="body">at the sensor. They are parallel returns.</text>
+
+  <!-- LOWER: controls, RS485, GX12 -->
+  <rect x="50" y="820" width="500" height="390" rx="16" class="panel"/>
+  <text x="75" y="860" class="section">5. Button and LED</text>
+  <rect x="80" y="895" width="440" height="125" rx="12" class="table"/>
+  <text x="105" y="935" class="label">Button (no external resistor)</text>
+  <path d="M140 975 L300 975" class="control"/><circle cx="325" cy="975" r="25" fill="#fff" stroke="#ef6c00" stroke-width="4"/><path d="M350 975 L470 975" class="gnd"/>
+  <text x="120" y="1008" class="pin">GPIO16</text><text x="295" y="1040" class="small">momentary switch</text><text x="430" y="1008" class="pin">GND</text>
+  <rect x="80" y="1045" width="440" height="130" rx="12" class="table"/>
+  <text x="105" y="1085" class="label">LED</text>
+  <path d="M140 1130 L210 1130" class="control"/><rect x="210" y="1115" width="80" height="30" fill="#fff8e1" stroke="#f9a825" stroke-width="2"/><path d="M290 1130 L335 1130" class="control"/><path d="M335 1110 L335 1150 L375 1130z" fill="#ffcc80" stroke="#ef6c00" stroke-width="2"/><path d="M375 1130 L470 1130" class="gnd"/>
+  <text x="135" y="1160" class="pin">GPIO23</text><text x="220" y="1108" class="tiny">220Ω, ¼W</text><text x="392" y="1160" class="pin">GND</text>
+  <text x="105" y="1198" class="small">LED anode faces GPIO/resistor; cathode faces GND.</text>
+
+  <rect x="580" y="820" width="620" height="390" rx="16" class="panel"/>
+  <text x="605" y="860" class="section">6. ESP32 → pictured MAX485 module</text>
+  <rect x="620" y="895" width="540" height="225" rx="14" class="rs"/>
+  <text x="890" y="935" text-anchor="middle" class="section">MAX485 MODULE</text>
+  <text x="650" y="980" class="label">VCC</text><text x="820" y="980" class="body">→ +5V supply*</text>
+  <text x="650" y="1015" class="label">GND</text><text x="820" y="1015" class="body">→ common GND</text>
+  <text x="650" y="1050" class="label">DI</text><text x="820" y="1050" class="body">← ESP32 GPIO33 / TX</text>
+  <text x="650" y="1085" class="label">RO</text><text x="820" y="1085" class="body">→ ESP32 GPIO18 / RX*</text>
+  <text x="650" y="1120" class="label">DE + RE</text><text x="820" y="1120" class="body">tie together → GPIO25</text>
+  <rect x="620" y="1140" width="540" height="52" rx="8" class="danger"/>
+  <text x="640" y="1172" class="small">*Many MAX485 boards are 5 V logic. Do not feed 5 V RO into ESP32 RX.</text>
+
+  <rect x="1230" y="820" width="1120" height="390" rx="16" class="panel"/>
+  <text x="1255" y="860" class="section">7. One GX12-6 connector at each node end</text>
+  <rect x="1270" y="895" width="260" height="230" rx="14" class="gx"/>
+  <text x="1400" y="935" text-anchor="middle" class="section">UPSTREAM</text>
+  <text x="1400" y="968" text-anchor="middle" class="label">GX12-6 MALE</text>
+  <text x="1300" y="1010" class="body">1 A</text><text x="1300" y="1040" class="body">2 B</text><text x="1300" y="1070" class="body">3/4 +5V</text><text x="1300" y="1100" class="body">5/6 GND</text>
+  <rect x="2070" y="895" width="260" height="230" rx="14" class="gx"/>
+  <text x="2200" y="935" text-anchor="middle" class="section">DOWNSTREAM</text>
+  <text x="2200" y="968" text-anchor="middle" class="label">GX12-6 FEMALE</text>
+  <text x="2100" y="1010" class="body">1 A</text><text x="2100" y="1040" class="body">2 B</text><text x="2100" y="1070" class="body">3/4 +5V</text><text x="2100" y="1100" class="body">5/6 GND</text>
+  <rect x="1570" y="930" width="420" height="145" rx="12" class="ok"/>
+  <text x="1780" y="962" text-anchor="middle" class="label">LOCAL DISTRIBUTION</text>
+  <text x="1780" y="995" text-anchor="middle" class="body">A/B → MAX485 A/B</text>
+  <text x="1780" y="1025" text-anchor="middle" class="body">+5V → ESP32 5V/VIN + MPU VCC</text>
+  <text x="1780" y="1055" text-anchor="middle" class="body">GND → ESP32/TCA/MPU/MAX485</text>
+  <path d="M1530 1010 L1570 1010" class="pass" marker-end="url(#arrow)"/><path d="M1990 1010 L2070 1010" class="pass" marker-end="url(#arrow)"/>
+  <text x="1560" y="1148" class="small">Direct female ↔ male joint • no cable between nodes</text>
+  <text x="1560" y="1175" class="small">Both GX12-6 genders use the same pin numbering.</text>
+
+  <!-- LOWER full width securing and MAX485 warning -->
+  <rect x="50" y="1250" width="1120" height="335" rx="16" class="panel"/>
+  <text x="75" y="1290" class="section">8. How to secure everything</text>
+  <text x="85" y="1330" class="body">1. Solder ESP32→TCA→MAX485 wires to a small perfboard/carrier plate; mount boards on M2/M3 standoffs.</text>
+  <text x="85" y="1362" class="body">2. Use locking terminals or soldered pigtails for each MPU cable; label S1/S2/S3/S4 at both ends.</text>
+  <text x="85" y="1394" class="body">3. Screw each GY-521 into a small 3D-printed sensor bracket at its marked rail position.</text>
+  <text x="85" y="1426" class="body">4. Mount GX12-6 male/female panel connectors with their threaded nuts; use a keyed orientation.</text>
+  <text x="85" y="1458" class="body">5. Use cable glands, clamps, heat-shrink, ferrules, and a service loop; cable pull must not reach a solder joint.</text>
+  <text x="85" y="1490" class="body">6. Use PVC guide rails and a separate latch/clamp to carry module weight; the GX12 connector is not structural.</text>
+  <rect x="80" y="1510" width="1050" height="55" rx="8" class="warning"/>
+  <text x="100" y="1545" class="small">Never leave breadboards, loose Dupont jumpers, or friction-only header wires in the final node.</text>
+
+  <rect x="1200" y="1250" width="1150" height="335" rx="16" class="panel"/>
+  <text x="1225" y="1290" class="section">9. MAX485 safety check before soldering</text>
+  <rect x="1230" y="1320" width="1080" height="105" rx="10" class="danger"/>
+  <text x="1250" y="1355" class="label">The pictured board is commonly a 5 V MAX485 module.</text>
+  <text x="1250" y="1383" class="body">If VCC=5 V, measure RO while idle/receiving or check the exact datasheet. RO may reach 5 V.</text>
+  <text x="1250" y="1411" class="body">Use a 3.3 V-compatible transceiver (preferred), or a proper 5 V→3.3 V level shifter on RO.</text>
+  <text x="1225" y="1465" class="body">RS-485 bus side to GX12-6:</text>
+  <text x="1260" y="1498" class="label">MAX485 A → GX12 pin 1</text><text x="1580" y="1498" class="label">MAX485 B → GX12 pin 2</text>
+  <text x="1260" y="1532" class="label">MAX485 GND → GX12 pins 5/6</text><text x="1780" y="1532" class="label">+5V → GX12 pins 3/4</text>
+
+  <text x="60" y="1630" class="tiny">Before powering: check continuity, check for +5V-to-GND shorts, verify connector pin numbering from the chosen GX12-6 datasheet, and verify MAX485 logic compatibility.</text>
+</svg>

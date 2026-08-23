@@ -18,6 +18,16 @@ For the chain-level view showing direct male/female mating between modules:
 
 ![Node chain assembly](./physical_build_node_chain.svg)
 
+For the complete beginner electrical wiring diagram, see
+[one_node_wiring_schematic.svg](./one_node_wiring_schematic.svg) (PNG preview:
+[one_node_wiring_schematic.png](./one_node_wiring_schematic.png)).
+
+For conductor-level cable termination, see:
+- [cat6_sensor_cable_termination.svg](./cat6_sensor_cable_termination.svg) —
+  Cat6 colors → GY-521 → TCA channel.
+- [gx12_6_power_rs485_wiring.svg](./gx12_6_power_rs485_wiring.svg) — GX12-6
+  direct-mating power + RS-485 pass-through.
+
 Each node is one vertical modular section with a total pitch of approximately
 **2.667 m**. The sensing span is 2.000 m, with 33.3 cm of blank/connector
 space at both ends.
@@ -131,7 +141,9 @@ Use labels and keyed connectors to prevent that mistake.
 ### 3.1 MPU6050 cable: sensor pod ↔ TCA channel
 
 Each sensor gets its own short cable and connector. Use terminal labels rather
-than relying only on wire colors.
+than relying only on wire colors. See the clean visual wiring reference:
+[mpu6050_cat6_wiring.svg](./mpu6050_cat6_wiring.svg) (PNG preview:
+[mpu6050_cat6_wiring.png](./mpu6050_cat6_wiring.png)).
 
 Recommended use of one Ethernet cable for a sensor drop:
 

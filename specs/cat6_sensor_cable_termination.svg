@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2200" height="1450" viewBox="0 0 2200 1450">
+  <title>ExcaVision Cat6 sensor cable termination</title>
+  <desc>Physical conductor-level wiring for one Cat6 cable from a TCA9548A channel to a GY-521 MPU6050, repeated for four sensors.</desc>
+  <defs>
+    <style>
+      .title{font:700 34px Arial,sans-serif;fill:#102027}.sub{font:400 19px Arial,sans-serif;fill:#455a64}
+      .head{font:700 24px Arial,sans-serif;fill:#102027}.label{font:700 19px Arial,sans-serif;fill:#102027}
+      .body{font:400 18px Arial,sans-serif;fill:#263238}.small{font:400 15px Arial,sans-serif;fill:#455a64}
+      .panel{fill:#f8fafb;stroke:#90a4ae;stroke-width:2}.table{fill:#fff;stroke:#b0bec5;stroke-width:2}
+      .board{fill:#1565c0;stroke:#0d47a1;stroke-width:4}.tca{fill:#e8eaf6;stroke:#3949ab;stroke-width:4}
+      .req{fill:#e8f5e9;stroke:#2e7d32;stroke-width:2}.warn{fill:#fff8e1;stroke:#f9a825;stroke-width:2}
+      .danger{fill:#ffebee;stroke:#c62828;stroke-width:2}.sda{stroke:#ef6c00;stroke-width:5}.scl{stroke:#2e7d32;stroke-width:5}
+      .pwr{stroke:#1565c0;stroke-width:5}.gnd{stroke:#455a64;stroke-width:5;stroke-dasharray:10 7}
+      .spare{stroke:#90a4ae;stroke-width:4;stroke-dasharray:8 8}.wire{fill:none}
+      .ow{fill:#fff;stroke:#ef6c00;stroke-width:2}.o{fill:#f57c00;stroke:#bf360c;stroke-width:2}
+      .gw{fill:#fff;stroke:#2e7d32;stroke-width:2}.g{fill:#43a047;stroke:#1b5e20;stroke-width:2}
+      .bw{fill:#fff;stroke:#1565c0;stroke-width:2}.b{fill:#1976d2;stroke:#0d47a1;stroke-width:2}
+      .brw{fill:#fff;stroke:#6d4c41;stroke-width:2}.br{fill:#795548;stroke:#3e2723;stroke-width:2}
+    </style>
+  </defs>
+  <rect width="2200" height="1450" fill="#fff"/>
+  <text x="60" y="55" class="title">Cat6 Sensor Cable — Actual Conductor Termination</text>
+  <text x="60" y="90" class="sub">One custom Cat6 cable per GY-521 • maximum 1 m • strip and terminate both ends • this is NOT an Ethernet network cable</text>
+
+  <!-- left: cable conductors -->
+  <rect x="50" y="135" width="620" height="1040" rx="16" class="panel"/>
+  <text x="80" y="180" class="head">1. Strip one Cat6 cable</text>
+  <text x="80" y="215" class="small">Use the T568B conductor colors only as a labeling convention.</text>
+  <text x="80" y="240" class="small">The RJ45 standard is not being used; do not plug this into a switch.</text>
+
+  <rect x="90" y="285" width="540" height="720" rx="14" class="table"/>
+  <text x="115" y="325" class="label">Cat6 conductor</text><text x="360" y="325" class="label">Signal</text><text x="505" y="325" class="label">GY-521 pin</text>
+  <line x1="110" y1="345" x2="610" y2="345" stroke="#b0bec5"/>
+
+  <rect x="115" y="365" width="35" height="35" class="ow"/><text x="165" y="390" class="body">orange/white</text><text x="360" y="390" class="body">SDA</text><text x="505" y="390" class="body">SDA</text>
+  <rect x="115" y="430" width="35" height="35" class="o"/><text x="165" y="455" class="body">orange</text><text x="360" y="455" class="body">GND</text><text x="505" y="455" class="body">GND</text>
+  <rect x="115" y="495" width="35" height="35" class="gw"/><text x="165" y="520" class="body">green/white</text><text x="360" y="520" class="body">SCL</text><text x="505" y="520" class="body">SCL</text>
+  <rect x="115" y="560" width="35" height="35" class="g"/><text x="165" y="585" class="body">green</text><text x="360" y="585" class="body">GND</text><text x="505" y="585" class="body">GND</text>
+  <rect x="115" y="625" width="35" height="35" class="bw"/><text x="165" y="650" class="body">blue/white</text><text x="360" y="650" class="body">+5V</text><text x="505" y="650" class="body">VCC</text>
+  <rect x="115" y="690" width="35" height="35" class="b"/><text x="165" y="715" class="body">blue</text><text x="360" y="715" class="body">GND</text><text x="505" y="715" class="body">GND</text>
+  <rect x="115" y="755" width="35" height="35" class="brw"/><text x="165" y="780" class="body">brown/white</text><text x="360" y="780" class="body">spare</text><text x="505" y="780" class="body">open</text>
+  <rect x="115" y="820" width="35" height="35" class="br"/><text x="165" y="845" class="body">brown</text><text x="360" y="845" class="body">spare</text><text x="505" y="845" class="body">open</text>
+
+  <rect x="115" y="900" width="480" height="80" rx="10" class="req"/>
+  <text x="135" y="932" class="label">At the GY-521 end:</text>
+  <text x="135" y="962" class="body">three GND conductors are joined to the one GND pad.</text>
+  <text x="135" y="1000" class="small">Use solder + heat-shrink or a small locking terminal.</text>
+
+  <!-- middle: cable to sensor -->
+  <rect x="720" y="135" width="690" height="1040" rx="16" class="panel"/>
+  <text x="750" y="180" class="head">2. Terminate the GY-521 end</text>
+  <text x="750" y="215" class="small">Solder or use a locking 4+ pin connector — never loose jumper wires.</text>
+
+  <rect x="790" y="300" width="520" height="610" rx="18" class="board"/>
+  <text x="1050" y="350" text-anchor="middle" fill="#fff" style="font:700 25px Arial">GY-521 / MPU6050</text>
+  <text x="1050" y="380" text-anchor="middle" fill="#dbeafe" style="font:400 16px Arial">Use only these four pins</text>
+  <rect x="850" y="445" width="400" height="65" rx="10" class="ow"/><text x="875" y="487" class="label">SDA</text><text x="1080" y="487" class="body">← orange/white</text>
+  <rect x="850" y="535" width="400" height="65" rx="10" class="o"/><text x="875" y="577" class="label">GND</text><text x="1080" y="577" class="body">← orange + green + blue</text>
+  <rect x="850" y="625" width="400" height="65" rx="10" class="gw"/><text x="875" y="667" class="label">SCL</text><text x="1080" y="667" class="body">← green/white</text>
+  <rect x="850" y="715" width="400" height="65" rx="10" class="bw"/><text x="875" y="757" class="label">VCC</text><text x="1080" y="757" class="body">← blue/white (+5V)</text>
+  <rect x="850" y="825" width="400" height="55" rx="10" class="danger"/>
+  <text x="875" y="858" class="body">XDA, XCL, AD0, INT = leave open</text>
+
+  <!-- middle lower instruction -->
+  <rect x="760" y="950" width="600" height="145" rx="12" class="warn"/>
+  <text x="785" y="985" class="label">Make a small soldered pigtail:</text>
+  <text x="785" y="1015" class="body">orange + green + blue → one GND wire → GY-521 GND</text>
+  <text x="785" y="1045" class="body">Protect every joint with heat-shrink.</text>
+  <text x="785" y="1075" class="small">Add a strain clamp near the board so cable tension cannot hit the pads.</text>
+
+  <!-- right: TCA end -->
+  <rect x="1460" y="135" width="690" height="1040" rx="16" class="panel"/>
+  <text x="1490" y="180" class="head">3. Terminate the TCA/enclosure end</text>
+  <text x="1490" y="215" class="small">Repeat this same cable four times; only the TCA channel changes.</text>
+  <rect x="1510" y="275" width="590" height="300" rx="16" class="tca"/>
+  <text x="1805" y="320" text-anchor="middle" class="head">TCA9548A BREAKOUT</text>
+  <text x="1545" y="365" class="label">Host SDA/SCL</text><text x="1800" y="365" class="body">→ ESP32 GPIO21 / GPIO22</text>
+  <text x="1545" y="405" class="label">TCA VIN/3V3</text><text x="1800" y="405" class="body">→ ESP32 3V3</text>
+  <text x="1545" y="445" class="label">TCA GND</text><text x="1800" y="445" class="body">→ common GND</text>
+  <text x="1545" y="485" class="label">Address</text><text x="1800" y="485" class="body">0x70</text>
+  <text x="1545" y="535" class="small">Each SDx/SCx pair is one sensor's SDA/SCL.</text>
+
+  <rect x="1510" y="625" width="590" height="330" rx="16" class="table"/>
+  <text x="1540" y="670" class="label">At the Cat6 terminal block</text>
+  <text x="1540" y="715" class="body">S1 cable: SDA → SD7 • SCL → SC7</text>
+  <text x="1540" y="755" class="body">S2 cable: SDA → SD3 • SCL → SC3</text>
+  <text x="1540" y="795" class="body">S3 cable: SDA → SD5 • SCL → SC5</text>
+  <text x="1540" y="835" class="body">S4 cable: SDA → SD1 • SCL → SC1</text>
+  <line x1="1535" y1="860" x2="2075" y2="860" stroke="#b0bec5"/>
+  <text x="1540" y="900" class="body">All cable +5V wires → +5V distribution → ESP32 5V/VIN</text>
+  <text x="1540" y="935" class="body">All cable GND wires → common GND → ESP32/TCA/MAX485</text>
+
+  <rect x="1510" y="1000" width="590" height="125" rx="12" class="danger"/>
+  <text x="1535" y="1035" class="label">Custom cable warning</text>
+  <text x="1535" y="1065" class="body">Label both ends. Never connect this cable to a network switch,</text>
+  <text x="1535" y="1092" class="body">router, PoE injector, or normal Ethernet equipment.</text>
+
+  <text x="60" y="1325" class="label">Physical termination order:</text>
+  <text x="60" y="1360" class="body">1. Cut one cable to ≤1 m → 2. Strip outer jacket → 3. Separate and label colors → 4. Join three GND wires at the sensor end → 5. Solder/terminate both ends → 6. Heat-shrink → 7. Clamp for strain relief → 8. Continuity-test before power.</text>
+  <text x="60" y="1405" class="small">This diagram defines a custom point-to-point sensor cable, not an Ethernet protocol connection.</text>
+</svg>

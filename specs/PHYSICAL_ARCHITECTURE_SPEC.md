@@ -5,6 +5,13 @@
 > sits between the electrical design ([NODE_SPEC.md](./NODE_SPEC.md) §2) and
 > the data hierarchy ([BACKEND_SPEC.md](./BACKEND_SPEC.md) §2).
 > Cross-refs: [NODE_SPEC.md](./NODE_SPEC.md), [BACKEND_SPEC.md](./BACKEND_SPEC.md).
+>
+> **Final-build override:** the current reproducible hardware form is defined
+> in [PHYSICAL_BUILD_SPEC.md](./PHYSICAL_BUILD_SPEC.md). It supersedes the
+> older horizontal diagrams, 0.5/1.0 m sensor placement, 2.0–3.0 m spacing
+> options, and local-power alternatives below where they differ. The locked
+> form is vertical, 2.667 m module pitch, 66.67 cm sensor spacing, top-fed
+> 5 V for up to three nodes, and `UPSTREAM`/`DOWNSTREAM` RS-485 connectors.
 
 ## 1. Revised node layout — TCA + ESP32 in the center
 

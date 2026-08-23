@@ -1,198 +1,72 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="2700" viewBox="0 0 1600 2700">
-  <title>ExcaVision single vertical sensor node assembly</title>
-  <desc>One 2.667 metre vertical module with four sensors spaced 66.67 centimetres apart, central ESP32 and TCA enclosure, one RS-485 transceiver, and direct-mating GX12-6 male/female combined RS-485 and power connectors.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1800" viewBox="0 0 1200 1800">
+  <title>ExcaVision single vertical node layout</title>
   <defs>
-    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#263238"/>
-    </marker>
-    <marker id="blueArrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1565c0"/>
-    </marker>
-    <marker id="greenArrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2e7d32"/>
-    </marker>
     <style>
-      .title { font: 700 34px Arial, sans-serif; fill: #102027; }
-      .subtitle { font: 400 20px Arial, sans-serif; fill: #455a64; }
-      .label { font: 700 22px Arial, sans-serif; fill: #102027; }
-      .small { font: 400 18px Arial, sans-serif; fill: #37474f; }
-      .tiny { font: 400 16px Arial, sans-serif; fill: #455a64; }
-      .dim { font: 700 18px Arial, sans-serif; fill: #263238; }
-      .boxtext { font: 700 18px Arial, sans-serif; fill: #102027; }
-      .pin { font: 600 16px Arial, sans-serif; fill: #263238; }
-      .rail { fill: #eceff1; stroke: #455a64; stroke-width: 5; }
-      .blank { fill: #fafafa; stroke: #b0bec5; stroke-width: 2; stroke-dasharray: 8 8; }
-      .sensor { fill: #fff3e0; stroke: #ef6c00; stroke-width: 4; }
-      .electronics { fill: #e3f2fd; stroke: #1565c0; stroke-width: 4; }
-      .board { fill: #ffffff; stroke: #1976d2; stroke-width: 2; }
-      .terminal { fill: #fffde7; stroke: #827717; stroke-width: 2; }
-      .port { fill: #263238; stroke: #102027; stroke-width: 3; }
-      .wireI2C { fill: none; stroke: #8e24aa; stroke-width: 5; stroke-dasharray: 13 8; }
-      .wirePower { fill: none; stroke: #2e7d32; stroke-width: 6; }
-      .wire485 { fill: none; stroke: #1565c0; stroke-width: 6; }
-      .wireGnd { fill: none; stroke: #455a64; stroke-width: 5; stroke-dasharray: 8 6; }
-      .dimension { fill: none; stroke: #263238; stroke-width: 3; marker-start: url(#arrow); marker-end: url(#arrow); }
-      .guide { fill: none; stroke: #90a4ae; stroke-width: 2; stroke-dasharray: 7 7; }
+      .title{font:700 32px Arial;fill:#102027}.sub{font:400 18px Arial;fill:#455a64}
+      .h{font:700 22px Arial;fill:#102027}.txt{font:400 18px Arial;fill:#263238}.small{font:400 15px Arial;fill:#455a64}
+      .rail{fill:#eceff1;stroke:#455a64;stroke-width:4}.sensor{fill:#fff3e0;stroke:#ef6c00;stroke-width:3}
+      .box{fill:#e3f2fd;stroke:#1565c0;stroke-width:3}.male{fill:#bbdefb;stroke:#1565c0;stroke-width:3}
+      .female{fill:#ffe0b2;stroke:#ef6c00;stroke-width:3}.dim{stroke:#263238;stroke-width:2;marker-start:url(#a);marker-end:url(#a);fill:none}
+      .guide{stroke:#90a4ae;stroke-width:2;stroke-dasharray:7 7;fill:none}
     </style>
+    <marker id="a" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#263238"/></marker>
   </defs>
+  <rect width="1200" height="1800" fill="white"/>
+  <text x="50" y="55" class="title">One ExcaVision Node — Vertical Physical Layout</text>
+  <text x="50" y="88" class="sub">One 2.667 m module • sensor spacing is 66.67 cm everywhere, including between modules</text>
 
-  <rect width="1600" height="2700" fill="#ffffff"/>
-  <text x="80" y="65" class="title">ExcaVision — One Vertical Node Module</text>
-  <text x="80" y="100" class="subtitle">2.667 m pitch • 66.67 cm sensor spacing • GX12-6 direct mate • no cable between nodes</text>
+  <rect x="310" y="150" width="180" height="1450" rx="18" class="rail"/>
+  <text x="400" y="130" text-anchor="middle" class="h">PVC rail / conduit</text>
+  <text x="400" y="1640" text-anchor="middle" class="small">clamp rail so it cannot slide or rotate</text>
 
-  <!-- Main vertical rail -->
-  <rect x="285" y="170" width="150" height="2370" rx="18" class="rail"/>
-  <text x="360" y="150" text-anchor="middle" class="label">PVC rail / conduit</text>
-  <text x="360" y="2575" text-anchor="middle" class="tiny">rigid, clamped so it cannot rotate or slide</text>
+  <rect x="275" y="150" width="250" height="46" rx="9" class="male"/>
+  <text x="400" y="180" text-anchor="middle" class="h">UPSTREAM • GX12-6 MALE</text>
+  <rect x="345" y="208" width="110" height="170" class="guide"/>
+  <text x="400" y="300" text-anchor="middle" class="txt">33.3 cm</text>
+  <text x="400" y="326" text-anchor="middle" class="small">blank end</text>
 
-  <!-- Top and bottom blank sections -->
-  <rect x="310" y="210" width="100" height="300" class="blank"/>
-  <rect x="310" y="2200" width="100" height="300" class="blank"/>
-  <text x="465" y="365" class="small">33.3 cm blank end</text>
-  <text x="465" y="2370" class="small">33.3 cm blank end</text>
+  <circle cx="400" cy="430" r="48" class="sensor"/><text x="400" y="424" text-anchor="middle" class="h">S1</text><text x="400" y="449" text-anchor="middle" class="small">ch7</text>
+  <circle cx="400" cy="730" r="48" class="sensor"/><text x="400" y="724" text-anchor="middle" class="h">S2</text><text x="400" y="749" text-anchor="middle" class="small">ch3</text>
 
-  <!-- Port blocks -->
-  <rect x="255" y="170" width="210" height="42" rx="8" class="port"/>
-  <text x="360" y="198" text-anchor="middle" fill="#ffffff" style="font:700 15px Arial">UPSTREAM • GX12-6 MALE</text>
-  <rect x="255" y="2500" width="210" height="42" rx="8" class="port"/>
-  <text x="360" y="2528" text-anchor="middle" fill="#ffffff" style="font:700 15px Arial">DOWNSTREAM • GX12-6 FEMALE</text>
+  <rect x="330" y="825" width="140" height="150" rx="12" class="box"/>
+  <text x="400" y="865" text-anchor="middle" class="h">CENTER</text>
+  <text x="400" y="895" text-anchor="middle" class="txt">ESP32</text>
+  <text x="400" y="922" text-anchor="middle" class="txt">TCA</text>
+  <text x="400" y="949" text-anchor="middle" class="txt">MAX485</text>
 
-  <!-- Sensor pods -->
-  <g>
-    <circle cx="360" cy="510" r="43" class="sensor"/>
-    <text x="360" y="502" text-anchor="middle" class="label">S1</text>
-    <text x="360" y="528" text-anchor="middle" class="tiny">ch7</text>
-    <text x="455" y="496" class="label">MPU6050 sensor pod</text>
-    <text x="455" y="524" class="small">fixed at 0.333 m</text>
-  </g>
-  <g>
-    <circle cx="360" cy="1110" r="43" class="sensor"/>
-    <text x="360" y="1102" text-anchor="middle" class="label">S2</text>
-    <text x="360" y="1128" text-anchor="middle" class="tiny">ch3</text>
-    <text x="455" y="1096" class="label">MPU6050 sensor pod</text>
-    <text x="455" y="1124" class="small">fixed at 1.000 m</text>
-  </g>
-  <g>
-    <circle cx="360" cy="1710" r="43" class="sensor"/>
-    <text x="360" y="1702" text-anchor="middle" class="label">S3</text>
-    <text x="360" y="1728" text-anchor="middle" class="tiny">ch5</text>
-    <text x="455" y="1696" class="label">MPU6050 sensor pod</text>
-    <text x="455" y="1724" class="small">fixed at 1.667 m</text>
-  </g>
-  <g>
-    <circle cx="360" cy="2310" r="43" class="sensor"/>
-    <text x="360" y="2302" text-anchor="middle" class="label">S4</text>
-    <text x="360" y="2328" text-anchor="middle" class="tiny">ch1</text>
-    <text x="455" y="2296" class="label">MPU6050 sensor pod</text>
-    <text x="455" y="2324" class="small">fixed at 2.333 m</text>
-  </g>
+  <circle cx="400" cy="1075" r="48" class="sensor"/><text x="400" y="1069" text-anchor="middle" class="h">S3</text><text x="400" y="1094" text-anchor="middle" class="small">ch5</text>
+  <circle cx="400" cy="1375" r="48" class="sensor"/><text x="400" y="1369" text-anchor="middle" class="h">S4</text><text x="400" y="1394" text-anchor="middle" class="small">ch1</text>
 
-  <!-- Sensor cable drops to center enclosure, schematic paths -->
-  <path d="M 403 510 C 540 510, 565 1190, 670 1190" class="wireI2C"/>
-  <path d="M 403 1110 C 520 1110, 570 1230, 670 1230" class="wireI2C"/>
-  <path d="M 403 1710 C 520 1710, 570 1370, 670 1370" class="wireI2C"/>
-  <path d="M 403 2310 C 540 2310, 565 1410, 670 1410" class="wireI2C"/>
-  <text x="520" y="750" class="small" fill="#8e24aa">four separate Cat5e/Cat6 drops</text>
-  <text x="520" y="778" class="tiny" fill="#8e24aa">each ≤ 1 m • strain-relieved at both ends</text>
+  <rect x="345" y="1427" width="110" height="145" class="guide"/>
+  <text x="400" y="1502" text-anchor="middle" class="txt">33.3 cm</text>
+  <text x="400" y="1528" text-anchor="middle" class="small">blank end</text>
+  <rect x="275" y="1554" width="250" height="46" rx="9" class="female"/>
+  <text x="400" y="1584" text-anchor="middle" class="h">DOWNSTREAM • GX12-6 FEMALE</text>
 
-  <!-- Center enclosure -->
-  <rect x="650" y="1030" width="470" height="570" rx="22" class="electronics"/>
-  <text x="885" y="1070" text-anchor="middle" class="label">CENTER IP65 ENCLOSURE</text>
-  <text x="885" y="1098" text-anchor="middle" class="small">screwed/clamped at approximately 1.333 m</text>
+  <line x1="160" y1="150" x2="160" y2="430" class="dim"/><text x="130" y="300" text-anchor="middle" transform="rotate(-90 130 300)" class="txt">33.3 cm</text>
+  <line x1="210" y1="430" x2="210" y2="730" class="dim"/><text x="180" y="580" text-anchor="middle" transform="rotate(-90 180 580)" class="txt">66.67 cm</text>
+  <line x1="210" y1="730" x2="210" y2="1075" class="dim"/><text x="180" y="900" text-anchor="middle" transform="rotate(-90 180 900)" class="small">center electronics zone</text>
+  <line x1="210" y1="1075" x2="210" y2="1375" class="dim"/><text x="180" y="1225" text-anchor="middle" transform="rotate(-90 180 1225)" class="txt">66.67 cm</text>
+  <line x1="80" y1="150" x2="80" y2="1600" class="dim"/><text x="55" y="875" text-anchor="middle" transform="rotate(-90 55 875)" class="txt">2.667 m module pitch</text>
 
-  <!-- internal boards -->
-  <rect x="695" y="1140" width="175" height="120" rx="10" class="board"/>
-  <text x="782" y="1190" text-anchor="middle" class="boxtext">ESP32</text>
-  <text x="782" y="1218" text-anchor="middle" class="pin">I²C: SDA21 / SCL22</text>
-  <text x="782" y="1244" text-anchor="middle" class="pin">RS485: TX33 / RX18</text>
-
-  <rect x="895" y="1140" width="175" height="120" rx="10" class="board"/>
-  <text x="982" y="1190" text-anchor="middle" class="boxtext">TCA9548A</text>
-  <text x="982" y="1218" text-anchor="middle" class="pin">address 0x70</text>
-  <text x="982" y="1244" text-anchor="middle" class="pin">S1=7 S2=3 S3=5 S4=1</text>
-
-  <rect x="695" y="1300" width="175" height="120" rx="10" class="board"/>
-  <text x="782" y="1350" text-anchor="middle" class="boxtext">RS-485 MODULE</text>
-  <text x="782" y="1378" text-anchor="middle" class="pin">DI ← GPIO33</text>
-  <text x="782" y="1404" text-anchor="middle" class="pin">RO → GPIO18</text>
-
-  <rect x="895" y="1300" width="175" height="120" rx="10" class="terminal"/>
-  <text x="982" y="1347" text-anchor="middle" class="boxtext">DISTRIBUTION</text>
-  <text x="982" y="1375" text-anchor="middle" class="pin">A / B / GND</text>
-  <text x="982" y="1401" text-anchor="middle" class="pin">+5V / GND</text>
-
-  <rect x="695" y="1460" width="375" height="90" rx="10" class="terminal"/>
-  <text x="882" y="1497" text-anchor="middle" class="boxtext">SOLDERED / SECURED CONNECTIONS ONLY</text>
-  <text x="882" y="1528" text-anchor="middle" class="pin">standoffs • ferrules/locking plugs • cable glands • strain relief</text>
-
-  <!-- internal wiring -->
-  <path d="M 870 1190 L 895 1190" class="wireI2C"/>
-  <path d="M 782 1260 L 782 1300" class="wire485"/>
-  <path d="M 870 1360 L 895 1360" class="wire485"/>
-  <path d="M 982 1260 L 982 1300" class="wirePower"/>
-  <path d="M 870 1470 L 870 1420" class="wireGnd"/>
-
-  <!-- external trunk pass-through -->
-  <path d="M 465 190 L 590 190 L 590 1360 L 695 1360" class="wire485"/>
-  <path d="M 465 2520 L 560 2520 L 560 1375 L 695 1375" class="wire485"/>
-  <path d="M 465 215 L 520 215 L 520 1450 L 895 1450" class="wirePower"/>
-  <path d="M 465 2505 L 500 2505 L 500 1475 L 895 1475" class="wireGnd"/>
-  <text x="510" y="1840" transform="rotate(-90 510 1840)" class="small" fill="#1565c0">RS-485 A/B/GND shared bus</text>
-  <text x="475" y="1840" transform="rotate(-90 475 1840)" class="small" fill="#2e7d32">top-fed +5V/GND pass-through</text>
-
-  <!-- dimensions -->
-  <line x1="130" y1="210" x2="130" y2="510" class="dimension"/>
-  <text x="108" y="370" text-anchor="middle" transform="rotate(-90 108 370)" class="dim">33.3 cm</text>
-
-  <line x1="175" y1="510" x2="175" y2="1110" class="dimension"/>
-  <text x="153" y="810" text-anchor="middle" transform="rotate(-90 153 810)" class="dim">66.67 cm</text>
-  <line x1="175" y1="1110" x2="175" y2="1710" class="dimension"/>
-  <text x="153" y="1410" text-anchor="middle" transform="rotate(-90 153 1410)" class="dim">66.67 cm</text>
-  <line x1="175" y1="1710" x2="175" y2="2310" class="dimension"/>
-  <text x="153" y="2010" text-anchor="middle" transform="rotate(-90 153 2010)" class="dim">66.67 cm</text>
-  <line x1="130" y1="2310" x2="130" y2="2500" class="dimension"/>
-  <text x="108" y="2410" text-anchor="middle" transform="rotate(-90 108 2410)" class="dim">33.3 cm</text>
-
-  <line x1="90" y1="210" x2="90" y2="2500" class="dimension"/>
-  <text x="62" y="1355" text-anchor="middle" transform="rotate(-90 62 1355)" class="dim">2.667 m module pitch</text>
-
-  <!-- center and max cable dimension -->
-  <line x1="1160" y1="1110" x2="1160" y2="1320" class="dimension"/>
-  <text x="1192" y="1215" class="dim">0.333 m</text>
-  <line x1="1160" y1="1320" x2="1160" y2="1710" class="dimension"/>
-  <text x="1192" y="1530" class="dim">0.333 m</text>
-  <line x1="1240" y1="510" x2="1240" y2="1320" class="dimension"/>
-  <text x="1272" y="950" class="dim">1.000 m max</text>
-  <text x="1272" y="978" class="small">TCA → S1/S4 cable distance</text>
-  <text x="1272" y="1010" class="small">GX12-6 joints mate directly — no wire</text>
-
-  <!-- external callouts -->
-  <path d="M 1120 1120 L 1370 1120" class="guide"/>
-  <text x="1390" y="1128" class="label">One transceiver per node</text>
-  <text x="1390" y="1158" class="small">A/B/GND = shared bus</text>
-  <text x="1390" y="1185" class="small">UPSTREAM = GX12-6 male</text>
-  <text x="1390" y="1212" class="small">DOWNSTREAM = GX12-6 female</text>
-  <text x="1390" y="1239" class="small">direct mate • no wire between nodes</text>
-  <text x="1390" y="1266" class="small">pins: 1=A 2=B 3/4=+5V 5/6=GND</text>
-
-  <path d="M 1120 1450 L 1370 1450" class="guide"/>
-  <text x="1390" y="1458" class="label">Secure mechanically</text>
-  <text x="1390" y="1488" class="small">screws + standoffs inside box</text>
-  <text x="1390" y="1515" class="small">locking connectors or ferrules</text>
-  <text x="1390" y="1542" class="small">glands and strain relief</text>
-
-  <!-- legend -->
-  <rect x="1190" y="1800" width="340" height="300" rx="14" fill="#f5f5f5" stroke="#b0bec5" stroke-width="2"/>
-  <text x="1215" y="1840" class="label">Connection legend</text>
-  <line x1="1220" y1="1880" x2="1290" y2="1880" class="wireI2C"/>
-  <text x="1310" y="1887" class="small">sensor I²C cable</text>
-  <line x1="1220" y1="1930" x2="1290" y2="1930" class="wire485"/>
-  <text x="1310" y="1937" class="small">RS-485 A/B bus</text>
-  <line x1="1220" y1="1980" x2="1290" y2="1980" class="wirePower"/>
-  <text x="1310" y="1987" class="small">+5V power</text>
-  <line x1="1220" y1="2030" x2="1290" y2="2030" class="wireGnd"/>
-  <text x="1310" y="2037" class="small">GND</text>
-  <text x="1215" y="2075" class="tiny">Custom cable pinout:</text>
-  <text x="1215" y="2098" class="tiny">never connect these ports to Ethernet</text>
-  <text x="1215" y="2121" class="tiny">network equipment or PoE.</text>
+  <rect x="650" y="230" width="480" height="1050" rx="16" fill="#f8fafb" stroke="#90a4ae" stroke-width="2"/>
+  <text x="680" y="275" class="h">What is physically inside this node?</text>
+  <text x="680" y="325" class="txt">S1, S2, S3, S4:</text><text x="710" y="355" class="txt">four screwed sensor brackets</text>
+  <text x="680" y="410" class="txt">Center enclosure:</text><text x="710" y="440" class="txt">ESP32 + TCA9548A + MAX485</text>
+  <text x="680" y="495" class="txt">Sensor cables:</text><text x="710" y="525" class="txt">four separate Cat6 drops, each ≤1 m</text>
+  <text x="680" y="580" class="txt">Top/bottom joint:</text><text x="710" y="610" class="txt">GX12-6 male/female direct mate</text>
+  <text x="680" y="665" class="txt">GX12-6 contacts carry:</text><text x="710" y="695" class="txt">A, B, +5V, GND</text>
+  <line x1="680" y1="735" x2="1090" y2="735" class="guide"/>
+  <text x="680" y="785" class="h">Mechanical securing</text>
+  <text x="680" y="830" class="txt">• boards: screws + M2/M3 standoffs</text>
+  <text x="680" y="870" class="txt">• MPUs: screws into printed brackets</text>
+  <text x="680" y="910" class="txt">• wires: solder/locking terminals</text>
+  <text x="680" y="950" class="txt">• cables: clamps + service loop</text>
+  <text x="680" y="990" class="txt">• enclosure: IP65 box + cable glands</text>
+  <text x="680" y="1030" class="txt">• modules: guide rails + separate latch</text>
+  <text x="680" y="1070" class="txt">  (GX12 connector is not structural)</text>
+  <rect x="680" y="1120" width="410" height="105" rx="10" fill="#fff8e1" stroke="#f9a825" stroke-width="2"/>
+  <text x="700" y="1155" class="txt">TOP = UPSTREAM male</text>
+  <text x="700" y="1185" class="txt">BOTTOM = DOWNSTREAM female</text>
+  <text x="700" y="1215" class="small">Keep every node facing the same way.</text>
 </svg>

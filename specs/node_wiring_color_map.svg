@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1500" viewBox="0 0 2400 1500">
+  <title>ExcaVision complete node wiring color map</title>
+  <desc>Beginner wiring map showing Cat6 sensor cables, internal hookup wires, GX12-6 pigtails, ESP32, TCA9548A, MAX485, button, LED, buzzer, power and ground.</desc>
+  <defs>
+    <style>
+      .title{font:700 36px Arial,sans-serif;fill:#102027}.sub{font:400 19px Arial,sans-serif;fill:#455a64}
+      .h{font:700 24px Arial,sans-serif;fill:#102027}.label{font:700 18px Arial,sans-serif;fill:#102027}
+      .body{font:400 17px Arial,sans-serif;fill:#263238}.small{font:400 15px Arial,sans-serif;fill:#455a64}
+      .panel{fill:#f8fafb;stroke:#90a4ae;stroke-width:2}.table{fill:#fff;stroke:#b0bec5;stroke-width:2}
+      .sensor{fill:#fff3e0;stroke:#ef6c00;stroke-width:3}.board{fill:#e3f2fd;stroke:#1565c0;stroke-width:3}
+      .tca{fill:#e8eaf6;stroke:#3949ab;stroke-width:3}.rs{fill:#fce4ec;stroke:#ad1457;stroke-width:3}
+      .gx{fill:#e0f2f1;stroke:#00695c;stroke-width:3}.ok{fill:#e8f5e9;stroke:#2e7d32;stroke-width:2}
+      .warn{fill:#fff8e1;stroke:#f9a825;stroke-width:2}.danger{fill:#ffebee;stroke:#c62828;stroke-width:2}
+      .ow{fill:#fff;stroke:#ef6c00;stroke-width:2}.o{fill:#f57c00;stroke:#bf360c;stroke-width:2}
+      .gw{fill:#fff;stroke:#2e7d32;stroke-width:2}.g{fill:#43a047;stroke:#1b5e20;stroke-width:2}
+      .bw{fill:#fff;stroke:#1565c0;stroke-width:2}.b{fill:#1976d2;stroke:#0d47a1;stroke-width:2}
+      .brw{fill:#fff;stroke:#6d4c41;stroke-width:2}.br{fill:#795548;stroke:#3e2723;stroke-width:2}
+    </style>
+  </defs>
+  <rect width="2400" height="1500" fill="#fff"/>
+  <text x="55" y="55" class="title">ExcaVision — Complete Per-Node Wiring Color Map</text>
+  <text x="55" y="90" class="sub">Read left-to-right: remote sensor Cat6 → internal boards/controls → GX12-6 direct-mating node connector</text>
+
+  <!-- Column 1: sensor Cat6 -->
+  <rect x="45" y="125" width="720" height="1100" rx="16" class="panel"/>
+  <text x="75" y="170" class="h">A. Cat6 sensor cable: TCA ↔ one GY-521</text>
+  <text x="75" y="202" class="small">Make four separate cables, one per MPU, each ≤1 m. This is a custom cable, not Ethernet networking.</text>
+  <rect x="75" y="235" width="660" height="700" rx="12" class="table"/>
+  <text x="100" y="275" class="label">Cat6 conductor</text><text x="350" y="275" class="label">Connect to GY-521</text><text x="590" y="275" class="label">At TCA/enclosure</text>
+  <line x1="95" y1="295" x2="715" y2="295" stroke="#b0bec5"/>
+  <rect x="100" y="320" width="30" height="30" class="ow"/><text x="145" y="343" class="body">orange/white</text><text x="350" y="343" class="body">SDA</text><text x="590" y="343" class="body">SDx</text>
+  <rect x="100" y="375" width="30" height="30" class="o"/><text x="145" y="398" class="body">orange</text><text x="350" y="398" class="body">GND</text><text x="590" y="398" class="body">common GND</text>
+  <rect x="100" y="430" width="30" height="30" class="gw"/><text x="145" y="453" class="body">green/white</text><text x="350" y="453" class="body">SCL</text><text x="590" y="453" class="body">SCx</text>
+  <rect x="100" y="485" width="30" height="30" class="g"/><text x="145" y="508" class="body">green</text><text x="350" y="508" class="body">GND</text><text x="590" y="508" class="body">common GND</text>
+  <rect x="100" y="540" width="30" height="30" class="bw"/><text x="145" y="563" class="body">blue/white</text><text x="350" y="563" class="body">VCC (+5V)</text><text x="590" y="563" class="body">+5V rail</text>
+  <rect x="100" y="595" width="30" height="30" class="b"/><text x="145" y="618" class="body">blue</text><text x="350" y="618" class="body">GND</text><text x="590" y="618" class="body">common GND</text>
+  <rect x="100" y="650" width="30" height="30" class="brw"/><text x="145" y="673" class="body">brown/white</text><text x="350" y="673" class="body">open</text><text x="590" y="673" class="body">spare/open</text>
+  <rect x="100" y="705" width="30" height="30" class="br"/><text x="145" y="728" class="body">brown</text><text x="350" y="728" class="body">open</text><text x="590" y="728" class="body">spare/open</text>
+  <rect x="100" y="785" width="600" height="115" rx="10" class="ok"/>
+  <text x="120" y="820" class="label">For each sensor cable:</text>
+  <text x="120" y="850" class="body">orange + green + blue → join to the GY-521's one GND pin.</text>
+  <text x="120" y="880" class="small">Protect the pigtail with solder/terminal + heat-shrink. Leave XDA, XCL, AD0, INT open.</text>
+  <text x="75" y="980" class="h">Channel examples</text>
+  <text x="85" y="1020" class="body">S1: SDA→SD7, SCL→SC7  •  S2: SDA→SD3, SCL→SC3</text>
+  <text x="85" y="1052" class="body">S3: SDA→SD5, SCL→SC5  •  S4: SDA→SD1, SCL→SC1</text>
+  <text x="75" y="1110" class="small">Use labelled terminal blocks at the enclosure. Never use RJ45/network equipment.</text>
+
+  <!-- Column 2: internal wiring -->
+  <rect x="800" y="125" width="760" height="1100" rx="16" class="panel"/>
+  <text x="830" y="170" class="h">B. Short internal hookup wires</text>
+  <text x="830" y="202" class="small">These are inside the IP65 enclosure. Suggested colours are labels; solder to a carrier/perfboard.</text>
+  <rect x="830" y="235" width="700" height="500" rx="12" class="table"/>
+  <text x="855" y="275" class="label">ESP32 side</text><text x="1110" y="275" class="label">Other side</text><text x="1340" y="275" class="label">Function</text>
+  <line x1="850" y1="295" x2="1510" y2="295" stroke="#b0bec5"/>
+  <text x="855" y="335" class="body">GPIO21 / yellow</text><text x="1110" y="335" class="body">TCA SDA</text><text x="1340" y="335" class="body">I²C data</text>
+  <text x="855" y="375" class="body">GPIO22 / white</text><text x="1110" y="375" class="body">TCA SCL</text><text x="1340" y="375" class="body">I²C clock</text>
+  <text x="855" y="415" class="body">3V3 / red</text><text x="1110" y="415" class="body">TCA VIN/VCC</text><text x="1340" y="415" class="body">TCA logic power</text>
+  <text x="855" y="455" class="body">GND / black</text><text x="1110" y="455" class="body">TCA GND</text><text x="1340" y="455" class="body">common ground</text>
+  <text x="855" y="495" class="body">GPIO33 / blue</text><text x="1110" y="495" class="body">MAX485 DI</text><text x="1340" y="495" class="body">RS-485 TX</text>
+  <text x="855" y="535" class="body">GPIO18 / green</text><text x="1110" y="535" class="body">MAX485 RO*</text><text x="1340" y="535" class="body">RS-485 RX</text>
+  <text x="855" y="575" class="body">GPIO25 / orange</text><text x="1110" y="575" class="body">MAX485 DE+RE</text><text x="1340" y="575" class="body">direction</text>
+  <text x="855" y="615" class="body">5V/VIN / red</text><text x="1110" y="615" class="body">MAX485 VCC*</text><text x="1340" y="615" class="body">module power</text>
+  <text x="855" y="655" class="body">GND / black</text><text x="1110" y="655" class="body">MAX485 GND</text><text x="1340" y="655" class="body">common ground</text>
+  <text x="855" y="695" class="body">GPIO17 / brown</text><text x="1110" y="695" class="body">buzzer SIG/+</text><text x="1340" y="695" class="body">alarm output</text>
+
+  <rect x="830" y="770" width="700" height="300" rx="12" class="table"/>
+  <text x="855" y="810" class="label">Controls</text>
+  <text x="855" y="855" class="body">Button: GPIO16 → one switch leg; other switch leg → common GND.</text>
+  <text x="855" y="900" class="body">LED: GPIO23 → 220 Ω / ¼ W resistor → LED anode (+).</text>
+  <text x="855" y="945" class="body">LED cathode (−) → common GND.</text>
+  <text x="855" y="990" class="body">Buzzer: GPIO17 → active buzzer SIG/+; buzzer GND/− → common GND.</text>
+  <text x="855" y="1035" class="small">Button uses internal INPUT_PULLUP. Use a 3.3 V-compatible low-current active buzzer.</text>
+
+  <rect x="830" y="1100" width="700" height="90" rx="10" class="danger"/>
+  <text x="850" y="1135" class="label">MAX485 warning:</text><text x="1020" y="1135" class="body">the pictured board may be 5 V logic; confirm RO is 3.3 V-safe.</text>
+  <text x="850" y="1165" class="small">If not, use a level shifter or a 3.3 V-compatible RS-485 transceiver.</text>
+
+  <!-- Column 3: GX12 -->
+  <rect x="1595" y="125" width="760" height="1100" rx="16" class="panel"/>
+  <text x="1625" y="170" class="h">C. GX12-6 pigtail: node end connector</text>
+  <text x="1625" y="202" class="small">This is a separate short Cat6 bundle inside the enclosure, not a sensor drop.</text>
+  <rect x="1625" y="235" width="700" height="500" rx="12" class="gx"/>
+  <text x="1650" y="275" class="label">Cat6 colour</text><text x="1850" y="275" class="label">GX12 pin</text><text x="2010" y="275" class="label">Signal</text><text x="2160" y="275" class="label">Local destination</text>
+  <line x1="1645" y1="295" x2="2305" y2="295" stroke="#80cbc4"/>
+  <text x="1650" y="335" class="body">orange/white</text><text x="1850" y="335" class="body">1</text><text x="2010" y="335" class="body">RS-485 A</text><text x="2160" y="335" class="body">MAX485 A</text>
+  <text x="1650" y="385" class="body">orange</text><text x="1850" y="385" class="body">2</text><text x="2010" y="385" class="body">RS-485 B</text><text x="2160" y="385" class="body">MAX485 B</text>
+  <text x="1650" y="435" class="body">green/white</text><text x="1850" y="435" class="body">3</text><text x="2010" y="435" class="body">+5V</text><text x="2160" y="435" class="body">+5V rail</text>
+  <text x="1650" y="485" class="body">green</text><text x="1850" y="485" class="body">4</text><text x="2010" y="485" class="body">+5V</text><text x="2160" y="485" class="body">+5V rail (parallel)</text>
+  <text x="1650" y="535" class="body">blue/white</text><text x="1850" y="535" class="body">5</text><text x="2010" y="535" class="body">GND</text><text x="2160" y="535" class="body">common GND</text>
+  <text x="1650" y="585" class="body">blue</text><text x="1850" y="585" class="body">6</text><text x="2010" y="585" class="body">GND</text><text x="2160" y="585" class="body">common GND (parallel)</text>
+  <text x="1650" y="635" class="body">brown pair</text><text x="1850" y="635" class="body">—</text><text x="2010" y="635" class="body">spare</text><text x="2160" y="635" class="body">open</text>
+  <text x="1650" y="690" class="small">Use the same pin assignment on the UPSTREAM male and DOWNSTREAM female.</text>
+
+  <rect x="1625" y="770" width="700" height="250" rx="12" class="table"/>
+  <text x="1650" y="810" class="label">Direct node joint — no wire between modules</text>
+  <text x="1650" y="855" class="body">Upper node DOWNSTREAM GX12-6 female</text>
+  <text x="2070" y="855" class="body">mates with</text>
+  <text x="1650" y="895" class="body">Lower node UPSTREAM GX12-6 male</text>
+  <text x="1650" y="945" class="body">Pins 1/2 = RS-485 • pins 3/4 = +5V • pins 5/6 = GND</text>
+  <text x="1650" y="985" class="small">The connector carries electricity; guide rails and a separate latch carry module weight.</text>
+
+  <rect x="1625" y="1055" width="700" height="135" rx="10" class="warn"/>
+  <text x="1650" y="1095" class="label">Gateway power entry</text>
+  <text x="1650" y="1130" class="body">USB 5V+ → +5V rail → GX12 pins 3/4</text>
+  <text x="1650" y="1165" class="body">USB GND → common GND → GX12 pins 5/6</text>
+
+  <rect x="45" y="1280" width="2310" height="145" rx="14" class="warn"/>
+  <text x="75" y="1320" class="label">Before power:</text>
+  <text x="255" y="1320" class="body">label every cable end → solder/crimp → heat-shrink → clamp for strain relief → continuity-test A/B/+5V/GND → check for +5V-to-GND shorts.</text>
+  <text x="75" y="1360" class="body">There are no RJ45/network connections here. Cat6 is only being used as convenient multi-conductor cable with a custom colour map.</text>
+  <text x="75" y="1400" class="small">All connector contact numbering must be checked against the exact GX12-6 manufacturer's datasheet before assembly.</text>
+</svg>

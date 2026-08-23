@@ -10,6 +10,7 @@ void doBaselineSet();            // global capture: own window + (on gateway) br
 void finalizeBaselineCapture();   // called when the window elapses: average + commit
 void saveBaselinesToFlash();       // persist to NVS (so a reboot keeps the reference)
 void loadBaselinesFromFlash();     // restore at boot (only for physically-present sensors)
+bool anyPresentBaseline();          // true if any present sensor has a baseline loaded (drives NVS-empty recovery)
 
 // Collection state (owned here; the loop's completion check reads these).
 extern bool          baselineCollecting;

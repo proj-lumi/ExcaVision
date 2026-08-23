@@ -65,7 +65,7 @@ void setup() {
   loadGatewayFromFlash();     // restore the master role if one was set (Step 5)
   loadThresholdFromFlash();   // restore the alert threshold if one was set (Step 8)
 
-  Serial.println("MPU6050 ready. 'z' = baseline (or short-press), 'g' = toggle gateway (or long-press ≥ 3 s).");
+  Serial.println("MPU6050 ready. 'z' = baseline (or short-press), 'g' = toggle gateway (or long-press ≥ 3 s), 'r' = reboot, 't' = threshold.");
 
   pinMode(BUTTON_PIN, INPUT_PULLUP);  // button: HIGH when open, LOW when pressed
   pinMode(LED_PIN, OUTPUT);           // LED (the Led module drives its states)
@@ -98,6 +98,30 @@ void loop() {
   updateLed();       // drive the LED for the current state
   updateAlarm();     // drive the buzzer for the current alarm state (Step 7)
   rs485Update();     // RS-485: receive lines + master poll schedule (Phase A)
+
+  // Cloud baseline recovery (spec §7.2, NVS-empty path): a SLAVE with no
+  // baselines periodically asks the master (F;) for them; when the master's
+  // Q; reply arrives, anyPresentBaseline() turns true and we stop.
+  if (!isThisGateway() && !anyPresentBaseline()) {
+    static unsigned long lastReq = 0;
+    static uint8_t       attempts = 0;
+    if (millis() - lastReq >= BASELINE_RECOVERY_INTERVAL_MS && attempts < BASELINE_RECOVERY_ATTEMPTS) {
+      lastReq = millis(); attempts++;
+      rs485SendBaselineRequest();
+      Serial.print("[rs485] requesting baselines from master (attempt ");
+      Serial.print(attempts); Serial.print("/");
+      Serial.print(BASELINE_RECOVERY_ATTEMPTS); Serial.println(")");
+    }
+  }
+
+  // Relay a slave's fetched baselines (staged by the cloud task) back over
+  // the bus as a Q; frame — all RS-485 TX stays in the main-loop context.
+  {
+    char macOut[18];
+    SenderBaseline sb[NUM_SENSORS];
+    int n = 0;
+    if (senderTakeBaselineReply(macOut, sb, n)) rs485SendBaselineReply(macOut, sb, n);
+  }
 
   // Realtime threshold sync: if the cloud task just learned a new threshold
   // from the app/Supabase, broadcast it to every slave (all RS-485 TX stays
@@ -143,6 +167,11 @@ void loop() {
       doBaselineSet();   // global capture: this box + (on gateway) broadcast `C` to slaves
     } else if (c == 'g') {
       toggleGateway();   // prints ON/OFF itself
+    } else if (c == 'r') {
+      // Hard reboot (esp_restart): handy to re-trigger NVS-empty baseline
+      // recovery after the 5-attempt window elapses — no physical reset needed.
+      Serial.println("Rebooting now (recovery re-attempts)...");
+      ESP.restart();
     } else if (c == 't') {
       // 't' alone prints the current threshold; 't2.5' sets it.
       float v = Serial.parseFloat();

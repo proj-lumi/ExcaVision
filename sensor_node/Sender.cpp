@@ -1,5 +1,6 @@
 #include <math.h>       // isnan
 #include <string.h>     // strncpy, memset
+#include <stdlib.h>     // atof, atoi, strtol
 #include <WiFi.h>       // WiFi.status() — the task owns the WiFi lifecycle
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
@@ -10,6 +11,7 @@
 #include "Sender.h"
 #include "Cloud.h"      // cloudConnectOnce / cloudStop / cloudPostJson / cloudGetJson
 #include "Alarm.h"      // setThresholdDeg()
+#include "Baseline.h"   // anyPresentBaseline() / saveBaselinesToFlash() (NVS-empty recovery)
 #include "secrets.h"
 
 // ---------------------------------------------------------------------------
@@ -24,7 +26,7 @@ typedef struct {
 } ReadingMsg;
 
 typedef struct {
-  uint8_t kind;      // 0 = alert, 1 = baseline
+  uint8_t kind;      // 0 = alert, 1 = baseline upload, 2 = fetch a slave's baselines
   char    mac[18];
   uint8_t channel;
   float   a, b, c;   // alert: value=a;  baseline: bx=a, by=b, bz=c
@@ -41,6 +43,13 @@ static TaskHandle_t  cloudHandle  = nullptr;
 // task only FLAGS it here. volatile: set on core 0, read on core 1.
 static volatile bool  threshPending;        // a new threshold needs forwarding
 static volatile float threshPendingValue;
+
+// A slave's baselines fetched by the cloud task, staged for the main loop to
+// relay back to the requesting slave (Q; frame). Same cross-core handoff.
+static volatile SenderBaseline replyBuf[NUM_SENSORS];
+static volatile int            replyCount;
+static volatile bool           replyPending;
+static char                    replyMac[18];
 
 // ---------------------------------------------------------------------------
 // JSON building + HTTP (BLOCKING — runs only inside the cloud task).
@@ -133,6 +142,88 @@ static void fetchThreshold() {
 }
 
 // ---------------------------------------------------------------------------
+// Cloud baseline recovery (spec §7.2, NVS-empty path).
+// ---------------------------------------------------------------------------
+
+// Parse the PostgREST JSON array get_current_baselines returns:
+//   [{"channel":7,"bx":..,"by":..,"bz":..}, ...]
+static int parseBaselinesJson(const char* js, SenderBaseline* out, int maxCount) {
+  int n = 0;
+  const char* p = js;
+  while (n < maxCount && (p = strchr(p, '{')) != nullptr) {
+    const char* end = strchr(p, '}');
+    if (!end) break;
+    const char* colon;
+    if (const char* c = strstr(p, "\"channel\"")) {
+      if (c < end && (colon = strchr(c, ':')) && colon < end) out[n].channel = (uint8_t)atoi(colon + 1);
+    }
+    if (const char* x = strstr(p, "\"bx\"")) {
+      if (x < end && (colon = strchr(x, ':')) && colon < end) out[n].bx = (float)atof(colon + 1);
+    }
+    if (const char* y = strstr(p, "\"by\"")) {
+      if (y < end && (colon = strchr(y, ':')) && colon < end) out[n].by = (float)atof(colon + 1);
+    }
+    if (const char* z = strstr(p, "\"bz\"")) {
+      if (z < end && (colon = strchr(z, ':')) && colon < end) out[n].bz = (float)atof(colon + 1);
+    }
+    n++;
+    p = end + 1;
+  }
+  return n;
+}
+
+// GET a MAC's current baselines from the cloud; returns the count parsed.
+static int fetchBaselinesFromCloud(const char* mac, SenderBaseline* out, int maxCount) {
+  String url = String(SUPABASE_URL) + "/rest/v1/rpc/get_current_baselines?mac=" + String(mac);
+  String js;
+  if (!cloudGetJson(url.c_str(), js)) {
+    Serial.println("[cloud] baseline fetch FAILED");
+    return 0;
+  }
+  return parseBaselinesJson(js.c_str(), out, maxCount);
+}
+
+// Master/gateway: if NVS had no baselines, recover this node's own from
+// Supabase (boot path). No-op once any sensor has a baseline.
+static void maybeRecoverOwnBaselines() {
+  if (anyPresentBaseline()) return;            // NVS already has the reference
+  SenderBaseline list[NUM_SENSORS];
+  int count = fetchBaselinesFromCloud(nodeMac, list, NUM_SENSORS);
+  if (count == 0) return;
+  bool applied = false;
+  for (int k = 0; k < count; k++) {
+    for (uint8_t i = 0; i < NUM_SENSORS; i++) {
+      if (nodes[i].present && SENSORS[i].channel == list[k].channel) {
+        nodes[i].bx = list[k].bx; nodes[i].by = list[k].by; nodes[i].bz = list[k].bz;
+        nodes[i].hasBaseline = true;
+        applied = true;
+      }
+    }
+  }
+  if (applied) {
+    saveBaselinesToFlash();
+    Serial.println("[cloud] recovered own baselines from Supabase");
+  }
+}
+
+// Master/gateway: a slave asked (F;) for its baselines. Fetch them from the
+// cloud and stage a reply for the main loop to send back (Q; frame).
+static void handleBaselineFetch(const EventMsg& ev) {
+  SenderBaseline list[NUM_SENSORS];
+  int count = fetchBaselinesFromCloud(ev.mac, list, NUM_SENSORS);
+  strncpy(replyMac, ev.mac, sizeof replyMac - 1);
+  replyMac[sizeof replyMac - 1] = '\0';
+  int n = count; if (n > NUM_SENSORS) n = NUM_SENSORS;
+  for (int i = 0; i < n; i++) {
+    replyBuf[i].channel = list[i].channel;
+    replyBuf[i].bx = list[i].bx; replyBuf[i].by = list[i].by; replyBuf[i].bz = list[i].bz;
+  }
+  replyCount  = n;
+  replyPending = true;
+  Serial.print("[cloud] fetched "); Serial.print(n); Serial.print(" baselines for "); Serial.println(ev.mac);
+}
+
+// ---------------------------------------------------------------------------
 // The cloud task — owns WiFi + all HTTP. Blocking here is fine: it's a separate
 // task, so the main loop's sampling / RS-485 / button / LED / alarm never wait.
 //
@@ -163,6 +254,7 @@ static void cloudTask(void*) {
         continue;
       }
       fetchThreshold();          // freshly connected: pull the threshold
+      maybeRecoverOwnBaselines(); // NVS-empty gateway: recover its own baselines
       lastConfig = millis();
     }
 
@@ -170,7 +262,8 @@ static void cloudTask(void*) {
     EventMsg ev;
     while (xQueueReceive(eventQueue, &ev, 0) == pdTRUE) {
       if (ev.kind == 0) postAlertEvent(ev);
-      else              postBaselineEvent(ev);
+      else if (ev.kind == 1) postBaselineEvent(ev);
+      else if (ev.kind == 2) handleBaselineFetch(ev);   // a slave asked for its baselines
     }
 
     // Drain readings into a batch (up to SENDER_MAX_QUEUE, or until the
@@ -259,5 +352,31 @@ bool senderTakeThresholdChange(float& value) {
   if (!threshPending) return false;
   threshPending = false;
   value = threshPendingValue;
+  return true;
+}
+
+// Main loop: ask the cloud task to fetch <mac>'s baselines (a slave relayed
+// `F;`). Enqueued; the task does the blocking HTTP + parsing.
+void senderFetchBaselines(const char* mac) {
+  if (!eventQueue) return;
+  EventMsg ev; memset(&ev, 0, sizeof ev);
+  ev.kind = 2;
+  strncpy(ev.mac, mac, sizeof ev.mac - 1);
+  if (xQueueSendToBack(eventQueue, &ev, 0) != pdTRUE)
+    Serial.println("[cloud] baseline-fetch DROPPED (queue full)");
+}
+
+// Main loop: consume a staged baseline fetch; returns true once with the
+// target MAC + list so the caller can relay them back as a Q; frame.
+bool senderTakeBaselineReply(char* macOut, SenderBaseline* out, int& count) {
+  if (!replyPending) return false;
+  int n = replyCount; if (n > NUM_SENSORS) n = NUM_SENSORS;
+  strncpy(macOut, replyMac, 17); macOut[17] = '\0';
+  for (int i = 0; i < n; i++) {
+    out[i].channel = replyBuf[i].channel;
+    out[i].bx = replyBuf[i].bx; out[i].by = replyBuf[i].by; out[i].bz = replyBuf[i].bz;
+  }
+  count = n;
+  replyPending = false;
   return true;
 }

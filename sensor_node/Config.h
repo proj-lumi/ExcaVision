@@ -48,6 +48,8 @@
 #define SENDER_BATCH_MS   5000UL    // flush the reading buffer every 5 s
 #define SENDER_MAX_QUEUE  20        // keep batch bodies ~2 KB (large POSTs can truncate over TLS)
 #define CONFIG_POLL_MS    15000UL   // re-fetch the threshold every 15 s (keeps the app's realtime control tight)
+#define BASELINE_RECOVERY_INTERVAL_MS 5000UL  // NVS-empty slave asks the master for cloud baselines this often
+#define BASELINE_RECOVERY_ATTEMPTS    5       // stop after ~25 s if the master never answers
 
 // ---------------------------------------------------------------------------
 // Sensor definition table — the scalability knob.

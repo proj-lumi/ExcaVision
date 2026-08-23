@@ -24,4 +24,11 @@ void senderUploadBaseline(const char* mac, uint8_t channel,
 
 bool senderTakeThresholdChange(float& value);   // main loop: consume a pending threshold change to relay to slaves
 
+// A single sensor's baseline (channel + unit vector).
+typedef struct { uint8_t channel; float bx, by, bz; } SenderBaseline;
+
+// Cloud baseline recovery (spec §7.2, NVS-empty path):
+void senderFetchBaselines(const char* mac);                      // main loop: ask the cloud for a MAC's baselines (slave relay)
+bool senderTakeBaselineReply(char* macOut, SenderBaseline* out, int& count);  // main loop: consume a fetched reply to relay back (Q;)
+
 #endif

@@ -59,6 +59,15 @@ void saveBaselinesToFlash() {
   prefs.end();   // commit to flash
 }
 
+// True if any present sensor currently has a baseline loaded. Drives the
+// "NVS empty?" check for cloud baseline recovery (spec §7.2): recovery should
+// only run while this is false.
+bool anyPresentBaseline() {
+  for (uint8_t i = 0; i < NUM_SENSORS; i++)
+    if (nodes[i].present && nodes[i].hasBaseline) return true;
+  return false;
+}
+
 // Restore baselines from flash at boot. Only applied to sensors that are
 // physically present (a missing sensor can't be monitored regardless).
 // This LOADS an existing reference — it never auto-re-zeroes. If the box was

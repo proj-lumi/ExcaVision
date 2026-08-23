@@ -165,7 +165,8 @@ direction if ever needed later — it's a reporting change, not new hardware.
 2. Read MAC (esp_efuse / WiFi.macAddress — stable, unique, no WiFi needed).
 3. Connect WiFi (master) / wait for RS485 poll (slave).
 4. Load baseline from **NVS** (instant, offline). Only if NVS is empty,
-   recover from the cloud (master: directly; slave: via the master relay).
+   recover from the cloud (master: directly; slave: via the master relay
+   `F;`→`Q;`).
 5. Baseline loaded → LED solid → start monitoring.
 6. No baseline anywhere → LED off → wait for SET.
 ```
@@ -243,7 +244,9 @@ after the wall has settled, not the instant the dig ends."
 ### 7.5 Serial debug equivalents (kept)
 - `z` → SET BASELINE (same as short press).
 - `g` → TOGGLE GATEWAY (same as long press — on becomes off, off becomes on).
-- `l` → LOAD baseline from Supabase / NVS.
+- `r` → reboot the box (`esp_restart`) — re-triggers NVS-empty recovery.
+- `t` / `t2.5` → show / set the local alert threshold.
+- (`l` removed — cloud recovery is automatic at boot; no manual LOAD needed.)
 The firmware works with or without the physical button/LED attached.
 
 ## 8. Node identity & data tagging
@@ -312,6 +315,8 @@ The wire protocol is ASCII, one `\n`-terminated line per message:
 | slave → | `B;<mac>;<ch>;<bx>,<by>,<bz>` | **spontaneous** baseline capture (master uploads it) |
 | master → | `C`                       | broadcast: all nodes capture a baseline |
 | master → | `T;<deg>`                 | broadcast: push the alert threshold to every slave |
+| slave → | `F;<mac>`                   | ask the master to fetch my baselines from the cloud |
+| master → | `Q;<mac>;<ch>:bx,by,bz;…` | reply with a slave's baselines (NVS-empty recovery) |
 
 All frames except `A;` and `B;` are **master-initiated**: the master asks, the slave
 answers, so there's exactly one transmitter at a time. The `A;`/`B;` frames are the

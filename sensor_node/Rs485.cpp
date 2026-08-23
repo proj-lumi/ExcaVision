@@ -1,10 +1,11 @@
 #include <Arduino.h>
 #include <string.h>      // strcmp, strncmp, strtok
+#include <stdlib.h>      // atoi, atof
 #include "Config.h"      // pins, constants, SENSORS[], nodes[]
 #include "Identity.h"    // nodeMac
 #include "Led.h"         // isThisGateway()
-#include "Sender.h"      // senderAddReading() (Phase B)
-#include "Baseline.h"    // startBaselineCapture() (global-capture broadcast 'C')
+#include "Sender.h"      // senderAddReading(), senderFetchBaselines() (Phase B)
+#include "Baseline.h"    // startBaselineCapture() (global-capture broadcast 'C'), saveBaselinesToFlash (Q; recovery)
 #include "Alarm.h"       // setThresholdDeg() (threshold relay 'T;')
 #include "Rs485.h"
 
@@ -169,6 +170,46 @@ static void parseAndForwardBaseline(const char* line) {
   senderUploadBaseline(mac, channel, bx, by, bz);
 }
 
+// Slave side: apply a Q; reply from the master ("Q;<mac>;<ch>:bx,by,bz;...")
+// to this node's sensors (NVS-empty cloud recovery). Only used if addressed
+// to me. Persists on success so a reboot keeps the recovered reference.
+static void parseAndApplyBaselineReply(const char* line) {
+  const char* p = line + 2;
+  char mac[18];
+  size_t k = 0;
+  while (*p && *p != ';' && k < sizeof mac - 1) mac[k++] = *p++;
+  mac[k] = '\0';
+  if (*p++ != ';') return;
+  if (strcmp(mac, nodeMac) != 0) return;   // not addressed to me
+
+  bool any = false;
+  // p is now AT the first channel digit ("7:0.5,..."). Parse segments until
+  // we run out: each segment is "<ch>:bx,by,bz", separated by ';'.
+  while (*p && *p >= '0' && *p <= '9') {
+    uint8_t ch = (uint8_t)atoi(p);
+    const char* colon = strchr(p, ':');
+    if (!colon) break;
+    float bx = 0, by = 0, bz = 0;
+    sscanf(colon + 1, "%f,%f,%f", &bx, &by, &bz);
+    for (uint8_t i = 0; i < NUM_SENSORS; i++) {
+      if (nodes[i].present && SENSORS[i].channel == ch) {
+        nodes[i].bx = bx; nodes[i].by = by; nodes[i].bz = bz;
+        nodes[i].hasBaseline = true;
+        any = true;
+      }
+    }
+    p = strchr(colon, ';');   // skip past the value, to the next ';'
+    if (!p) break;            // end of frame
+    p++;                      // now at the next channel digit
+  }
+  if (any) {
+    saveBaselinesToFlash();
+    Serial.println("[rs485] baselines recovered from master (Q;)");
+  } else {
+    Serial.println("[rs485] Q; had nothing for me — no baseline yet");
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Receive side: dispatch one complete line according to role.
 // ---------------------------------------------------------------------------
@@ -183,6 +224,11 @@ static void handleLine() {
       parseAndForwardAlert(line);
     } else if (startWith(line, "B;")) {
       parseAndForwardBaseline(line);
+    } else if (startWith(line, "F;")) {
+      // A slave asked for its baselines (NVS-empty recovery): fetch them from
+      // the cloud; the main loop relays the Q; reply back.
+      senderFetchBaselines(line + 2);
+      Serial.print("[rs485] baseline fetch requested for "); Serial.println(line + 2);
     } else if (startWith(line, "H:") && rsState == 1) {
       if (slaveCount < RS485_MAX_SLAVES) {
         for (uint8_t i = 0; i < slaveCount; i++)
@@ -212,6 +258,10 @@ static void handleLine() {
       // slave's local alarm immediately + persist to NVS (threshold relay).
       float t = (float)atof(line + 2);
       if (t > 0) setThresholdDeg(t);
+    } else if (startWith(line, "Q;")) {
+      // The master replied with my baselines (NVS-empty recovery). Apply,
+      // persist, and let monitoring start.
+      parseAndApplyBaselineReply(line);
     } else if (startWith(line, "P:")) {
       if (strcmp(line + 2, nodeMac) == 0) {
         sendReadings();
@@ -307,6 +357,30 @@ void rs485BroadcastThreshold(float deg) {
   char line[32];
   snprintf(line, sizeof line, "T;%.2f", (double)deg);
   rs485Send(line);
+}
+
+// Slave: ask the master to fetch my baselines from the cloud (NVS-empty boot).
+// One-line "F;<mac>".
+void rs485SendBaselineRequest() {
+  char line[24];
+  snprintf(line, sizeof line, "F;%s", nodeMac);
+  rs485Send(line);
+}
+
+// Gateway: send a slave its fetched baselines ("Q;<mac>;<ch>:bx,by,bz;...").
+// Listens on the wire too (all nodes hear everything); only the addressed
+// slave applies it.
+void rs485SendBaselineReply(const char* mac, const SenderBaseline* list, int count) {
+  String line = String("Q;") + mac;
+  for (int i = 0; i < count; i++) {
+    line += ";"; line += String((uint32_t)list[i].channel);
+    line += ":"; line += String(list[i].bx, 4);
+    line += ","; line += String(list[i].by, 4);
+    line += ","; line += String(list[i].bz, 4);
+  }
+  rs485Send(line.c_str());
+  Serial.print("[rs485] sent Q; reply for "); Serial.print(mac);
+  Serial.print(" ("); Serial.print(count); Serial.println(" baselines)");
 }
 
 void rs485Update() {

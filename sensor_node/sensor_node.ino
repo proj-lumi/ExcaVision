@@ -99,6 +99,12 @@ void loop() {
   updateAlarm();     // drive the buzzer for the current alarm state (Step 7)
   rs485Update();     // RS-485: receive lines + master poll schedule (Phase A)
 
+  // Realtime threshold sync: if the cloud task just learned a new threshold
+  // from the app/Supabase, broadcast it to every slave (all RS-485 TX stays
+  // in the main-loop context). Slaves apply it to their own local alarm + NVS.
+  float newTh;
+  if (senderTakeThresholdChange(newTh)) rs485BroadcastThreshold(newTh);
+
   // A box promoted to gateway AT RUNTIME (long-press) never went through
   // setup()'s task start — start it on the rising edge. The task itself
   // connects WiFi and fetches the threshold.

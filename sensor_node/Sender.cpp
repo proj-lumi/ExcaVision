@@ -36,6 +36,12 @@ static QueueHandle_t readingQueue = nullptr;
 static QueueHandle_t eventQueue   = nullptr;
 static TaskHandle_t  cloudHandle  = nullptr;
 
+// A threshold changed by the app/cloud task, pending relay to the slaves by
+// the main loop. All RS-485 TX stays in the main-loop context, so the cloud
+// task only FLAGS it here. volatile: set on core 0, read on core 1.
+static volatile bool  threshPending;        // a new threshold needs forwarding
+static volatile float threshPendingValue;
+
 // ---------------------------------------------------------------------------
 // JSON building + HTTP (BLOCKING — runs only inside the cloud task).
 // ---------------------------------------------------------------------------
@@ -114,7 +120,13 @@ static void fetchThreshold() {
       idx = out.indexOf(':', idx);
       if (idx >= 0) {
         float t = out.substring(idx + 1).toFloat();
-        if (t > 0) setThresholdDeg(t);
+        // Apply a change locally and flag it for relay to the slaves: the
+        // main loop broadcasts `T;` so every node's LOCAL alarm stays in sync.
+        if (t > 0 && t != getThresholdDeg()) {
+          setThresholdDeg(t);
+          threshPending      = true;
+          threshPendingValue = t;
+        }
       }
     }
   }
@@ -238,4 +250,14 @@ void senderUploadBaseline(const char* mac, uint8_t channel,
     Serial.print("[cloud] BASELINE DROPPED (queue full) "); Serial.print(mac);
     Serial.print(" ch"); Serial.println(channel);
   }
+}
+
+// The main loop polls this: consumes a pending threshold-change (fetched by
+// the cloud task) so it can broadcast `T;` to the slaves. Returns true with
+// the new value on a change, false otherwise.
+bool senderTakeThresholdChange(float& value) {
+  if (!threshPending) return false;
+  threshPending = false;
+  value = threshPendingValue;
+  return true;
 }

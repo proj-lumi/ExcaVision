@@ -5,6 +5,7 @@
 #include "Led.h"         // isThisGateway()
 #include "Sender.h"      // senderAddReading() (Phase B)
 #include "Baseline.h"    // startBaselineCapture() (global-capture broadcast 'C')
+#include "Alarm.h"       // setThresholdDeg() (threshold relay 'T;')
 #include "Rs485.h"
 
 // ---------------------------------------------------------------------------
@@ -206,6 +207,11 @@ static void handleLine() {
       // tells EVERY node to run its own BASELINE_COLLECT_SECONDS window.
       // When it ends, this node sends its B; frames so the master uploads it.
       startBaselineCapture();
+    } else if (startWith(line, "T;")) {
+      // Engineer-set alert threshold pushed from the gateway: apply to THIS
+      // slave's local alarm immediately + persist to NVS (threshold relay).
+      float t = (float)atof(line + 2);
+      if (t > 0) setThresholdDeg(t);
     } else if (startWith(line, "P:")) {
       if (strcmp(line + 2, nodeMac) == 0) {
         sendReadings();
@@ -292,6 +298,15 @@ void rs485SendBaseline(uint8_t channel, float bx, float by, float bz) {
 // (built already) so the master uploads every node's baseline.
 void rs485BroadcastCapture() {
   rs485Send("C");
+}
+
+// Gateway: push the pipe's engineer-set alert threshold to every slave so
+// their LOCAL alarm stays in sync. One-line "T;<deg>". Master-initiated
+// (like D/P), so no slave transmits while it's on the bus.
+void rs485BroadcastThreshold(float deg) {
+  char line[32];
+  snprintf(line, sizeof line, "T;%.2f", (double)deg);
+  rs485Send(line);
 }
 
 void rs485Update() {

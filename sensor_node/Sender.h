@@ -22,4 +22,6 @@ void senderPushAlert(const char* mac, uint8_t channel, const char* kind,
 void senderUploadBaseline(const char* mac, uint8_t channel,
                           float bx, float by, float bz);
 
+bool senderTakeThresholdChange(float& value);   // main loop: consume a pending threshold change to relay to slaves
+
 #endif

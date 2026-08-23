@@ -310,6 +310,8 @@ The wire protocol is ASCII, one `\n`-terminated line per message:
 | slave → | `R;<mac>;S1@7:v,v,v,v,v;S2@3:...` | readings, name@channel, per sensor: tilt,g,T,n,fail |
 | slave → | `A;<mac>;<ch>;<kind>;<sev>;<value>` | **spontaneous** threshold alert |
 | slave → | `B;<mac>;<ch>;<bx>,<by>,<bz>` | **spontaneous** baseline capture (master uploads it) |
+| master → | `C`                       | broadcast: all nodes capture a baseline |
+| master → | `T;<deg>`                 | broadcast: push the alert threshold to every slave |
 
 All frames except `A;` and `B;` are **master-initiated**: the master asks, the slave
 answers, so there's exactly one transmitter at a time. The `A;`/`B;` frames are the
@@ -369,10 +371,10 @@ screaming = loudest coverage and the clearest "something near you is wrong."
 - **Always controllable from the app, in real time.** An engineer opens the
   app, changes the threshold, and every node picks it up within a short
   window — no re-flash, no field visit. Mechanism: the gateway re-polls
-  `node_config` on a short interval (tens of seconds) and relays the value to
-  slaves over RS-485 so each node's *local* evaluation uses the newest
-  number. Honest tradeoff: this is polling, not push — app→node latency is
-  one poll interval (~10–30 s), which is effectively real-time for shoring
+  `node_config` every ~15 s and relays the value to
+  slaves over RS-485 (frame `T;`) so each node's *local* evaluation uses the
+  newest number. Honest tradeoff: this is polling, not push — app→node latency is
+  one poll interval (~15 s), which is effectively real-time for shoring
   (a wall moves over hours, not seconds). True push (MQTT / long-poll) is a
   possible later refinement but adds a broker dependency — not needed for
   v1.

@@ -53,9 +53,9 @@
 
   <!-- Port blocks -->
   <rect x="255" y="170" width="210" height="42" rx="8" class="port"/>
-  <text x="360" y="198" text-anchor="middle" fill="#ffffff" style="font:700 17px Arial">UPSTREAM PORT</text>
+  <text x="360" y="198" text-anchor="middle" fill="#ffffff" style="font:700 17px Arial">UPSTREAM • MALE</text>
   <rect x="255" y="2500" width="210" height="42" rx="8" class="port"/>
-  <text x="360" y="2528" text-anchor="middle" fill="#ffffff" style="font:700 17px Arial">DOWNSTREAM PORT</text>
+  <text x="360" y="2528" text-anchor="middle" fill="#ffffff" style="font:700 17px Arial">DOWNSTREAM • FEMALE</text>
 
   <!-- Sensor pods -->
   <g>
@@ -169,8 +169,8 @@
   <path d="M 1120 1120 L 1370 1120" class="guide"/>
   <text x="1390" y="1128" class="label">One transceiver per node</text>
   <text x="1390" y="1158" class="small">A/B/GND are one shared bus</text>
-  <text x="1390" y="1185" class="small">top/bottom ports are passive</text>
-  <text x="1390" y="1212" class="small">parallel pass-throughs</text>
+  <text x="1390" y="1185" class="small">UPSTREAM = male</text>
+  <text x="1390" y="1212" class="small">DOWNSTREAM = female; passive pass-through</text>
 
   <path d="M 1120 1450 L 1370 1450" class="guide"/>
   <text x="1390" y="1458" class="label">Secure mechanically</text>

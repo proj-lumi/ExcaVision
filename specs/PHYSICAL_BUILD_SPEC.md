@@ -94,8 +94,12 @@ gateway at the surface, and the backend keys them by `pipe_id` under the site.
   after confirming its RO output is safe for the ESP32's 3.3 V RX input.
 - Four small sensor mounting brackets. These are the only parts that need to
   be 3D printed; do not print a 2.667 m enclosure.
-- Two keyed/latching trunk connectors or screw-terminal connectors, labelled
-  `UPSTREAM` and `DOWNSTREAM`.
+- One keyed/latching **male** trunk connector at the top, labelled
+  `UPSTREAM`.
+- One keyed/latching **female** trunk connector at the bottom, labelled
+  `DOWNSTREAM`.
+- The trunk connector carries RS-485 `A/B`, common `GND`, and pass-through
+  `+5V`/power return; use enough pins for all conductors.
 - Four sensor cable connectors, labelled `S1`, `S2`, `S3`, and `S4`.
 - M2/M3 screws, nuts, and standoffs for the boards and sensor brackets.
 - Cable glands, strain reliefs, heat-shrink tubing, ferrules, and cable ties.
@@ -177,7 +181,7 @@ ESP32 GND           → transceiver GND
 then connected to GPIO 25 through one secured wire. Use a transceiver whose
 logic levels are compatible with the ESP32.
 
-### 3.4 Node-to-node trunk — single shared bus, directional PORT labels only
+### 3.4 Node-to-node trunk — single shared bus, gendered ports
 
 There is **one** RS-485 transceiver per node. `A` and `B` form a single shared
 bidirectional bus; there is no separate “in” and “out” pair of conductors —
@@ -200,10 +204,25 @@ bidirectional bus; there is no separate “in” and “out” pair of conductor
   (5 V / GND) ──────────┤   TOP and BOTTOM power pass-through
 ```
 
-The `UPSTREAM` (top) and `DOWNSTREAM` (bottom) PORT labels are **assembly
-labels only** — a wiring-direction convention for daisy-chaining physically.
-Electrically both ports land on the same local `A`/`B`/`GND` bus and the same
-single transceiver. Do not install two RS-485 modules per node.
+For Lego-style physical chaining, use one fixed vertical connector convention:
+
+```text
+TOP / UPSTREAM       = male connector
+BOTTOM / DOWNSTREAM  = female connector
+```
+
+The lower node's male `UPSTREAM` plugs into the upper node's female
+`DOWNSTREAM`:
+
+```text
+upper node DOWNSTREAM female
+             │
+             └──── plugs into ──── lower node UPSTREAM male
+```
+
+The labels and connector genders are assembly conventions only. Electrically
+both ports land on the same local `A`/`B`/`GND` bus and the same single
+transceiver. Do not install two RS-485 modules per node.
 
 Inside each enclosure, distribute the bus with a small screw-terminal strip,
 WAGO-style lever connector, tiny perfboard, or a small custom distribution
@@ -297,7 +316,7 @@ three-node cable length and wiring without those components.
 8. Check continuity and shorts with power disconnected.
 9. Verify every MPU is on the intended TCA channel.
 10. Apply power locally on the bench and verify the boot scan.
-11. Connect modules using `DOWNSTREAM → UPSTREAM` trunk connections.
+11. Connect modules using `DOWNSTREAM female → UPSTREAM male` trunk connections.
 12. Add the next module with the same vertical orientation and pitch.
 13. Verify RS-485 discovery and polling before closing the enclosures.
 14. Tighten cable glands, install covers, and re-test after mechanical movement.

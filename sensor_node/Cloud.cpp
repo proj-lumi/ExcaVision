@@ -42,6 +42,7 @@ bool cloudPostJson(const char* url, const String& jsonBody) {
   if (!connected) return false;
   client.stop();   // reset stale TLS/socket state before each request (ESP32 reuse gotcha)
   http.begin(client, url);
+  http.setTimeout(10000);   // 10 s read timeout — the -11 timeouts were 5 s; hurts when the server is briefly slow
   http.addHeader("Content-Type", "application/json");
   http.addHeader("apikey", SUPABASE_SECRET_KEY);
   http.addHeader("Authorization", String("Bearer ") + SUPABASE_SECRET_KEY);
@@ -60,6 +61,7 @@ bool cloudGetJson(const char* url, String& out) {
   if (!connected) return false;
   client.stop();
   http.begin(client, url);
+  http.setTimeout(10000);   // 10 s read timeout (was 5 s)
   http.addHeader("apikey", SUPABASE_SECRET_KEY);
   http.addHeader("Authorization", String("Bearer ") + SUPABASE_SECRET_KEY);
   int code = http.GET();

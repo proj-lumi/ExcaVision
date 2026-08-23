@@ -50,6 +50,7 @@
 #define CONFIG_POLL_MS    15000UL   // re-fetch the threshold every 15 s (keeps the app's realtime control tight)
 #define BASELINE_RECOVERY_INTERVAL_MS 5000UL  // NVS-empty slave asks the master for cloud baselines this often
 #define BASELINE_RECOVERY_ATTEMPTS    5       // stop after ~25 s if the master never answers
+#define BASELINE_UPLOAD_RETRIES       3       // alert/baseline POSTs retry this many times on timeout/failure (never silently lose them)
 
 // ---------------------------------------------------------------------------
 // Sensor definition table — the scalability knob.

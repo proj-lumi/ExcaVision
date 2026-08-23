@@ -32,6 +32,7 @@ typedef struct {
   float   a, b, c;   // alert: value=a;  baseline: bx=a, by=b, bz=c
   char    s1[12];    // alert: kind;     baseline: unused
   char    s2[12];    // alert: severity; baseline: unused
+  uint8_t tries;     // upload retry counter (never silently lose alerts/baselines)
 } EventMsg;
 
 static QueueHandle_t readingQueue = nullptr;
@@ -98,6 +99,19 @@ static void postAlertEvent(const EventMsg& ev) {
   } else {
     Serial.print("[cloud] alert POST FAILED "); Serial.print(ev.mac);
     Serial.print(" ch"); Serial.println(ev.channel);
+    // Alerts matter — if this was a transient timeout/network blip, re-queue
+    // and try again (bounded). Never silently lose a safety event.
+    if (ev.tries < BASELINE_UPLOAD_RETRIES) {
+      EventMsg retry = ev;
+      retry.tries++;
+      if (xQueueSendToFront(eventQueue, &retry, 0) == pdTRUE) {
+        Serial.print("[cloud] alert retry "); Serial.println((int)retry.tries);
+      } else {
+        Serial.println("[cloud] alert retry re-queue FAILED — dropped");
+      }
+    } else {
+      Serial.println("[cloud] alert dropped after retries");
+    }
   }
 }
 
@@ -116,6 +130,19 @@ static void postBaselineEvent(const EventMsg& ev) {
   } else {
     Serial.print("[cloud] baseline POST FAILED "); Serial.print(ev.mac);
     Serial.print(" ch"); Serial.println(ev.channel);
+    // A lost baseline would silently re-zero history — re-queue and retry
+    // (bounded) so a transient timeout can't drop the reference.
+    if (ev.tries < BASELINE_UPLOAD_RETRIES) {
+      EventMsg retry = ev;
+      retry.tries++;
+      if (xQueueSendToFront(eventQueue, &retry, 0) == pdTRUE) {
+        Serial.print("[cloud] baseline retry "); Serial.println((int)retry.tries);
+      } else {
+        Serial.println("[cloud] baseline retry re-queue FAILED — dropped");
+      }
+    } else {
+      Serial.println("[cloud] baseline dropped after retries");
+    }
   }
 }
 

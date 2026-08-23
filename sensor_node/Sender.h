@@ -3,24 +3,21 @@
 
 #include <Arduino.h>
 
-// The master's outbound sync to Supabase (Phase B). Owns a bounded buffer of
-// pending readings (own + all slaves'), flushes it every SENDER_BATCH_MS, and
-// handles the non-batch events: threshold poll, alert push, baseline upload.
+// Cloud sync runs in its OWN FreeRTOS task so the blocking WiFi/TLS/HTTP work
+// never stalls the 100 Hz sampling or the RS-485 polling. The main loop only
+// enqueues readings/events (microseconds, non-blocking); the task batches and
+// POSTs on its own core.
 //
-// NOTE: these run in loop() and BLOCK briefly during each HTTPS call. That's a
-// known minor tradeoff (a poll can occasionally time out and n can dip) —
-// acceptable for the bench. A non-blocking background-task version is a later
-// option if it ever matters in deployment.
+// senderInit() is idempotent — call it when the box is/become the gateway.
 
-void senderInit();   // call once at boot (gateway only): fetch the threshold
-void senderTick();   // call every loop(): flush + threshold re-poll
+void senderInit();   // create queues + start the cloud task (gateway only)
 
-void senderAddReading(const char* mac, uint8_t channel,
-                      float tilt, float g, float temp,
-                      uint32_t n, uint32_t fail, bool alertFlag);
+// Non-blocking (enqueue + return in microseconds; drop on overflow):
+void senderAddReading(const char* mac, uint8_t channel, float tilt, float g,
+                      float temp, uint32_t n, uint32_t fail, bool alertFlag);
 
-void senderPushAlert(const char* mac, uint8_t channel,
-                     const char* kind, const char* severity, float value);
+void senderPushAlert(const char* mac, uint8_t channel, const char* kind,
+                     const char* severity, float value);
 
 void senderUploadBaseline(const char* mac, uint8_t channel,
                           float bx, float by, float bz);

@@ -23,8 +23,7 @@
 #include "Identity.h"
 #include "Alarm.h"
 #include "Rs485.h"
-#include "Cloud.h"
-#include "Sender.h"
+#include "Sender.h"   // cloud sync runs in its own FreeRTOS task (Phase B)
 #include "Report.h"
 
 // ---------------------------------------------------------------------------
@@ -81,11 +80,10 @@ void setup() {
 
   rs485Init();   // RS-485 link (feat/transport Phase A) — DE=25, TX=33, RX=18
 
-  // Phase B: the gateway is the only box with WiFi + cloud sync.
-  if (isThisGateway()) {
-    cloudInit();    // connect WiFi
-    senderInit();   // fetch the pipe's threshold from Supabase
-  }
+  // Phase B: the gateway is the only box with WiFi + cloud sync. Starting the
+  // sender task spins up WiFi + HTTP on its own core — it must not run here
+  // (blocking) or on the main loop.
+  if (isThisGateway()) senderInit();
   wasGateway = isThisGateway();   // seed the transition tracker so a boot-as-gateway doesn't double-init
 }
 
@@ -102,15 +100,13 @@ void loop() {
   rs485Update();     // RS-485: receive lines + master poll schedule (Phase A)
 
   // A box promoted to gateway AT RUNTIME (long-press) never went through
-  // setup()'s cloudInit — connect WiFi + fetch the threshold on the rising edge.
+  // setup()'s task start — start it on the rising edge. The task itself
+  // connects WiFi and fetches the threshold.
   if (isThisGateway() && !wasGateway) {
-    Serial.println("[cloud] became gateway at runtime — connecting WiFi");
-    cloudInit();
+    Serial.println("[cloud] became gateway at runtime — starting cloud task");
     senderInit();
   }
   wasGateway = isThisGateway();
-
-  if (isThisGateway()) senderTick();   // 5 s batch flush + threshold re-poll (Phase B)
 
   // ── Sample block: every 10 ms, read each present sensor and accumulate ──
   if (now - lastSample >= SAMPLE_INTERVAL_MS) {

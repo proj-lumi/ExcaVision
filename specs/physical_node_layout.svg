@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1300" viewBox="0 0 900 1300">
+  <defs>
+    <style>
+      .bg { fill: #ffffff; }
+      .title { font: 700 24px Arial, sans-serif; fill: #102027; }
+      .sub { font: 400 14px Arial, sans-serif; fill: #546e7a; }
+      .h2 { font: 700 16px Arial, sans-serif; fill: #102027; }
+      .txt { font: 400 13px Arial, sans-serif; fill: #263238; }
+      .dim { font: 700 13px Arial, sans-serif; fill: #37474f; }
+      .rail { fill: #eceff1; stroke: #455a64; stroke-width: 3; }
+      .sensor { fill: #fff3e0; stroke: #ef6c00; stroke-width: 3; }
+      .box { fill: #e3f2fd; stroke: #1565c0; stroke-width: 3; }
+      .male { fill: #bbdefb; stroke: #1565c0; stroke-width: 2.5; }
+      .female { fill: #ffe0b2; stroke: #e65100; stroke-width: 2.5; }
+      .dimline { stroke: #37474f; stroke-width: 1.5; fill: none; marker-start: url(#arr); marker-end: url(#arr); }
+      .guideline { stroke: #b0bec5; stroke-width: 1; stroke-dasharray: 4 4; fill: none; }
+      .card { fill: #f8fafb; stroke: #cfd8dc; stroke-width: 1.5; rx: 8; }
+    </style>
+    <marker id="arr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#37474f"/>
+    </marker>
+  </defs>
+
+  <rect width="900" height="1300" class="bg"/>
+
+  <!-- Title -->
+  <text x="40" y="45" class="title">ExcaVision Module — Physical Layout</text>
+  <text x="40" y="70" class="sub">2.667 m total pitch • 66.67 cm uniform sensor spacing • Direct-mating GX12-6 joints</text>
+
+  <!-- Left Dimensions -->
+  <!-- Total 2.667m -->
+  <line x1="60" y1="120" x2="60" y2="1200" class="dimline"/>
+  <text x="40" y="660" text-anchor="middle" transform="rotate(-90 40 660)" class="dim">2.667 m Module Pitch</text>
+
+  <!-- 33.3cm Top -->
+  <line x1="120" y1="120" x2="120" y2="255" class="dimline"/>
+  <text x="105" y="190" text-anchor="middle" transform="rotate(-90 105 190)" class="dim">33.3 cm</text>
+
+  <!-- 66.7cm S1 to S2 -->
+  <line x1="120" y1="255" x2="120" y2="525" class="dimline"/>
+  <text x="105" y="390" text-anchor="middle" transform="rotate(-90 105 390)" class="dim">66.67 cm</text>
+
+  <!-- 66.7cm S2 to S3 -->
+  <line x1="120" y1="525" x2="120" y2="795" class="dimline"/>
+  <text x="105" y="660" text-anchor="middle" transform="rotate(-90 105 660)" class="dim">66.67 cm</text>
+
+  <!-- 66.7cm S3 to S4 -->
+  <line x1="120" y1="795" x2="120" y2="1065" class="dimline"/>
+  <text x="105" y="930" text-anchor="middle" transform="rotate(-90 105 930)" class="dim">66.67 cm</text>
+
+  <!-- 33.3cm Bottom -->
+  <line x1="120" y1="1065" x2="120" y2="1200" class="dimline"/>
+  <text x="105" y="1135" text-anchor="middle" transform="rotate(-90 105 1135)" class="dim">33.3 cm</text>
+
+  <!-- Physical Rail -->
+  <rect x="220" y="120" width="120" height="1080" rx="8" class="rail"/>
+
+  <!-- Top Connector -->
+  <rect x="200" y="120" width="160" height="32" rx="6" class="male"/>
+  <text x="280" y="142" text-anchor="middle" fill="#0d47a1" style="font:700 12px Arial">TOP: UPSTREAM (MALE)</text>
+
+  <!-- Sensors & Box -->
+  <!-- S1 -->
+  <line x1="120" y1="255" x2="280" y2="255" class="guideline"/>
+  <circle cx="280" cy="255" r="30" class="sensor"/>
+  <text x="280" y="252" text-anchor="middle" class="h2">S1</text>
+  <text x="280" y="268" text-anchor="middle" class="small">ch7</text>
+
+  <!-- S2 -->
+  <line x1="120" y1="525" x2="280" y2="525" class="guideline"/>
+  <circle cx="280" cy="525" r="30" class="sensor"/>
+  <text x="280" y="522" text-anchor="middle" class="h2">S2</text>
+  <text x="280" y="538" text-anchor="middle" class="small">ch3</text>
+
+  <!-- Center Box -->
+  <rect x="235" y="605" width="90" height="110" rx="8" class="box"/>
+  <text x="280" y="635" text-anchor="middle" class="h2">ENCLOSURE</text>
+  <text x="280" y="655" text-anchor="middle" class="small">ESP32</text>
+  <text x="280" y="675" text-anchor="middle" class="small">TCA9548A</text>
+  <text x="280" y="695" text-anchor="middle" class="small">MAX485</text>
+
+  <!-- S3 -->
+  <line x1="120" y1="795" x2="280" y2="795" class="guideline"/>
+  <circle cx="280" cy="795" r="30" class="sensor"/>
+  <text x="280" y="792" text-anchor="middle" class="h2">S3</text>
+  <text x="280" y="808" text-anchor="middle" class="small">ch5</text>
+
+  <!-- S4 -->
+  <line x1="120" y1="1065" x2="280" y2="1065" class="guideline"/>
+  <circle cx="280" cy="1065" r="30" class="sensor"/>
+  <text x="280" y="1062" text-anchor="middle" class="h2">S4</text>
+  <text x="280" y="1078" text-anchor="middle" class="small">ch1</text>
+
+  <!-- Bottom Connector -->
+  <rect x="200" y="1168" width="160" height="32" rx="6" class="female"/>
+  <text x="280" y="1190" text-anchor="middle" fill="#b71c1c" style="font:700 12px Arial">BOTTOM: DOWNSTREAM (FEMALE)</text>
+
+  <!-- Right Information Cards -->
+  <!-- Card 1: Key Dimensions -->
+  <rect x="420" y="120" width="440" height="240" class="card"/>
+  <text x="445" y="155" class="h2">1. Geometric Rules</text>
+  <text x="445" y="185" class="txt">• Total module length: <tspan font-weight="700">2.667 m</tspan> (mating face to face)</text>
+  <text x="445" y="215" class="txt">• Sensor spacing: <tspan font-weight="700">66.67 cm</tspan> uniform between all sensors</text>
+  <text x="445" y="245" class="txt">• End margins: <tspan font-weight="700">33.33 cm</tspan> from each connector to outer sensor</text>
+  <text x="445" y="275" class="txt">• Center enclosure: at <tspan font-weight="700">1.333 m</tspan> (max 1.0 m run to S1 / S4)</text>
+  <text x="445" y="305" class="txt">• Mounting: rigid PVC conduit/rail with 3D-printed sensor clips</text>
+  <text x="445" y="335" class="txt">• Alignment: always keep <tspan font-weight="700">UPSTREAM (Top)</tspan> facing up</text>
+
+  <!-- Card 2: Chaining & Connectors -->
+  <rect x="420" y="380" width="440" height="300" class="card"/>
+  <text x="445" y="415" class="h2">2. Direct-Mating Chaining</text>
+  <text x="445" y="445" class="txt">• Top connector: <tspan font-weight="700">GX12-6 Male</tspan> (UPSTREAM)</text>
+  <text x="445" y="475" class="txt">• Bottom connector: <tspan font-weight="700">GX12-6 Female</tspan> (DOWNSTREAM)</text>
+  <text x="445" y="505" class="txt">• Connection: <tspan font-weight="700">No wire between modules</tspan> — plugs directly</text>
+  <text x="445" y="535" class="txt">• Upper female mates directly with lower male</text>
+  <text x="445" y="565" class="txt">• Boundary spacing: 33.3 cm + 33.3 cm = <tspan font-weight="700">66.67 cm</tspan> S4 → S1</text>
+  <text x="445" y="595" class="txt">• Mechanical latch / guide rail carries weight (not connector)</text>
+  <text x="445" y="625" class="txt">• Power flow: 5 V USB enters Gateway at top, chains down</text>
+  <text x="445" y="655" class="txt">• Max daisy-chain: <tspan font-weight="700">3 nodes</tspan> on one 5 V 3 A top supply</text>
+
+  <!-- Card 3: Sensor Assignment -->
+  <rect x="420" y="700" width="440" height="230" class="card"/>
+  <text x="445" y="735" class="h2">3. Sensor and Channel Assignment</text>
+  <text x="445" y="765" class="txt">• <tspan font-weight="700">S1</tspan> (Top sensor, 0.333 m) → <tspan font-weight="700" fill="#1565c0">TCA Channel 7</tspan></text>
+  <text x="445" y="795" class="txt">• <tspan font-weight="700">S2</tspan> (Mid-top, 1.000 m) → <tspan font-weight="700" fill="#1565c0">TCA Channel 3</tspan></text>
+  <text x="445" y="825" class="txt">• <tspan font-weight="700">S3</tspan> (Mid-bottom, 1.667 m) → <tspan font-weight="700" fill="#1565c0">TCA Channel 5</tspan></text>
+  <text x="445" y="855" class="txt">• <tspan font-weight="700">S4</tspan> (Bottom sensor, 2.333 m) → <tspan font-weight="700" fill="#1565c0">TCA Channel 1</tspan></text>
+  <text x="445" y="890" class="txt">• Sensor drops: individual Cat6 cable to each sensor (max 1 m)</text>
+
+  <!-- Card 4: GX12-6 Pinout -->
+  <rect x="420" y="950" width="440" height="250" class="card"/>
+  <text x="445" y="985" class="h2">4. GX12-6 Direct Joint Pinout</text>
+  <text x="445" y="1015" class="txt">• <tspan font-weight="700">Pin 1:</tspan> RS-485 A</text>
+  <text x="445" y="1045" class="txt">• <tspan font-weight="700">Pin 2:</tspan> RS-485 B</text>
+  <text x="445" y="1075" class="txt">• <tspan font-weight="700">Pin 3:</tspan> +5 V Power</text>
+  <text x="445" y="1105" class="txt">• <tspan font-weight="700">Pin 4:</tspan> +5 V Power (parallel contact)</text>
+  <text x="445" y="1135" class="txt">• <tspan font-weight="700">Pin 5:</tspan> GND Power &amp; Signal Ground</text>
+  <text x="445" y="1165" class="txt">• <tspan font-weight="700">Pin 6:</tspan> GND Power &amp; Signal Ground (parallel contact)</text>
+</svg>

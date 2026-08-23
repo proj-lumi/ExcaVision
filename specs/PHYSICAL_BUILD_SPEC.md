@@ -5,6 +5,15 @@
 
 ## 1. Final vertical module geometry
 
+### 1.0 Per-node assembly diagram
+
+Use this as the primary physical reference. It shows **one complete node**
+vertically: sensor positions, the center electronics enclosure, four MPU cable
+runs, one RS-485 transceiver, passive `UPSTREAM`/`DOWNSTREAM` pass-through
+ports, and the top-fed power pass-through.
+
+![Single vertical node assembly](./physical_build_single_node.svg)
+
 Each node is one vertical modular section with a total pitch of approximately
 **2.667 m**. The sensing span is 2.000 m, with 33.3 cm of blank/connector
 space at both ends.

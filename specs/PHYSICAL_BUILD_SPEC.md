@@ -14,6 +14,9 @@ ports, and the top-fed power pass-through.
 
 ![Single vertical node assembly](./physical_build_single_node.svg)
 
+For the chain-level view showing direct male/female mating between modules,
+see [physical_build_node_chain.svg](./physical_build_node_chain.svg).
+
 Each node is one vertical modular section with a total pitch of approximately
 **2.667 m**. The sensing span is 2.000 m, with 33.3 cm of blank/connector
 space at both ends.
@@ -109,12 +112,12 @@ gateway at the surface, and the backend keys them by `pipe_id` under the site.
 
 - One cable run per MPU, no longer than 1 m. Ethernet/Cat5e/Cat6 cable is
   suitable for these short sensor drops.
-- One RS-485 trunk cable between adjacent nodes carrying `A`, `B`, and `GND`.
-  Use a twisted pair for `A/B`.
-- One separate two-conductor power trunk carrying `+5V` and `GND` when using
-  top-fed power.
-- Keep sensor cables and the RS-485/power trunk physically clamped to the
-  PVC rail so their weight cannot pull on the boards.
+- **No cable between adjacent modules.** The keyed male/female combined end
+  connectors mate directly and carry RS-485 plus pass-through power.
+- One external USB 5 V power lead enters the gateway only; lower modules
+  receive power through the direct-mating connector joints.
+- Keep internal sensor drops and enclosure wiring secured so their weight
+  cannot pull on boards or connectors.
 
 Ethernet cable used for sensors or RS-485 has a **custom ExcaVision pinout**;
 it must never be connected to a network switch, router, or PoE source.
@@ -283,8 +286,8 @@ The final assembly must satisfy all of the following:
 - Every external cable enters through a cable gland or strain relief.
 - Sensor cables have a service loop and are clamped near the enclosure so a
   pull on the cable cannot reach the MPU solder joints or TCA connector.
-- RS-485/power trunk connectors are keyed or physically labelled `UPSTREAM`
-  and `DOWNSTREAM`.
+- Combined RS-485/power connectors are keyed, gendered, and physically
+  labelled `UPSTREAM` (male) and `DOWNSTREAM` (female).
 - Connectors are labelled at both ends with the signal names, not only with
   color.
 - The PVC rail has clamps or mounting points so the module cannot rotate or
@@ -328,7 +331,8 @@ three-node cable length and wiring without those components.
 - TCA-to-furthest-MPU cable distance is no more than 1 m.
 - No breadboard or jumper wires remain.
 - All connectors are labelled and mechanically strain-relieved.
-- `UPSTREAM`/`DOWNSTREAM` trunk orientation is obvious.
+- `UPSTREAM`/`DOWNSTREAM` orientation is obvious; male/female connectors mate
+  directly with no wire between modules.
 - A/B/GND continuity is correct from gateway to final node.
 - The furthest node remains above its required 5 V operating voltage.
 - A three-node chain runs the complete firmware test: readings, alerts,

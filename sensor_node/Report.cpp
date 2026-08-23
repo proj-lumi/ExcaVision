@@ -60,6 +60,7 @@ void formatSensorBlock(char* buf, uint8_t i) {
     float gz = (float)nodes[i].sumZ / nodes[i].sampleCount / COUNTS_PER_G;
     float mag = sqrt(gx*gx + gy*gy + gz*gz);   // |g|, should be approx 1.000
     float tempC = nodes[i].mpu.readTemperatureC();
+    if (isnan(tempC)) tempC = nodes[i].lastTemp;   // failed read -> hold last good temp (not 0, not NaN)
 
     // Remember this cycle's values for anything that needs the latest reading
     // (the Alarm module, and the RS-485 slave when it answers a poll).

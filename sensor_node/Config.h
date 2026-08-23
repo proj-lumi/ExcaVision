@@ -42,6 +42,11 @@
 #define RS485_MAX_SLAVES   16
 #define RS485_MAX_LINE     256
 
+// --- Cloud / Supabase (Phase B) ---
+#define SENDER_BATCH_MS   5000UL    // flush the reading buffer every 5 s
+#define SENDER_MAX_QUEUE  20        // keep batch bodies ~2 KB (large POSTs can truncate over TLS)
+#define CONFIG_POLL_MS    300000UL  // re-fetch the threshold every 5 min
+
 // ---------------------------------------------------------------------------
 // Sensor definition table — the scalability knob.
 // Each entry: { name, TCA channel }. Add a line to add a sensor.

@@ -1,5 +1,6 @@
 .env
 .aliases
+sensor_node/secrets.h
 sensor_node/archive
 sensor_node/archive/*
 http-features/

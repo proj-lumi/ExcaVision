@@ -3,6 +3,7 @@
 #include "Config.h"      // pins, constants, SENSORS[], nodes[]
 #include "Identity.h"    // nodeMac
 #include "Led.h"         // isThisGateway()
+#include "Sender.h"      // senderAddReading() (Phase B)
 #include "Rs485.h"
 
 // ---------------------------------------------------------------------------
@@ -53,8 +54,8 @@ static void sendReadings() {
   for (uint8_t i = 0; i < NUM_SENSORS; i++) {
     if (!nodes[i].present) continue;
     n += (uint16_t)snprintf(line + n, sizeof line - n,
-                            ";%s:%.3f,%.3f,%.1f,%lu,%lu",
-                            SENSORS[i].name,
+                            ";%s@%u:%.3f,%.3f,%.1f,%lu,%lu",
+                            SENSORS[i].name, SENSORS[i].channel,
                             nodes[i].lastTilt, nodes[i].lastMag, nodes[i].lastTemp,
                             (unsigned long)nodes[i].lastN,
                             (unsigned long)nodes[i].lastFail);
@@ -63,39 +64,34 @@ static void sendReadings() {
 }
 
 // ---------------------------------------------------------------------------
-// Master side: print a slave's readings line ("R;<mac>;S<ch>:v,v,v,v,v;...")
+// Master side: enqueue a slave's readings into the Sender (Phase B). The frame
+// is "R;<mac>;S1@7:v,v,v,v,v;S2@3:..." — name for display, channel for the DB.
 // ---------------------------------------------------------------------------
 
-static void parseAndPrintReadings(const char* line) {
+static void parseAndEnqueueReadings(const char* line) {
   const char* p = line + 2;           // skip "R;"
   char mac[18];
   size_t k = 0;
   while (*p && *p != ';' && k < sizeof mac - 1) mac[k++] = *p++;
   mac[k] = '\0';
 
-  Serial.print("[rs485] slave "); Serial.print(mac);
   while (*p == ';') {
     p++;
-    // "<name>:<tilt>,<g>,<T>,<n>,<fail>"
-    char name[8];
-    size_t j = 0;
-    while (*p && *p != ':' && j < sizeof name - 1) name[j++] = *p++;
-    name[j] = '\0';
-    if (*p != ':') break;
-    p++;   // skip the ':'
+    // "<name>@<channel>:<tilt>,<g>,<T>,<n>,<fail>"
+    uint8_t ch = 0;
+    const char* colon = strchr(p, ':');
+    if (!colon) break;
+    const char* at = strchr(p, '@');
+    if (at && at < colon) ch = (uint8_t)atoi(at + 1);
+
     float tilt = 0, g = 0, T = 0;
     unsigned long n = 0, f = 0;
-    sscanf(p, "%f,%f,%f,%lu,%lu", &tilt, &g, &T, &n, &f);
-    Serial.print("  "); Serial.print(name);
-    Serial.print(" tilt="); Serial.print(tilt, 3);
-    Serial.print(" g=");   Serial.print(g, 3);
-    Serial.print(" T=");   Serial.print(T, 1);
-    Serial.print(" n=");   Serial.print(n);
-    Serial.print(" f=");   Serial.print(f);
-    p = strchr(p, ';');
+    sscanf(colon + 1, "%f,%f,%f,%lu,%lu", &tilt, &g, &T, &n, &f);
+
+    senderAddReading(mac, ch, tilt, g, T, n, f, false);
+    p = strchr(colon, ';');
     if (!p) break;
   }
-  Serial.println();
 }
 
 // ---------------------------------------------------------------------------
@@ -117,7 +113,7 @@ static void handleLine() {
         slaveCount++;
       }
     } else if (startWith(line, "R;") && rsState == 2) {
-      parseAndPrintReadings(line);
+      parseAndEnqueueReadings(line);
       gotReply = true;
     }
   } else {

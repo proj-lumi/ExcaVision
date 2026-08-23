@@ -18,5 +18,6 @@ const char* trippedName();   // label of the tripped sensor, or ""
 void setThresholdDeg(float);
 float getThresholdDeg();
 void loadThresholdFromFlash();   // restore the threshold at boot (Step 8)
+bool alertTripPending(uint8_t& channel, float& value);  // one-shot trip notification
 
 #endif

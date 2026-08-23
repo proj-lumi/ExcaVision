@@ -7,6 +7,9 @@
 static float   thresholdDeg = THRESHOLD_DEG;
 static bool    alarmActive  = false;
 static int8_t  trippedIndex = -1;   // -1 = none
+static bool    tripPending  = false; // one-shot trip notification
+static uint8_t tripChannel  = 0;
+static float   tripValue    = 0;
 
 // NVS access for the threshold (internal).
 static Preferences alarmPrefs;
@@ -33,6 +36,16 @@ void loadThresholdFromFlash() {
 bool isAlarmActive() { return alarmActive; }
 const char* trippedName() { return (trippedIndex >= 0) ? SENSORS[trippedIndex].name : ""; }
 
+// One-shot: returns true once per trip (false->active transition), then clears.
+// Lets the caller route the alert (master -> Supabase, slave -> RS-485 relay).
+bool alertTripPending(uint8_t& channel, float& value) {
+  if (!tripPending) return false;
+  tripPending = false;
+  channel = tripChannel;
+  value   = tripValue;
+  return true;
+}
+
 void setThresholdDeg(float v) {
   thresholdDeg = v;
   saveThresholdToFlash();   // persist so a reboot keeps the setting
@@ -57,6 +70,9 @@ void evaluateAlarms() {
   trippedIndex  = newTripped;
 
   if (alarmActive && !wasActive) {
+    tripPending = true;
+    tripChannel = (uint8_t)trippedIndex;
+    tripValue   = nodes[trippedIndex].lastTilt;
     Serial.print("ALERT "); Serial.print(SENSORS[trippedIndex].name);
     Serial.print(" tilt="); Serial.print(nodes[trippedIndex].lastTilt, 3);
     Serial.print("° > threshold "); Serial.print(thresholdDeg, 2); Serial.println("°");

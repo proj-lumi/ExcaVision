@@ -23,6 +23,8 @@
 #include "Identity.h"
 #include "Alarm.h"
 #include "Rs485.h"
+#include "Cloud.h"
+#include "Sender.h"
 #include "Report.h"
 
 // ---------------------------------------------------------------------------
@@ -35,6 +37,7 @@ SensorNode nodes[NUM_SENSORS];   // defined here; extern-declared in Config.h
 unsigned long lastSample = 0;
 unsigned long lastReport = 0;
 uint16_t      rowCount   = 0;
+bool          wasGateway = false;   // transition tracker: connect WiFi if promoted at runtime
 
 // ---------------------------------------------------------------------------
 // setup() — init bus, scan for sensors, wake the ones that answered,
@@ -77,6 +80,13 @@ void setup() {
   digitalWrite(BUZZER_PIN, LOW);
 
   rs485Init();   // RS-485 link (feat/transport Phase A) — DE=25, TX=33, RX=18
+
+  // Phase B: the gateway is the only box with WiFi + cloud sync.
+  if (isThisGateway()) {
+    cloudInit();    // connect WiFi
+    senderInit();   // fetch the pipe's threshold from Supabase
+  }
+  wasGateway = isThisGateway();   // seed the transition tracker so a boot-as-gateway doesn't double-init
 }
 
 // ---------------------------------------------------------------------------
@@ -90,6 +100,17 @@ void loop() {
   updateLed();       // drive the LED for the current state
   updateAlarm();     // drive the buzzer for the current alarm state (Step 7)
   rs485Update();     // RS-485: receive lines + master poll schedule (Phase A)
+
+  // A box promoted to gateway AT RUNTIME (long-press) never went through
+  // setup()'s cloudInit — connect WiFi + fetch the threshold on the rising edge.
+  if (isThisGateway() && !wasGateway) {
+    Serial.println("[cloud] became gateway at runtime — connecting WiFi");
+    cloudInit();
+    senderInit();
+  }
+  wasGateway = isThisGateway();
+
+  if (isThisGateway()) senderTick();   // 5 s batch flush + threshold re-poll (Phase B)
 
   // ── Sample block: every 10 ms, read each present sensor and accumulate ──
   if (now - lastSample >= SAMPLE_INTERVAL_MS) {
@@ -153,6 +174,25 @@ void loop() {
     Serial.println();
 
     evaluateAlarms();   // check each sensor's tilt vs the threshold (Step 7)
+
+    // Phase B: the gateway enqueues its OWN readings into the send batch
+    // (the slave's readings arrive separately via RS-485 and are enqueued there).
+    if (isThisGateway()) {
+      for (uint8_t i = 0; i < NUM_SENSORS; i++) {
+        if (!nodes[i].present) continue;
+        senderAddReading(nodeMac, SENSORS[i].channel,
+                         nodes[i].lastTilt, nodes[i].lastMag, nodes[i].lastTemp,
+                         nodes[i].lastN, nodes[i].lastFail,
+                         nodes[i].lastTilt > getThresholdDeg());
+      }
+    }
+
+    // Route an alarm trip (one-shot). Gateway -> Supabase; slave -> deferred
+    // RS-485 relay in a later slice (its local buzzer already fired).
+    uint8_t ach; float av;
+    if (alertTripPending(ach, av)) {
+      if (isThisGateway()) senderPushAlert(nodeMac, ach, "threshold", "critical", av);
+    }
   }
 
   // ── Baseline collection completion: after BASELINE_COLLECT_SECONDS, average

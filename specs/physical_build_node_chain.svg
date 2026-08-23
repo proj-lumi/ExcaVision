@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1800" height="3000" viewBox="0 0 1800 3000">
   <title>ExcaVision direct-mating vertical node chain</title>
-  <desc>Three vertical 2.667 metre sensor modules directly connected by male and female combined connectors with no cable between modules.</desc>
+  <desc>Three vertical 2.667 metre sensor modules directly connected by GX12-6 male and female combined connectors with no cable between modules.</desc>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#263238"/></marker>
     <marker id="blue" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#1565c0"/></marker>
@@ -17,7 +17,7 @@
   </defs>
   <rect width="1800" height="3000" fill="white"/>
   <text x="70" y="65" class="title">ExcaVision — Direct-Mating Vertical Node Chain</text>
-  <text x="70" y="102" class="sub">No wire between modules • UPSTREAM male mates directly with DOWNSTREAM female • RS-485 + 5 V pass through</text>
+  <text x="70" y="102" class="sub">No wire between modules • GX12-6 UPSTREAM male mates directly with DOWNSTREAM female • RS-485 + 5 V pass through</text>
 
   <!-- Gateway external power -->
   <rect x="660" y="130" width="340" height="72" rx="14" fill="#e8f5e9" stroke="#2e7d32" stroke-width="3"/>
@@ -29,7 +29,7 @@
   <!-- Node 1 -->
   <rect x="600" y="250" width="460" height="820" rx="18" class="module"/>
   <rect x="580" y="250" width="500" height="38" rx="8" class="male"/>
-  <text x="830" y="277" text-anchor="middle" class="h">NODE 1 — GATEWAY • UPSTREAM MALE</text>
+  <text x="830" y="277" text-anchor="middle" class="h">NODE 1 — GATEWAY • GX12-6 UPSTREAM MALE</text>
   <rect x="620" y="292" width="420" height="88" class="blank"/>
   <text x="830" y="340" text-anchor="middle" class="txt">33.3 cm blank end</text>
   <circle cx="830" cy="405" r="34" class="sensor"/><text x="830" y="401" text-anchor="middle" class="h">S1</text><text x="830" y="426" text-anchor="middle" class="small">ch7</text>
@@ -42,7 +42,7 @@
   <circle cx="830" cy="875" r="34" class="sensor"/><text x="830" y="871" text-anchor="middle" class="h">S3</text><text x="830" y="896" text-anchor="middle" class="small">ch5</text>
   <circle cx="830" cy="1015" r="34" class="sensor"/><text x="830" y="1011" text-anchor="middle" class="h">S4</text><text x="830" y="1036" text-anchor="middle" class="small">ch1</text>
   <rect x="620" y="1030" width="420" height="40" class="blank"/><text x="830" y="1057" text-anchor="middle" class="small">33.3 cm blank end</text>
-  <rect x="580" y="1070" width="500" height="38" rx="8" class="female"/><text x="830" y="1097" text-anchor="middle" class="h">DOWNSTREAM FEMALE</text>
+  <rect x="580" y="1070" width="500" height="38" rx="8" class="female"/><text x="830" y="1097" text-anchor="middle" class="h">GX12-6 DOWNSTREAM FEMALE</text>
 
   <!-- direct joint 1 -->
   <rect x="580" y="1070" width="500" height="38" rx="8" class="female"/>
@@ -53,7 +53,7 @@
 
   <!-- Node 2 -->
   <rect x="600" y="1138" width="460" height="820" rx="18" class="module"/>
-  <rect x="580" y="1100" width="500" height="38" rx="8" class="male"/><text x="830" y="1127" text-anchor="middle" class="h">NODE 2 • UPSTREAM MALE</text>
+  <rect x="580" y="1100" width="500" height="38" rx="8" class="male"/><text x="830" y="1127" text-anchor="middle" class="h">NODE 2 • GX12-6 UPSTREAM MALE</text>
   <rect x="620" y="1140" width="420" height="70" class="blank"/><text x="830" y="1182" text-anchor="middle" class="small">33.3 cm blank end</text>
   <circle cx="830" cy="1235" r="34" class="sensor"/><text x="830" y="1231" text-anchor="middle" class="h">S1</text><text x="830" y="1256" text-anchor="middle" class="small">ch7</text>
   <circle cx="830" cy="1380" r="34" class="sensor"/><text x="830" y="1376" text-anchor="middle" class="h">S2</text><text x="830" y="1401" text-anchor="middle" class="small">ch3</text>
@@ -61,7 +61,7 @@
   <circle cx="830" cy="1705" r="34" class="sensor"/><text x="830" y="1701" text-anchor="middle" class="h">S3</text><text x="830" y="1726" text-anchor="middle" class="small">ch5</text>
   <circle cx="830" cy="1845" r="34" class="sensor"/><text x="830" y="1841" text-anchor="middle" class="h">S4</text><text x="830" y="1866" text-anchor="middle" class="small">ch1</text>
   <rect x="620" y="1885" width="420" height="35" class="blank"/><text x="830" y="1910" text-anchor="middle" class="small">33.3 cm blank end</text>
-  <rect x="580" y="1920" width="500" height="38" rx="8" class="female"/><text x="830" y="1947" text-anchor="middle" class="h">DOWNSTREAM FEMALE</text>
+  <rect x="580" y="1920" width="500" height="38" rx="8" class="female"/><text x="830" y="1947" text-anchor="middle" class="h">GX12-6 DOWNSTREAM FEMALE</text>
 
   <!-- direct joint 2 -->
   <rect x="580" y="1920" width="500" height="38" rx="8" class="female"/>
@@ -70,14 +70,14 @@
 
   <!-- Node 3 -->
   <rect x="600" y="1988" width="460" height="820" rx="18" class="module"/>
-  <rect x="580" y="1950" width="500" height="38" rx="8" class="male"/><text x="830" y="1977" text-anchor="middle" class="h">NODE 3 • UPSTREAM MALE</text>
+  <rect x="580" y="1950" width="500" height="38" rx="8" class="male"/><text x="830" y="1977" text-anchor="middle" class="h">NODE 3 • GX12-6 UPSTREAM MALE</text>
   <rect x="620" y="1990" width="420" height="70" class="blank"/><text x="830" y="2032" text-anchor="middle" class="small">33.3 cm blank end</text>
   <circle cx="830" cy="2085" r="34" class="sensor"/><text x="830" y="2081" text-anchor="middle" class="h">S1</text><text x="830" y="2106" text-anchor="middle" class="small">ch7</text>
   <circle cx="830" cy="2230" r="34" class="sensor"/><text x="830" y="2226" text-anchor="middle" class="h">S2</text><text x="830" y="2251" text-anchor="middle" class="small">ch3</text>
   <rect x="670" y="2300" width="320" height="180" rx="14" class="box"/><text x="830" y="2333" text-anchor="middle" class="h">CENTER IP65 ENCLOSURE</text><text x="830" y="2375" text-anchor="middle" class="txt">ESP32 + TCA + one RS-485</text><text x="830" y="2405" text-anchor="middle" class="small">all boards on standoffs</text>
   <circle cx="830" cy="2555" r="34" class="sensor"/><text x="830" y="2551" text-anchor="middle" class="h">S3</text><text x="830" y="2576" text-anchor="middle" class="small">ch5</text>
   <circle cx="830" cy="2695" r="34" class="sensor"/><text x="830" y="2691" text-anchor="middle" class="h">S4</text><text x="830" y="2716" text-anchor="middle" class="small">ch1</text>
-  <rect x="580" y="2770" width="500" height="38" rx="8" class="male"/><text x="830" y="2797" text-anchor="middle" class="h">BOTTOM UPSTREAM/EXPOSED MALE — CAP IT</text>
+  <rect x="580" y="2770" width="500" height="38" rx="8" class="male"/><text x="830" y="2797" text-anchor="middle" class="h">BOTTOM GX12-6 MALE — CAP IT</text>
 
   <!-- Left dimensions -->
   <line x1="250" y1="292" x2="250" y2="405" class="measure"/><text x="220" y="350" text-anchor="middle" transform="rotate(-90 220 350)" class="dim">33.3 cm</text>
@@ -90,10 +90,11 @@
   <!-- Right callouts -->
   <rect x="1210" y="350" width="490" height="470" rx="16" fill="#f5f5f5" stroke="#b0bec5" stroke-width="2"/>
   <text x="1240" y="395" class="h">One-node electrical meaning</text>
-  <text x="1240" y="440" class="txt">UPSTREAM male pins:</text>
-  <text x="1270" y="470" class="txt">A • B • RS485 GND • +5V • GND</text>
-  <text x="1240" y="520" class="txt">DOWNSTREAM female pins:</text>
-  <text x="1270" y="550" class="txt">same signals, pass-through</text>
+  <text x="1240" y="440" class="txt">GX12-6 pinout:</text>
+  <text x="1240" y="470" class="txt">1=A • 2=B • 3/4=+5V</text>
+  <text x="1240" y="520" class="txt">5/6=GND • same on both genders</text>
+  <text x="1240" y="570" class="txt">direct female ↔ male mating</text>
+  <text x="1270" y="600" class="txt">RS-485 + power pass-through</text>
   <path d="M1260 600 L1650 600" class="bus"/><text x="1240" y="635" class="txt">A/B = shared bidirectional bus</text>
   <path d="M1260 690 L1650 690" class="power"/><text x="1240" y="725" class="txt">+5V/GND = local power + next node</text>
   <text x="1240" y="780" class="small">The connector is not “RS-485 in” or “out”.</text>

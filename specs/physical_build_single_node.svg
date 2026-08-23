@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="2700" viewBox="0 0 1600 2700">
   <title>ExcaVision single vertical sensor node assembly</title>
-  <desc>One 2.667 metre vertical module with four sensors spaced 66.67 centimetres apart, central ESP32 and TCA enclosure, one RS-485 transceiver, and upstream/downstream pass-through connectors.</desc>
+  <desc>One 2.667 metre vertical module with four sensors spaced 66.67 centimetres apart, central ESP32 and TCA enclosure, one RS-485 transceiver, and direct-mating GX12-6 male/female combined RS-485 and power connectors.</desc>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#263238"/>
@@ -38,7 +38,7 @@
 
   <rect width="1600" height="2700" fill="#ffffff"/>
   <text x="80" y="65" class="title">ExcaVision — One Vertical Node Module</text>
-  <text x="80" y="100" class="subtitle">2.667 m pitch • 66.67 cm sensor spacing • one RS-485 transceiver • no breadboard/jumper wiring</text>
+  <text x="80" y="100" class="subtitle">2.667 m pitch • 66.67 cm sensor spacing • GX12-6 direct mate • no cable between nodes</text>
 
   <!-- Main vertical rail -->
   <rect x="285" y="170" width="150" height="2370" rx="18" class="rail"/>
@@ -53,9 +53,9 @@
 
   <!-- Port blocks -->
   <rect x="255" y="170" width="210" height="42" rx="8" class="port"/>
-  <text x="360" y="198" text-anchor="middle" fill="#ffffff" style="font:700 16px Arial">UPSTREAM • MALE</text>
+  <text x="360" y="198" text-anchor="middle" fill="#ffffff" style="font:700 15px Arial">UPSTREAM • GX12-6 MALE</text>
   <rect x="255" y="2500" width="210" height="42" rx="8" class="port"/>
-  <text x="360" y="2528" text-anchor="middle" fill="#ffffff" style="font:700 16px Arial">DOWNSTREAM • FEMALE</text>
+  <text x="360" y="2528" text-anchor="middle" fill="#ffffff" style="font:700 15px Arial">DOWNSTREAM • GX12-6 FEMALE</text>
 
   <!-- Sensor pods -->
   <g>
@@ -164,15 +164,16 @@
   <line x1="1240" y1="510" x2="1240" y2="1320" class="dimension"/>
   <text x="1272" y="950" class="dim">1.000 m max</text>
   <text x="1272" y="978" class="small">TCA → S1/S4 cable distance</text>
-  <text x="1272" y="1010" class="small">module joints mate directly — no wire</text>
+  <text x="1272" y="1010" class="small">GX12-6 joints mate directly — no wire</text>
 
   <!-- external callouts -->
   <path d="M 1120 1120 L 1370 1120" class="guide"/>
   <text x="1390" y="1128" class="label">One transceiver per node</text>
   <text x="1390" y="1158" class="small">A/B/GND = shared bus</text>
-  <text x="1390" y="1185" class="small">UPSTREAM = keyed male</text>
-  <text x="1390" y="1212" class="small">DOWNSTREAM = keyed female</text>
-  <text x="1390" y="1239" class="small">combined RS-485 + 5V pass-through</text>
+  <text x="1390" y="1185" class="small">UPSTREAM = GX12-6 male</text>
+  <text x="1390" y="1212" class="small">DOWNSTREAM = GX12-6 female</text>
+  <text x="1390" y="1239" class="small">direct mate • no wire between nodes</text>
+  <text x="1390" y="1266" class="small">pins: 1=A 2=B 3/4=+5V 5/6=GND</text>
 
   <path d="M 1120 1450 L 1370 1450" class="guide"/>
   <text x="1390" y="1458" class="label">Secure mechanically</text>

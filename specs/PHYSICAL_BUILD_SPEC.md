@@ -98,12 +98,14 @@ gateway at the surface, and the backend keys them by `pipe_id` under the site.
   after confirming its RO output is safe for the ESP32's 3.3 V RX input.
 - Four small sensor mounting brackets. These are the only parts that need to
   be 3D printed; do not print a 2.667 m enclosure.
-- One keyed/latching **male** trunk connector at the top, labelled
-  `UPSTREAM`.
-- One keyed/latching **female** trunk connector at the bottom, labelled
-  `DOWNSTREAM`.
-- The trunk connector carries RS-485 `A/B`, common `GND`, and pass-through
-  `+5V`/power return; use enough pins for all conductors.
+- One threaded/locking **GX12-6 male** combined connector at the top,
+  labelled `UPSTREAM`.
+- One threaded/locking **GX12-6 female** combined connector at the bottom,
+  labelled `DOWNSTREAM`.
+- The connector carries RS-485 and pass-through power using this fixed pinout:
+  `1=A`, `2=B`, `3=+5V`, `4=+5V`, `5=GND`, `6=GND`.
+- Verify the exact GX12-6 part's contact-current rating before production;
+  pins 3/4 and 5/6 are paralleled for the 5 V power path.
 - Four sensor cable connectors, labelled `S1`, `S2`, `S3`, and `S4`.
 - M2/M3 screws, nuts, and standoffs for the boards and sensor brackets.
 - Cable glands, strain reliefs, heat-shrink tubing, ferrules, and cable ties.
@@ -185,7 +187,7 @@ ESP32 GND           → transceiver GND
 then connected to GPIO 25 through one secured wire. Use a transceiver whose
 logic levels are compatible with the ESP32.
 
-### 3.4 Node-to-node trunk — single shared bus, gendered ports
+### 3.4 Node-to-node trunk — direct-mating GX12-6 shared bus
 
 There is **one** RS-485 transceiver per node. `A` and `B` form a single shared
 bidirectional bus; there is no separate “in” and “out” pair of conductors —
@@ -211,12 +213,12 @@ bidirectional bus; there is no separate “in” and “out” pair of conductor
 For Lego-style physical chaining, use one fixed vertical connector convention:
 
 ```text
-TOP / UPSTREAM       = male connector
-BOTTOM / DOWNSTREAM  = female connector
+TOP / UPSTREAM       = GX12-6 male
+BOTTOM / DOWNSTREAM  = GX12-6 female
 ```
 
-The lower node's male `UPSTREAM` plugs into the upper node's female
-`DOWNSTREAM`:
+The lower node's GX12-6 male `UPSTREAM` plugs directly into the upper node's
+GX12-6 female `DOWNSTREAM`:
 
 ```text
 upper node DOWNSTREAM female
@@ -224,9 +226,26 @@ upper node DOWNSTREAM female
              └──── plugs into ──── lower node UPSTREAM male
 ```
 
-The labels and connector genders are assembly conventions only. Electrically
-both ports land on the same local `A`/`B`/`GND` bus and the same single
-transceiver. Do not install two RS-485 modules per node.
+There is **no cable between modules**. The connector is both the mechanical
+joint and the electrical link. The labels and connector genders are assembly
+conventions only: electrically both ports land on the same local `A`/`B`/`GND`
+bus and the same single transceiver. Do not install two RS-485 modules per
+node.
+
+#### GX12-6 direct-joint pinout
+
+| GX12-6 pin | Signal | Purpose |
+|---:|---|---|
+| 1 | RS-485 `A` | shared bus |
+| 2 | RS-485 `B` | shared bus |
+| 3 | `+5V` | power contact 1 |
+| 4 | `+5V` | power contact 2, paralleled |
+| 5 | `GND` | return/contact 1 |
+| 6 | `GND` | return/contact 2, paralleled |
+
+The two connector genders use the same signal numbering when viewed from the
+mating face according to the chosen connector manufacturer's datasheet. Label
+both the connector and its rear wiring; do not assume wire color alone.
 
 Inside each enclosure, distribute the bus with a small screw-terminal strip,
 WAGO-style lever connector, tiny perfboard, or a small custom distribution
@@ -287,8 +306,8 @@ The final assembly must satisfy all of the following:
 - Every external cable enters through a cable gland or strain relief.
 - Sensor cables have a service loop and are clamped near the enclosure so a
   pull on the cable cannot reach the MPU solder joints or TCA connector.
-- Combined RS-485/power connectors are keyed, gendered, and physically
-  labelled `UPSTREAM` (male) and `DOWNSTREAM` (female).
+- Combined GX12-6 RS-485/power connectors are threaded/locking, gendered,
+  and physically labelled `UPSTREAM` (male) and `DOWNSTREAM` (female).
 - Connectors are labelled at both ends with the signal names, not only with
   color.
 - The PVC rail has clamps or mounting points so the module cannot rotate or
@@ -320,7 +339,8 @@ three-node cable length and wiring without those components.
 8. Check continuity and shorts with power disconnected.
 9. Verify every MPU is on the intended TCA channel.
 10. Apply power locally on the bench and verify the boot scan.
-11. Connect modules using `DOWNSTREAM female → UPSTREAM male` trunk connections.
+11. Align and directly mate `DOWNSTREAM GX12-6 female → UPSTREAM GX12-6 male`;
+    there is no cable between modules.
 12. Add the next module with the same vertical orientation and pitch.
 13. Verify RS-485 discovery and polling before closing the enclosures.
 14. Tighten cable glands, install covers, and re-test after mechanical movement.

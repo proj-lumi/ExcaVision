@@ -10,7 +10,7 @@
 // the `apikey` and `Authorization` headers. This bypasses RLS — the node is
 // trusted and only ever writes its own MAC-tagged data.
 
-bool cloudConnectOnce();                               // one connect attempt (~15 s max); true when linked. Retryable.
+bool cloudConnectOnce();                               // one WiFi + NTP + pinned-TLS setup attempt; retryable.
 void cloudStop();                                      // disconnect + mark not-connected (box stopped being the gateway)
 bool cloudConnected();
 bool cloudPostJson(const char* url, const String& jsonBody);  // true on 2xx

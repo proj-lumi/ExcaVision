@@ -65,7 +65,7 @@ void setup() {
   loadGatewayFromFlash();     // restore the master role if one was set (Step 5)
   loadThresholdFromFlash();   // restore the alert threshold if one was set (Step 8)
 
-  Serial.println("MPU6050 ready. 'z' = baseline (or short-press), 'g' = toggle gateway (or long-press ≥ 3 s), 'r' = reboot, 't' = threshold.");
+  Serial.println("MPU6050 ready. 'z' = baseline (or short-press), 'g' = toggle gateway (or long-press ≥ 3 s), 'r' = reboot.");
 
   pinMode(BUTTON_PIN, INPUT_PULLUP);  // button: HIGH when open, LOW when pressed
   pinMode(LED_PIN, OUTPUT);           // LED (the Led module drives its states)
@@ -172,11 +172,6 @@ void loop() {
       // recovery after the 5-attempt window elapses — no physical reset needed.
       Serial.println("Rebooting now (recovery re-attempts)...");
       ESP.restart();
-    } else if (c == 't') {
-      // 't' alone prints the current threshold; 't2.5' sets it.
-      float v = Serial.parseFloat();
-      if (v > 0) setThresholdDeg(v);
-      else       Serial.print("threshold = "), Serial.print(getThresholdDeg(), 2), Serial.println("°");
     }
   }
 

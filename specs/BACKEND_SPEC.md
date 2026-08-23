@@ -138,6 +138,34 @@ One `INSERT … SELECT … GROUP BY` + one `DELETE`. Beginner-buildable.
 - 14 days raw ≈ 14 M rows. Postgres handles this trivially.
 - 1 min forever: ~17k rows/day, ~6 M/year, ~300 MB/year. Tiny.
 
+### 5.3 Baseline periods (re-zero does NOT delete data)
+
+Capturing a new baseline starts a new **monitoring period** — the reference used
+to compute tilt changed, so pre-reset and post-reset readings are **not directly
+comparable**. The policy is **segment, never delete**:
+
+- **No deletion on re-zero.** A new baseline does not delete, rewrite, or
+  orphan any existing rows. Old baselines and old readings stay in the DB.
+- **Baseline history kept.** `baselines.supersedes_id` already chains re-zeros
+  (new → old); the "current" baseline is the unsuperseded one.
+- **Period boundary = the newest baseline's `captured_at`.** For a sensor,
+  readings with `ts >= latest_baseline.captured_at` belong to the current
+  period; earlier ones belong to a prior period. This simple `captured_at`
+  cutoff is the v1 definition; a per-reading `baseline_id` is a possible later
+  refinement, not needed yet.
+- **"Current period" query** (used by the app + ML): per sensor take the newest
+  baseline `captured_at`, then filter readings/`readings_1min` by
+  `ts >= <that timestamp>`. (In SQL: a per-sensor "last baseline time" then
+  `JOIN readings ON readings.ts >= baseline.captured_at`.)
+- **Alerts stay historical.** A real trip before a re-zero is still a real
+  event in the `alerts` log (audit trail / the reason the engineer re-zeroed).
+  Never delete alerts on re-zero.
+- **Retention unchanged.** Raw `readings` still follows the normal 14-day
+  policy (§5.1); re-zeroing does not shorten or disable it.
+- **The reset is not a movement.** A re-zero can make tilt jump back toward
+  ~0 without any physical wall movement; consumers (esp. the ML) must not
+  read it as an event — see [ML_SPEC.md](./ML_SPEC.md).
+
 ## 6. Install flow (how a pipe gets assigned to a user)
 
 1. **Assembly time (your team, before field):** flash each ESP32 with a
@@ -208,4 +236,7 @@ are Supabase auto-generated CRUD, not custom.
   itself (originating from its button long-press → NVS → included in its
   Supabase posts), NOT set by the app. No auto-failover.
 - **Baseline history preserved** (`supersedes_id`); current = unsuperseded.
+- **Re-zero = new monitoring period; data is segmented, never deleted.**
+  Baselines and readings are preserved; consumers use the newest baseline's
+  `captured_at` as the current-period boundary; 14-day retention unchanged.
 - **Engineer-set threshold on `pipes`**, pushed to nodes, checked locally.

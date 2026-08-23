@@ -22,6 +22,7 @@ is needed.
 ## 2. Hardware
 
 ### 2.1 Components per node
+
 - 1× ESP32 (any devkit variant with GPIO 21/22 free).
 - 1× TCA9548A I²C multiplexer at address `0x70` (A0/A1/A2 tied low).
 - Up to 4× MPU6050 breakouts (GY-521-compatible, WHO_AM_I reports `0x70` —
@@ -35,6 +36,7 @@ is needed.
   every box screaming = loudest coverage.
 
 ### 2.2 Wiring (critical for reading quality — see [PHYSICAL_ARCHITECTURE_SPEC.md](./PHYSICAL_ARCHITECTURE_SPEC.md) for the full layout)
+
 - **TCA + ESP32 centered in the node's 2 m span**, with 4 sensors splayed
   symmetrically: two at ±0.5 m, two at ±1.0 m. **Max wire run is 1 m** (down
   from 4 m in the old layout) — this puts the I²C bus well inside its
@@ -58,6 +60,7 @@ is needed.
 - **Bus clock: 100 kHz** (default, no `setClock). At 1 m this is rock-solid.
 
 ### 2.3 GPIO map (defaults — confirm per board)
+
 - SDA = 21, SCL = 22 (I²C to the TCA9548A).
 - **Button = GPIO 16** (external momentary button; `INPUT_PULLUP` — HIGH when
   open, LOW when pressed).
@@ -107,12 +110,14 @@ Adding a sensor = one line. Sample/report/zero loops iterate the array.
 - **Non-blocking:** all timing via `millis()` deltas. **No `delay()`** in the
   loop (only boot-time delays).
 - **Output table format** (per second, per sensor):
+
   ```
   time |    S1                       |    S2
   (s)  |  tilt   |g|    T   n/fail   |  tilt   |g|    T   n/fail
   ------+---------------------------+---------------------------
    1.0 | 0.012 0.999 47.2  100/0    | 0.034 1.001 47.5  100/0
   ```
+
   Header reprints every 20 rows. `--` placeholders keep columns aligned when
   no baseline / no samples.
 
@@ -141,8 +146,9 @@ direction if ever needed later — it's a reporting change, not new hardware.
 ## 7. Baseline management
 
 ### 7.1 Storage tiers (priority order)
+
 | Layer | Survives | Role |
-|---|---|---|
+| --- | --- | --- |
 | Supabase | everything | source of truth, shared, auditable |
 | NVS (ESP32 flash) | reboot, WiFi outage | local cache / fallback |
 | RAM | nothing | working copy the tilt math uses |
@@ -160,6 +166,7 @@ direction if ever needed later — it's a reporting change, not new hardware.
   only. A crash must not silently reset the reference.
 
 ### 7.2 Boot sequence (the power-interruption fix)
+
 ```
 1. Power on, LED off.
 2. Read MAC (esp_efuse / WiFi.macAddress — stable, unique, no WiFi needed).
@@ -170,6 +177,7 @@ direction if ever needed later — it's a reporting change, not new hardware.
 5. Baseline loaded → LED solid → start monitoring.
 6. No baseline anywhere → LED off → wait for SET.
 ```
+
 A normal reboot → NVS serves instantly, no network needed; the cloud is
 only consulted when local memory is empty. **No operator action on a
 normal reboot.**
@@ -177,7 +185,7 @@ normal reboot.**
 ### 7.3 The install button + LED (one of each, combined)
 
 | LED state | Meaning |
-|---|---|
+| --- | --- |
 | Off | no baseline loaded, or no sensors present (not ready, press the button) |
 | Fast blink | busy — collecting / uploading / downloading baseline |
 | Solid on | baseline loaded, monitoring normally (normal sensor node) |
@@ -188,6 +196,7 @@ normal reboot.**
 > (it can't detect mid-run failures and won't clear until reboot), and doing
 > it right (continuous evaluation + hysteresis + resolution) duplicates what
 > the app already does better. So:
+>
 > - **Install-time diagnostics** = the boot scan's per-channel `MISSING`
 >   serial prints (installer is on a laptop).
 > - **Runtime health** = the app, which alarms when a sensor stops reporting.
@@ -195,6 +204,7 @@ normal reboot.**
 >   LED state.
 
 **One momentary button, two actions by hold duration:**
+
 - **Short press (tap, < 1 s)** → SET BASELINE: begin collecting samples for
   `BASELINE_COLLECT_SECONDS` (default 30 s, configurable); at the end,
   average into the baseline, cache to NVS, upload to Supabase. LED
@@ -224,6 +234,7 @@ window. Change the value to trade accuracy vs. install time. Note: the 1 s
 separate, longer collection window.
 
 ### 7.4 Global baseline capture (the inaccessible-slaves fix)
+
 A long press (TOGGLE GATEWAY, see §7.3) becoming the master does **not**
 re-capture baselines by itself — but the classic install flow is one long
 press to take gateway on the master *plus* the short-press collection on
@@ -242,11 +253,13 @@ true reference. No confirm window needed. Operational rule: "set baselines
 after the wall has settled, not the instant the dig ends."
 
 ### 7.5 Serial debug equivalents (kept)
+
 - `z` → SET BASELINE (same as short press).
 - `g` → TOGGLE GATEWAY (same as long press — on becomes off, off becomes on).
 - `r` → reboot the box (`esp_restart`) — re-triggers NVS-empty recovery.
-- `t` / `t2.5` → show / set the local alert threshold.
-- (`l` removed — cloud recovery is automatic at boot; no manual LOAD needed.)
+- There is NO local threshold command: the threshold is pipe-level (app/DB)
+  and reaches every node via the gateway's realtime `T;` relay (§10). A local
+  override would contradict that, so it was removed.
 The firmware works with or without the physical button/LED attached.
 
 ## 8. Node identity & data tagging
@@ -306,16 +319,16 @@ says).
 The wire protocol is ASCII, one `\n`-terminated line per message:
 
 | Direction | Frame | Meaning |
-|---|---|---|
+| --- | --- | --- |
 | master → | `D` | discovery broadcast — who is on the bus? |
 | slave → | `H:<mac>` | hello, I am `<mac>` |
 | master → | `P:<mac>` | poll that specific node |
 | slave → | `R;<mac>;S1@7:v,v,v,v,v;S2@3:...` | readings, name@channel, per sensor: tilt,g,T,n,fail |
 | slave → | `A;<mac>;<ch>;<kind>;<sev>;<value>` | **spontaneous** threshold alert |
 | slave → | `B;<mac>;<ch>;<bx>,<by>,<bz>` | **spontaneous** baseline capture (master uploads it) |
-| master → | `C`                       | broadcast: all nodes capture a baseline |
-| master → | `T;<deg>`                 | broadcast: push the alert threshold to every slave |
-| slave → | `F;<mac>`                   | ask the master to fetch my baselines from the cloud |
+| master → | `C` | broadcast: all nodes capture a baseline |
+| master → | `T;<deg>` | broadcast: push the alert threshold to every slave |
+| slave → | `F;<mac>` | ask the master to fetch my baselines from the cloud |
 | master → | `Q;<mac>;<ch>:bx,by,bz;…` | reply with a slave's baselines (NVS-empty recovery) |
 
 All frames except `A;` and `B;` are **master-initiated**: the master asks, the slave
@@ -339,6 +352,7 @@ A future refinement (if wanted): a small random back-off before sending `A;`,
 or a retry-until-acked scheme — not a v1 blocker.
 
 ### 9.1 Master→Supabase batching
+
 - Bundle readings and POST every ~5 s (not one request per second) over a
   **reused** HTTPS connection (keep-alive). A warm batch POST is ~200 ms,
   comfortably inside the 5 s window. 5 s dashboard latency is invisible for
@@ -346,8 +360,11 @@ or a retry-until-acked scheme — not a v1 blocker.
 - **Bounded buffer** (~60 readings) absorbs WiFi hiccups. Sampling never
   blocks on HTTP. On failure, leave readings in the buffer and retry next
   batch.
-- For v1 testing: `client.setInsecure()` is fine. For production: pin
-  Supabase's CA cert.
+- HTTPS uses CA validation. The firmware pins the Google Trust Services GTS
+  Root R4 CA used by the current Supabase certificate chain and synchronizes
+  the ESP32 clock with NTP before TLS. The Supabase leaf certificate is not
+  pinned because it rotates frequently. If Supabase changes CA, update the
+  embedded root and reflash the firmware before the old chain expires.
 
 ## 10. Threshold alert (the safety layer, evaluated on every node)
 
@@ -385,6 +402,7 @@ screaming = loudest coverage and the clearest "something near you is wrong."
   v1.
 
 **Why a buzzer on every node, not just the master:**
+
 - **Loudest coverage** — N buzzers along the wall >> 1 buzzer at the top.
   Crew in the trench hear the box next to them, not a distant surface alarm.
 - **Locality** — the box closest to the failing panel is the one that
@@ -416,6 +434,7 @@ sensor_node/
 ```
 
 Phased additions:
+
 - **Phase 1 (this branch, `feat/sensor`):** button state machine + LED state
   machine + NVS baseline persistence. Works without WiFi.
 - **`feat/transport`:** RS485 transport module (swappable with WiFi), the
@@ -435,6 +454,7 @@ Phased additions:
 ```bash
 arduino-cli compile --fqbn esp32:esp32:esp32 sensor_node/
 ```
+
 Expected: ~22% flash, clean. At runtime: boot scan lists each sensor
 `present`/`MISSING`; one table row per second per sensor; `n` ≈ 100, `fail`
 ≈ 0, `|g|` within 1% of 1.000; resting `tilt` within ±0.02° after zeroing.

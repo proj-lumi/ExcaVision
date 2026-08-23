@@ -1,7 +1,9 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <WiFiClientSecure.h>
+#include <time.h>
 #include "Cloud.h"
+#include "GtsRootR4.h"
 #include "secrets.h"
 
 // Long-lived objects so the TLS session / connection can be reused across
@@ -9,30 +11,58 @@
 static WiFiClientSecure client;
 static HTTPClient        http;
 static bool              connected = false;
+static bool              clockReady = false;
 
 void cloudStop() {
   connected = false;
+  clockReady = false;
   WiFi.disconnect();
   Serial.println("[cloud] gateway off — WiFi disconnected");
 }
 
-// ONE connect attempt (max ~15 s). Safe to call repeatedly — retrying until
-// the AP answers is the cloud task's job, so a boot-time outage, bad
-// credentials, or a runtime AP blip all self-heal. Never gate the main loop.
-bool cloudConnectOnce() {
-  if (WiFi.status() == WL_CONNECTED) { connected = true; return true; }
-  client.setInsecure();   // bench only — pin Supabase's CA cert for production
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  Serial.print("[cloud] connecting to WiFi");
+// Synchronize the RTC before TLS certificate validation. A certificate can
+// be valid on the calendar but appear invalid to an ESP32 whose clock is 1970.
+static bool syncClock() {
+  if (clockReady) return true;
+  configTime(0, 0, "pool.ntp.org", "time.nist.gov", "time.google.com");
+  Serial.print("[cloud] synchronizing clock");
   unsigned long t0 = millis();
-  while (WiFi.status() != WL_CONNECTED && millis() - t0 < 15000) {
-    delay(500);
+  time_t now = 0;
+  while (now < 1700000000 && millis() - t0 < 10000) {
+    delay(250);
+    time(&now);
     Serial.print(".");
   }
-  connected = (WiFi.status() == WL_CONNECTED);
-  if (connected) Serial.println(" connected");
-  else           Serial.println();
+  clockReady = (now >= 1700000000);
+  Serial.println(clockReady ? " synchronized" : " FAILED");
+  return clockReady;
+}
+
+// ONE connect attempt (max ~15 s, plus up to 10 s for NTP). Safe to call
+// repeatedly — retrying until the AP answers is the cloud task's job, so a
+// boot-time outage, bad credentials, or runtime AP blip all self-heal.
+bool cloudConnectOnce() {
+  if (WiFi.status() != WL_CONNECTED) {
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+    Serial.print("[cloud] connecting to WiFi");
+    unsigned long t0 = millis();
+    while (WiFi.status() != WL_CONNECTED && millis() - t0 < 15000) {
+      delay(500);
+      Serial.print(".");
+    }
+    Serial.println(WiFi.status() == WL_CONNECTED ? " connected" : " FAILED");
+  }
+
+  if (WiFi.status() != WL_CONNECTED) {
+    connected = false;
+    return false;
+  }
+
+  // Trust only the pinned Google Trust Services root used by the current
+  // Supabase certificate chain. Never fall back to setInsecure().
+  client.setCACert(GTS_ROOT_R4);
+  connected = syncClock();
   return connected;
 }
 

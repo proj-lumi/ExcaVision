@@ -101,6 +101,18 @@ readings will probably keep climbing." That's the precursor you want.
   1-min inference (cheap, fine for a slow signal); move to 1-s if you need
   faster early warnings.
 
+**Baseline period = feature-window boundary.** A re-zero changes the tilt
+reference (tilt can snap back toward ~0 with no physical movement), so treat
+each new baseline as a **fresh start, never an event**:
+
+- **Inference:** reset the feature/lag window at each new baseline — the
+  current prediction only uses readings since the newest baseline's
+  `captured_at` (per [BACKEND_SPEC.md §5.3](./BACKEND_SPEC.md)). A re-zero
+  must not look like a sudden physical change.
+- **Training:** treat each contiguous span between baseline captures as one
+  **separate segment**. Train on normal segments; never pool features across a
+  reset seam, or the model learns "the reset" as normal behaviour.
+
 ## 5. Training (offline, in a Jupyter notebook)
 
 1. **Collect** 1–2 weeks of normal operation into a pandas DataFrame (read
@@ -128,7 +140,9 @@ the workhorse stack of real-world ML and it's beginner-accessible.
 A cron job (every minute to start):
 
 1. **Load** the saved model (by `model_version`).
-2. **Read** the last hour of `readings` (or `readings_1min`) for each node.
+2. **Read** the last hour of `readings` (or `readings_1min`) for each node —
+   **clamped to readings since the newest baseline (§4)**, so a re-zero
+   boundary is never inside the window.
 3. **Build the same features** as training (lagged tilts, rate, etc.).
 4. **Predict** the next tilt; compare to the actual reading that just
    arrived.

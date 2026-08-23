@@ -77,6 +77,12 @@ Plus two cross-cutting screens: **Alerts inbox** and **Install wizard**.
   app.
 - The toggle is just which table the query hits. The backend's downsample job
   ([BACKEND_SPEC.md §5](./BACKEND_SPEC.md)) makes this cheap.
+- **Baseline periods:** a re-zero starts a new monitoring period. Live/history
+  charts show the **current period** by default — reading at/after the latest
+  baseline's `captured_at`. Pre-reset readings are **never deleted**; they stay
+  queryable and are labelled as a prior period ("before baseline reset @
+  <time>"), so an engineer can review why a re-zero happened without
+  mistaking the reset itself for movement.
 
 ### 3.4 Node detail
 - A single ESP32 box: its MAC, position in pipe, `is_gateway` flag, online
@@ -94,6 +100,8 @@ Plus two cross-cutting screens: **Alerts inbox** and **Install wizard**.
 ### 3.5 Sensor detail
 - One MPU6050: full time-series of tilt + |g| + T, selectable ranges.
 - Baseline info: when set, by whom, the baseline vector, supersedes history.
+  A re-zero is shown as a **period boundary** — the prior period's readings
+  remain available (labelled "before reset @ <time>"), never auto-deleted.
 - Raw readings table (paginated) for forensics.
 
 ### 3.6 Alerts inbox

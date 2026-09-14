@@ -1,0 +1,90 @@
+{
+  "customerUnits": [
+    {
+      "id": "UNIT-01",
+      "name": "North wall",
+      "status": "Active",
+      "currentTilt": 0.82,
+      "threshold": 2.0,
+      "sensorCount": 12,
+      "updated": "15 seconds ago",
+      "trend": [
+        0.30,
+        0.34,
+        0.36,
+        0.45,
+        0.52,
+        0.60,
+        0.68,
+        0.82
+      ]
+    },
+    {
+      "id": "UNIT-05",
+      "name": "South wall",
+      "status": "Active",
+      "currentTilt": 0.24,
+      "threshold": 1.8,
+      "sensorCount": 8,
+      "updated": "21 seconds ago",
+      "trend": [
+        0.22,
+        0.20,
+        0.23,
+        0.21,
+        0.25,
+        0.24,
+        0.22,
+        0.24
+      ]
+    }
+  ],
+  "customerAlerts": [
+    {
+      "id": "ALERT-19",
+      "kind": "Early Advisory",
+      "severity": "warning",
+      "unit": "North wall",
+      "detail": "North wall may be approaching its movement limit.",
+      "value": 0.82,
+      "time": "Today, 1:42 PM",
+      "acknowledged": false
+    },
+    {
+      "id": "ALERT-18",
+      "kind": "Threshold Warning",
+      "severity": "critical",
+      "unit": "North wall",
+      "detail": "Node 3 exceeded the configured movement limit.",
+      "value": 2.13,
+      "time": "Yesterday, 4:18 PM",
+      "acknowledged": true
+    },
+    {
+      "id": "ALERT-17",
+      "kind": "Early Advisory",
+      "severity": "warning",
+      "unit": "South wall",
+      "detail": "South wall showed unusual sustained movement.",
+      "value": 0.71,
+      "time": "Sep 12, 10:06 AM",
+      "acknowledged": true
+    }
+  ],
+  "customerRequests": [
+    {
+      "id": "SR-301",
+      "type": "Repair",
+      "detail": "North wall Node 2 enclosure is loose.",
+      "status": "Under review",
+      "submitted": "Sep 13"
+    },
+    {
+      "id": "SR-300",
+      "type": "More coverage",
+      "detail": "Please inspect the loading-ramp side for additional monitoring.",
+      "status": "Scheduled",
+      "submitted": "Sep 8"
+    }
+  ]
+}

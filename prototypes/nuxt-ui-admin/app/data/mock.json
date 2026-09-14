@@ -1,0 +1,167 @@
+{
+  "requests": [
+    {
+      "id": "REQ-1042",
+      "type": "Installation",
+      "customer": "Ana Reyes",
+      "company": "Reyes Construction",
+      "email": "ana@example.com",
+      "site": "Dumaguete Foundation Site",
+      "submitted": "Today, 9:24 AM",
+      "status": "intake",
+      "summary": "Monitoring needed along the north excavation wall before foundation work continues."
+    },
+    {
+      "id": "REQ-1041",
+      "type": "Repair",
+      "customer": "Gerald Faustorilla",
+      "company": "GF Builders",
+      "email": "gerald@example.com",
+      "site": "Rest & Relax Guesthouse",
+      "submitted": "Today, 8:10 AM",
+      "status": "approved",
+      "summary": "North wing Unit 2 stopped reporting after overnight rain."
+    },
+    {
+      "id": "REQ-1040",
+      "type": "More coverage",
+      "customer": "Paolo Lim",
+      "company": "Lim Civil Works",
+      "email": "paolo@example.com",
+      "site": "Bacolod Retaining Wall",
+      "submitted": "Yesterday",
+      "status": "in_progress",
+      "summary": "Add coverage near the vehicle access ramp."
+    },
+    {
+      "id": "REQ-1039",
+      "type": "Installation",
+      "customer": "Mara Yu",
+      "company": "YU Development",
+      "email": "mara@example.com",
+      "site": "Sibulan Commercial Dig",
+      "submitted": "Sep 12",
+      "status": "in_progress",
+      "summary": "Initial monitoring installation for a two-wall excavation."
+    },
+    {
+      "id": "REQ-1038",
+      "type": "Repair",
+      "customer": "Carlo Tan",
+      "company": "CT Engineering",
+      "email": "carlo@example.com",
+      "site": "South Road Project",
+      "submitted": "Sep 11",
+      "status": "completed",
+      "summary": "Replace a damaged node at position 3."
+    }
+  ],
+  "sites": [
+    {
+      "id": "SITE-01",
+      "name": "Rest & Relax Guesthouse",
+      "customer": "Gerald Faustorilla",
+      "location": "Dumaguete City, Negros Oriental",
+      "activeUnits": 2,
+      "customerAccess": "Active"
+    },
+    {
+      "id": "SITE-02",
+      "name": "Bacolod Retaining Wall",
+      "customer": "Paolo Lim",
+      "location": "Bacolod City, Negros Occidental",
+      "activeUnits": 1,
+      "customerAccess": "Active"
+    },
+    {
+      "id": "SITE-03",
+      "name": "Sibulan Commercial Dig",
+      "customer": "Mara Yu",
+      "location": "Sibulan, Negros Oriental",
+      "activeUnits": 0,
+      "customerAccess": "Not invited"
+    }
+  ],
+  "installations": [
+    {
+      "id": "UNIT-01",
+      "name": "North wall",
+      "site": "Rest & Relax Guesthouse",
+      "stage": "Active",
+      "plannedNodes": 3,
+      "assignedNodes": 3,
+      "gatewayReady": true
+    },
+    {
+      "id": "UNIT-02",
+      "name": "Access ramp",
+      "site": "Bacolod Retaining Wall",
+      "stage": "Planning",
+      "plannedNodes": 2,
+      "assignedNodes": 1,
+      "gatewayReady": true
+    },
+    {
+      "id": "UNIT-03",
+      "name": "East wall",
+      "site": "Sibulan Commercial Dig",
+      "stage": "Field ready",
+      "plannedNodes": 3,
+      "assignedNodes": 3,
+      "gatewayReady": true
+    },
+    {
+      "id": "UNIT-04",
+      "name": "West wall",
+      "site": "Sibulan Commercial Dig",
+      "stage": "Commissioning",
+      "plannedNodes": 2,
+      "assignedNodes": 2,
+      "gatewayReady": true
+    }
+  ],
+  "inventory": [
+    {
+      "id": "NODE-001",
+      "serial": "EXV-0001",
+      "mac": "4C:C3:82:C4:58:9C",
+      "state": "Deployed",
+      "assignment": "North wall · Gateway"
+    },
+    {
+      "id": "NODE-002",
+      "serial": "EXV-0002",
+      "mac": "68:09:47:9B:0A:84",
+      "state": "Deployed",
+      "assignment": "North wall · Position 2"
+    },
+    {
+      "id": "NODE-003",
+      "serial": "EXV-0003",
+      "mac": "30:76:F5:E5:A2:24",
+      "state": "Needs inspection",
+      "assignment": null
+    },
+    {
+      "id": "NODE-004",
+      "serial": "EXV-0004",
+      "mac": "84:F7:03:10:4B:21",
+      "state": "Available",
+      "assignment": null
+    },
+    {
+      "id": "NODE-005",
+      "serial": "EXV-0005",
+      "mac": "EC:64:C9:72:11:B0",
+      "state": "Assigned",
+      "assignment": "Access ramp · Position 1"
+    },
+    {
+      "id": "NODE-006",
+      "serial": "EXV-0006",
+      "mac": "44:17:93:AF:91:08",
+      "state": "Available",
+      "assignment": null
+    }
+  ]
+}

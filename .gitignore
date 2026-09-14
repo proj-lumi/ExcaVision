@@ -1,0 +1,14 @@
+.env
+.aliases
+.cache/
+**/.pio/
+**/.vscode/
+**/.astro/
+**/dist/
+**/node_modules/
+**/compile_commands.json
+firmware/node/include/secrets.h
+apps/landing/public/config.js
+ngrok.yml
+http-features/
+http-features/*

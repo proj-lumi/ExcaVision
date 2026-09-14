@@ -1,0 +1,12 @@
+{
+  "name": "ExcaVision Monitoring",
+  "short_name": "ExcaVision",
+  "description": "Customer monitoring for ExcaVision sites",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f5f7",
+  "theme_color": "#17324d",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

@@ -1,0 +1,229 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1230" viewBox="0 0 1400 1230">
+  <title>External wiring and sensor placement</title>
+  <desc>External order, shared GX12 trunk connections, and precise MPU6050 sensor positions along a 2.667 metre pipe.</desc>
+  <defs>
+    <pattern id="blueWhite" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="12" height="12" fill="#f8fbff"/><rect width="6" height="12" fill="#2563eb"/>
+    </pattern>
+    <pattern id="brownWhite" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="12" height="12" fill="#fffaf5"/><rect width="6" height="12" fill="#8a4b20"/>
+    </pattern>
+    <pattern id="orangeWhite" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="12" height="12" fill="#fff9f2"/><rect width="6" height="12" fill="#e76f00"/>
+    </pattern>
+    <pattern id="greenWhite" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="12" height="12" fill="#f5fff8"/><rect width="6" height="12" fill="#238636"/>
+    </pattern>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#334155"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.16"/>
+    </filter>
+    <style>
+      .ink { fill:#172033; font-family:sans-serif; }
+      .muted { fill:#526174; font-family:sans-serif; }
+      .section { fill:#0f3d5e; font-family:sans-serif; font-weight:700; font-size:22px; letter-spacing:0.4px; }
+      .label { fill:#172033; font-family:sans-serif; font-size:16px; }
+      .small { fill:#526174; font-family:sans-serif; font-size:14px; }
+      .bold { font-weight:700; }
+      .box { fill:#ffffff; stroke:#b8c5d3; stroke-width:2; }
+      .rule { stroke:#9aaabd; stroke-width:2; }
+      .fine { stroke:#b8c5d3; stroke-width:1.5; }
+      .dim { stroke:#475569; stroke-width:2; fill:none; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="1230" fill="#ffffff"/>
+
+  <text x="70" y="48" class="ink" font-size="30" font-weight="700">EXTERNAL WIRING</text>
+  <text x="70" y="76" class="muted" font-size="16">Placement order, shared trunk conductors, and MPU6050 drop locations</text>
+  <line x1="70" y1="96" x2="1330" y2="96" stroke="#0f3d5e" stroke-width="4"/>
+
+  <!-- Section 1 -->
+  <rect x="55" y="118" width="1290" height="410" rx="14" fill="#f7fafc" stroke="#c7d3df" stroke-width="2"/>
+  <text x="82" y="154" class="section">1. EXTERNAL ORDER &amp; SHARED TRUNK</text>
+  <text x="82" y="181" class="small">Physical-order arrows are placement only — they do not define electrical routing.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="88" y="214" width="215" height="72" rx="10" class="box" stroke="#2563eb"/>
+    <rect x="393" y="214" width="230" height="72" rx="10" class="box" stroke="#c47a18"/>
+    <rect x="713" y="214" width="230" height="72" rx="10" class="box" stroke="#7c3aed"/>
+    <rect x="1063" y="214" width="245" height="72" rx="10" class="box" stroke="#2563eb"/>
+  </g>
+  <text x="195" y="238" text-anchor="middle" class="ink bold" font-size="18">UPSTREAM GX12-4</text>
+  <text x="195" y="260" text-anchor="middle" class="small">incoming trunk</text>
+  <text x="195" y="280" text-anchor="middle" class="small">A / B / +12V / GND</text>
+  <text x="508" y="238" text-anchor="middle" class="ink bold" font-size="18">OFF-BOARD BUCK</text>
+  <text x="508" y="260" text-anchor="middle" class="small">IN: +12V / GND</text>
+  <text x="508" y="280" text-anchor="middle" class="small">OUT: 5V / GND</text>
+  <text x="828" y="238" text-anchor="middle" class="ink bold" font-size="18">CUSTOM PCB</text>
+  <text x="828" y="260" text-anchor="middle" class="small">RS-485 screw terminal: A / B</text>
+  <text x="828" y="280" text-anchor="middle" class="small">J1 power input: 5V / GND</text>
+  <text x="1185" y="238" text-anchor="middle" class="ink bold" font-size="18">DOWNSTREAM GX12-4</text>
+  <text x="1185" y="260" text-anchor="middle" class="small">continues the trunk</text>
+  <text x="1185" y="280" text-anchor="middle" class="small">A / B / +12V / GND</text>
+
+  <line x1="311" y1="250" x2="382" y2="250" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="631" y1="250" x2="702" y2="250" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <line x1="951" y1="250" x2="1052" y2="250" stroke="#334155" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+  <rect x="88" y="309" width="1220" height="43" rx="8" fill="#e9f3fb" stroke="#a8c7df"/>
+  <text x="698" y="337" text-anchor="middle" class="ink bold" font-size="17">The two GX12s share the same four trunk connections: A, B, +12V, and GND.</text>
+
+  <text x="88" y="382" class="ink bold" font-size="18">Parallel GX12 trunk table — same pin number at both ends</text>
+  <rect x="88" y="395" width="1220" height="123" rx="6" fill="#ffffff" stroke="#9aaabd" stroke-width="1.5"/>
+  <rect x="88" y="395" width="1220" height="27" fill="#e7eef5"/>
+  <line x1="300" y1="395" x2="300" y2="518" class="fine"/>
+  <line x1="695" y1="395" x2="695" y2="518" class="fine"/>
+  <line x1="88" y1="422" x2="1308" y2="422" class="fine"/>
+  <line x1="88" y1="446" x2="1308" y2="446" class="fine"/>
+  <line x1="88" y1="470" x2="1308" y2="470" class="fine"/>
+  <line x1="88" y1="494" x2="1308" y2="494" class="fine"/>
+  <text x="108" y="414" class="ink bold" font-size="14">GX12 PIN / SIGNAL</text>
+  <text x="320" y="414" class="ink bold" font-size="14">TRUNK ROLE</text>
+  <text x="715" y="414" class="ink bold" font-size="14">COLOR CODE</text>
+  <text x="108" y="440" class="label bold">1 / A</text>
+  <text x="320" y="440" class="small">RS-485 A + pin 1 of both GX12s</text>
+  <rect x="715" y="430" width="18" height="14" rx="2" fill="url(#blueWhite)"/><text x="745" y="442" class="label">blue / white</text>
+  <text x="108" y="464" class="label bold">2 / B</text>
+  <text x="320" y="464" class="small">RS-485 B + pin 2 of both GX12s</text>
+  <rect x="715" y="454" width="18" height="14" rx="2" fill="#2563eb"/><text x="745" y="466" class="label">blue</text>
+  <text x="108" y="488" class="label bold">3 / +12V</text>
+  <text x="320" y="488" class="small">buck IN+ + pin 3 of both GX12s</text>
+  <rect x="715" y="478" width="18" height="14" rx="2" fill="url(#brownWhite)"/><text x="745" y="490" class="label">brown / white</text>
+  <text x="108" y="512" class="label bold">4 / GND</text>
+  <text x="320" y="512" class="small">buck IN− + pin 4 of both GX12s</text>
+  <rect x="715" y="502" width="18" height="14" rx="2" fill="#7b4427"/><text x="745" y="514" class="label">brown</text>
+
+  <!-- Section 2 -->
+  <rect x="55" y="535" width="1290" height="660" rx="14" fill="#fbfcfe" stroke="#c7d3df" stroke-width="2"/>
+  <text x="82" y="572" class="section">2. SENSOR PIPE &amp; CENTER EQUIPMENT</text>
+  <text x="82" y="601" class="small">Horizontal pipe: 0.000m → 2.667m • four sensors in physical order</text>
+
+  <!-- central equipment, deliberately centered at x=700 between S2 and S3 -->
+  <g filter="url(#shadow)">
+    <rect x="585" y="615" width="230" height="78" rx="12" fill="#fff4d6" stroke="#c47a18" stroke-width="3"/>
+  </g>
+  <text x="700" y="642" text-anchor="middle" class="ink bold" font-size="16">CENTER EQUIPMENT:</text>
+  <text x="700" y="664" text-anchor="middle" class="ink bold" font-size="15">OFF-BOARD BUCK + PCB ENCLOSURE</text>
+  <text x="700" y="684" text-anchor="middle" class="muted" font-size="14">center = 1.333m</text>
+
+  <!-- exact position labels, above the pipe -->
+  <text x="250" y="716" text-anchor="middle" class="ink bold" font-size="15">S1 · 0.333m</text>
+  <text x="550" y="716" text-anchor="middle" class="ink bold" font-size="15">S2 · 1.000m</text>
+  <text x="849" y="716" text-anchor="middle" class="ink bold" font-size="15">S3 · 1.667m</text>
+  <text x="1149" y="716" text-anchor="middle" class="ink bold" font-size="15">S4 · 2.333m</text>
+
+  <!-- pipe and exact marker map: x=100 at 0.000m, x=1300 at 2.667m -->
+  <line x1="100" y1="745" x2="1300" y2="745" stroke="#334155" stroke-width="10" stroke-linecap="round"/>
+  <line x1="100" y1="745" x2="1300" y2="745" stroke="#8aa4bb" stroke-width="4" stroke-linecap="round"/>
+  <line x1="100" y1="730" x2="100" y2="760" stroke="#334155" stroke-width="3"/>
+  <line x1="1300" y1="730" x2="1300" y2="760" stroke="#334155" stroke-width="3"/>
+  <line x1="250" y1="727" x2="250" y2="763" stroke="#2563eb" stroke-width="4"/>
+  <line x1="550" y1="727" x2="550" y2="763" stroke="#2563eb" stroke-width="4"/>
+  <line x1="849" y1="727" x2="849" y2="763" stroke="#2563eb" stroke-width="4"/>
+  <line x1="1149" y1="727" x2="1149" y2="763" stroke="#2563eb" stroke-width="4"/>
+  <line x1="700" y1="693" x2="700" y2="745" stroke="#c47a18" stroke-width="5"/>
+  <circle cx="700" cy="745" r="9" fill="#c47a18" stroke="#ffffff" stroke-width="3"/>
+  <text x="100" y="779" class="small">0.000m</text>
+  <text x="1300" y="779" text-anchor="end" class="small">2.667m</text>
+
+  <!-- separate dimension row: outer intervals -->
+  <line x1="250" y1="797" x2="550" y2="797" class="dim"/>
+  <line x1="250" y1="790" x2="250" y2="804" class="dim"/>
+  <line x1="550" y1="790" x2="550" y2="804" class="dim"/>
+  <rect x="341" y="783" width="118" height="23" rx="4" fill="#fbfcfe"/>
+  <text x="400" y="800" text-anchor="middle" class="ink bold" font-size="15">S1 → S2 = 0.667m</text>
+  <line x1="849" y1="797" x2="1149" y2="797" class="dim"/>
+  <line x1="849" y1="790" x2="849" y2="804" class="dim"/>
+  <line x1="1149" y1="790" x2="1149" y2="804" class="dim"/>
+  <rect x="941" y="783" width="116" height="23" rx="4" fill="#fbfcfe"/>
+  <text x="999" y="800" text-anchor="middle" class="ink bold" font-size="15">S3 → S4 = 0.666m</text>
+
+  <!-- separate dimension row: center intervals; split labels keep the short spans legible -->
+  <line x1="550" y1="833" x2="700" y2="833" class="dim"/>
+  <line x1="550" y1="826" x2="550" y2="840" class="dim"/>
+  <line x1="700" y1="826" x2="700" y2="840" class="dim"/>
+  <rect x="563" y="815" width="124" height="43" rx="4" fill="#fbfcfe"/>
+  <text x="625" y="831" text-anchor="middle" class="ink bold" font-size="15">S2 → center</text>
+  <text x="625" y="850" text-anchor="middle" class="ink bold" font-size="15">0.333m</text>
+  <line x1="700" y1="833" x2="849" y2="833" class="dim"/>
+  <line x1="849" y1="826" x2="849" y2="840" class="dim"/>
+  <rect x="712" y="815" width="126" height="43" rx="4" fill="#fbfcfe"/>
+  <text x="775" y="831" text-anchor="middle" class="ink bold" font-size="15">center → S3</text>
+  <text x="775" y="850" text-anchor="middle" class="ink bold" font-size="15">0.334m</text>
+
+  <!-- four independent drop cards -->
+  <g>
+    <rect x="75" y="862" width="285" height="218" rx="10" class="box"/>
+    <rect x="385" y="862" width="285" height="218" rx="10" class="box"/>
+    <rect x="715" y="862" width="285" height="218" rx="10" class="box"/>
+    <rect x="1040" y="862" width="285" height="218" rx="10" class="box"/>
+  </g>
+
+  <!-- card 1 -->
+  <text x="94" y="890" class="ink bold" font-size="18">S1 → MPU #1</text>
+  <g>
+    <rect x="94" y="907" width="112" height="73" rx="5" fill="#e88924" stroke="#9a4e0d" stroke-width="2"/>
+    <rect x="102" y="915" width="96" height="57" rx="3" fill="#f5a33e" stroke="#7c3f11"/>
+    <circle cx="111" cy="925" r="4" fill="#ffffff"/><circle cx="111" cy="938" r="4" fill="#ffffff"/><circle cx="111" cy="951" r="4" fill="#ffffff"/><circle cx="111" cy="964" r="4" fill="#ffffff"/>
+    <text x="150" y="938" text-anchor="middle" fill="#172033" font-family="sans-serif" font-size="14" font-weight="700">MPU6050</text>
+    <text x="150" y="958" text-anchor="middle" fill="#172033" font-family="sans-serif" font-size="14" font-weight="700">GY-521</text>
+  </g>
+  <text x="222" y="925" class="label">mapping: S1 · ch7</text>
+  <text x="222" y="951" class="label">J5 + J13 · drop: 1.000m</text>
+  <text x="94" y="1020" class="small">I²C: SDA / SCL</text>
+  <text x="94" y="1047" class="small">power: 3.3V / GND</text>
+
+  <!-- card 2 -->
+  <text x="404" y="890" class="ink bold" font-size="18">S2 → MPU #2</text>
+  <g>
+    <rect x="404" y="907" width="112" height="73" rx="5" fill="#e88924" stroke="#9a4e0d" stroke-width="2"/>
+    <rect x="412" y="915" width="96" height="57" rx="3" fill="#f5a33e" stroke="#7c3f11"/>
+    <circle cx="421" cy="925" r="4" fill="#ffffff"/><circle cx="421" cy="938" r="4" fill="#ffffff"/><circle cx="421" cy="951" r="4" fill="#ffffff"/><circle cx="421" cy="964" r="4" fill="#ffffff"/>
+    <text x="460" y="938" text-anchor="middle" fill="#172033" font-family="sans-serif" font-size="14" font-weight="700">MPU6050</text>
+    <text x="460" y="958" text-anchor="middle" fill="#172033" font-family="sans-serif" font-size="14" font-weight="700">GY-521</text>
+  </g>
+  <text x="532" y="925" class="label">mapping: S2 · ch3</text>
+  <text x="532" y="951" class="label">J3 + J12 · drop: 0.333m</text>
+  <text x="404" y="1020" class="small">I²C: SDA / SCL</text>
+  <text x="404" y="1047" class="small">power: 3.3V / GND</text>
+
+  <!-- card 3 -->
+  <text x="734" y="890" class="ink bold" font-size="18">S3 → MPU #3</text>
+  <g>
+    <rect x="734" y="907" width="112" height="73" rx="5" fill="#e88924" stroke="#9a4e0d" stroke-width="2"/>
+    <rect x="742" y="915" width="96" height="57" rx="3" fill="#f5a33e" stroke="#7c3f11"/>
+    <circle cx="751" cy="925" r="4" fill="#ffffff"/><circle cx="751" cy="938" r="4" fill="#ffffff"/><circle cx="751" cy="951" r="4" fill="#ffffff"/><circle cx="751" cy="964" r="4" fill="#ffffff"/>
+    <text x="790" y="938" text-anchor="middle" fill="#172033" font-family="sans-serif" font-size="14" font-weight="700">MPU6050</text>
+    <text x="790" y="958" text-anchor="middle" fill="#172033" font-family="sans-serif" font-size="14" font-weight="700">GY-521</text>
+  </g>
+  <text x="862" y="925" class="label">mapping: S3 · ch5</text>
+  <text x="862" y="951" class="label">J4 + J14 · drop: 0.333m</text>
+  <text x="734" y="1020" class="small">I²C: SDA / SCL</text>
+  <text x="734" y="1047" class="small">power: 3.3V / GND</text>
+
+  <!-- card 4 -->
+  <text x="1059" y="890" class="ink bold" font-size="18">S4 → MPU #4</text>
+  <g>
+    <rect x="1059" y="907" width="112" height="73" rx="5" fill="#e88924" stroke="#9a4e0d" stroke-width="2"/>
+    <rect x="1067" y="915" width="96" height="57" rx="3" fill="#f5a33e" stroke="#7c3f11"/>
+    <circle cx="1076" cy="925" r="4" fill="#ffffff"/><circle cx="1076" cy="938" r="4" fill="#ffffff"/><circle cx="1076" cy="951" r="4" fill="#ffffff"/><circle cx="1076" cy="964" r="4" fill="#ffffff"/>
+    <text x="1115" y="938" text-anchor="middle" fill="#172033" font-family="sans-serif" font-size="14" font-weight="700">MPU6050</text>
+    <text x="1115" y="958" text-anchor="middle" fill="#172033" font-family="sans-serif" font-size="14" font-weight="700">GY-521</text>
+  </g>
+  <text x="1187" y="925" class="label">mapping: S4 · ch1</text>
+  <text x="1187" y="951" class="label">J2 + J11 · drop: 1.000m</text>
+  <text x="1059" y="1020" class="small">I²C: SDA / SCL</text>
+  <text x="1059" y="1047" class="small">power: 3.3V / GND</text>
+
+  <!-- MPU drop legend -->
+  <line x1="82" y1="1100" x2="1318" y2="1100" class="fine"/>
+  <text x="82" y="1130" class="ink bold" font-size="17">MPU drop color legend</text>
+  <rect x="300" y="1116" width="20" height="16" rx="2" fill="url(#orangeWhite)" stroke="#314553"/><text x="330" y="1130" class="label">orange / white = SDA</text>
+  <rect x="520" y="1116" width="20" height="16" rx="2" fill="#e8790b"/><text x="550" y="1130" class="label">orange = SCL</text>
+  <rect x="700" y="1116" width="20" height="16" rx="2" fill="url(#greenWhite)" stroke="#3d8b4a"/><text x="730" y="1130" class="label">green / white = GND</text>
+  <rect x="930" y="1116" width="20" height="16" rx="2" fill="#3d8b4a"/><text x="960" y="1130" class="label">green = 3.3V</text>
+  <text x="82" y="1172" class="muted" font-size="15">Blue and brown conductors are unused on MPU drops.</text>
+</svg>

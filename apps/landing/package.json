@@ -1,0 +1,19 @@
+{
+  "name": "@excavision/landing",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ExcaVision public landing page and service-request entry point",
+  "scripts": {
+    "config": "node scripts/write-runtime-config.mjs",
+    "predev": "npm run config",
+    "dev": "astro dev",
+    "prebuild": "npm run config",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.3.0",
+    "astro": "^7.3.2",
+    "leaflet": "^1.9.4"
+  }
+}

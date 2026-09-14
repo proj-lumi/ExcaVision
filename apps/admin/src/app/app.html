@@ -1,0 +1,451 @@
+@if (!api.session()) {
+  <main class="login-shell">
+    <section class="login-panel" aria-labelledby="login-title">
+      <a class="wordmark" href="/">ExcaVision</a>
+      <p class="product-label">Staff operations</p>
+      <h1 id="login-title">Admin sign in</h1>
+
+      @if (!api.configured) {
+        <div class="message error-message" role="alert">
+          Supabase runtime configuration is missing. See the admin README before signing in.
+        </div>
+      }
+
+      <form (ngSubmit)="signIn()" class="login-form">
+        <label>
+          <span>Email <b class="required-mark" aria-hidden="true">*</b></span>
+          <input name="email" type="email" autocomplete="username" [(ngModel)]="email" required aria-required="true" />
+        </label>
+        <label>
+          <span>Password <b class="required-mark" aria-hidden="true">*</b></span>
+          <input name="password" type="password" autocomplete="current-password" [(ngModel)]="password" required aria-required="true" />
+        </label>
+        <button class="primary-button" type="submit" [disabled]="loading() || !api.configured">
+          {{ loading() ? 'Signing in...' : 'Sign in' }}
+        </button>
+      </form>
+    </section>
+  </main>
+} @else {
+  <div class="app-shell">
+    <header class="mobile-header">
+      <button
+        class="menu-button"
+        type="button"
+        [attr.aria-expanded]="menuOpen()"
+        aria-controls="admin-navigation"
+        (click)="menuOpen.set(!menuOpen())"
+      >
+        <span>{{ menuOpen() ? 'Close' : 'Menu' }}</span>
+      </button>
+      <span class="wordmark">ExcaVision</span>
+      <button class="text-button" type="button" (click)="signOut()">
+        <span>Sign out</span>
+      </button>
+    </header>
+
+    <aside id="admin-navigation" class="sidebar" [class.open]="menuOpen()">
+      <div class="brand-block">
+        <span class="wordmark">ExcaVision</span>
+        <span>Staff operations</span>
+      </div>
+
+      <nav aria-label="Admin navigation">
+        <button type="button" [class.active]="activeView() === 'requests'" (click)="selectView('requests')">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5.5 3.5h9a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1h-9a1 1 0 0 1-1-1v-11a1 1 0 0 1 1-1Z"/><path d="M7.5 7h5M7.5 10h5M7.5 13h3"/></svg>
+          <span>Requests</span>
+        </button>
+        <button type="button" [class.active]="activeView() === 'sites'" (click)="selectView('sites')">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 16.5h13M5 16.5v-12h7v12M12 8h3v8.5M7.5 7h2M7.5 10h2M7.5 13h2"/></svg>
+          <span>Sites</span>
+        </button>
+        <button type="button" [class.active]="activeView() === 'inventory'" (click)="selectView('inventory')">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3.5" y="4.5" width="13" height="11" rx="1"/><path d="M3.5 8h13M7 4.5v11M13 4.5v11"/></svg>
+          <span>Inventory</span>
+        </button>
+        <button type="button" [class.active]="activeView() === 'deployments'" (click)="selectView('deployments')">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3.5a6.5 6.5 0 1 0 6.5 6.5M10 6.5v4l2.5 1.5"/><path d="M13.5 3.5h3v3"/></svg>
+          <span>Installations</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-account">
+        <span>{{ api.session()?.user?.email }}</span>
+        <button class="text-button" type="button" (click)="signOut()"><span>Sign out</span></button>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <header class="page-header">
+        <div>
+          <h1>
+            @switch (activeView()) {
+              @case ('requests') { Requests }
+              @case ('sites') { Sites }
+              @case ('inventory') { Inventory }
+              @case ('deployments') { Installations }
+            }
+          </h1>
+        </div>
+        <div class="page-header-actions">
+          @if (requestRealtimeStatus() === 'offline') {
+            <span class="realtime-warning" role="status">Updates offline</span>
+          }
+          <button class="header-refresh text-button" type="button" [disabled]="loading()" (click)="loadAll()">{{ loading() ? 'Refreshing' : 'Refresh' }}</button>
+        </div>
+      </header>
+
+      @switch (activeView()) {
+          @case ('requests') {
+            @defer (on immediate) {
+              <app-requests-feature [app]="featureVm" />
+            } @placeholder {
+              <section class="request-workspace"><div class="request-list-skeleton" aria-label="Loading requests feature"><span></span><span></span><span></span><span></span></div></section>
+            }
+          }
+
+          @case ('sites') {
+            <section class="section-block">
+              <div class="collection-toolbar" role="search">
+                <label class="search-field"><span class="sr-only">Search sites</span><input type="search" name="siteSearch" [ngModel]="siteSearch" (ngModelChange)="onSiteSearchChange($event)" placeholder="Search sites" /></label>
+              </div>
+              @if (sitesLoading()) {
+                <div class="site-list collection-card-skeleton" aria-label="Loading sites"><span></span><span></span><span></span><span></span></div>
+              } @else if (!sites().length) {
+                <div class="site-list collection-empty-list">
+                  <div class="empty-state"><h3>No sites</h3><button class="primary-button" type="button" (click)="selectView('requests')">View requests</button></div>
+                </div>
+              } @else {
+                <div class="site-list">
+                  @for (site of sites(); track site.id) {
+                    <article>
+                      <div class="site-record-identity"><h3>{{ site.name }}</h3><p>{{ site.created_at | date: 'MMM d, y' }}</p></div>
+                      <div class="site-record-actions">
+                        <span class="item-count">{{ unitCount(site.id) }} {{ unitCount(site.id) === 1 ? 'unit' : 'units' }}</span>
+                        @if (site.customer_email) {<span class="status" data-tone="healthy" [title]="site.customer_email">Customer access</span>} @else if (site.ready_monitoring_unit_count) {<button class="text-button" type="button" (click)="openInviteCustomer(site)">Invite customer</button>}
+                        <button class="text-button" type="button" (click)="openInstallationsForSite(site)">Installations</button>
+                        <button class="overflow-trigger" type="button" aria-label="More site actions" title="More actions" [attr.aria-expanded]="menuIsOpen('site', site.id)" (click)="toggleOverflowMenu($event, 'site', site.id)">...</button>
+                      </div>
+                    </article>
+                  }
+                </div>
+              }
+              <footer class="collection-pagination" [class.loading-hidden]="sitesLoading()"><span>{{ pageStart(sitePage(), sitePageSize, siteTotal()) }} to {{ pageEnd(sitePage(), sitePageSize, siteTotal()) }} of {{ siteTotal() }}</span><div><button type="button" [disabled]="sitePage() === 1" (click)="changeSitePage(-1)">Previous</button><span>Page {{ sitePage() }} of {{ pageCount(siteTotal(), sitePageSize) }}</span><button type="button" [disabled]="sitePage() >= pageCount(siteTotal(), sitePageSize)" (click)="changeSitePage(1)">Next</button></div></footer>
+            </section>
+          }
+
+          @case ('inventory') {
+            @defer (on immediate) {
+              <app-inventory-feature [app]="featureVm" />
+            } @placeholder {
+              <div class="table-wrap table-skeleton" aria-label="Loading inventory feature"><span class="skeleton-table-head"></span><span></span><span></span><span></span><span></span><span></span></div>
+            }
+          }
+
+          @case ('deployments') {
+            @defer (on immediate) {
+              <app-installations-feature [app]="featureVm" />
+            } @placeholder {
+              <div class="installation-scroll"><div class="installation-groups collection-card-skeleton deployment-skeleton" aria-label="Loading installations feature"><span></span><span></span><span></span></div></div>
+            }
+          }
+        }
+    </main>
+
+    @if (overflowMenu(); as menu) {
+      <div class="overflow-menu-layer" (mousedown)="closeOverflowMenu()">
+        <div class="floating-overflow-menu" role="menu" tabindex="-1" [style.left.px]="menu.left" [style.top.px]="menu.top" (mousedown)="$event.stopPropagation()" (keydown)="trapFocus($event)">
+          @if (overflowRequest(); as request) {
+            @if (requestCloseActionLabel(request); as closeLabel) {<button role="menuitem" type="button" (click)="openCloseRequest(request)">{{ closeLabel }}</button>}
+            <button class="danger-menu-action" role="menuitem" type="button" [disabled]="!canDeleteRequest(request)" [title]="canDeleteRequest(request) ? 'Delete request' : 'Close the request to preserve its work history'" (click)="confirmDelete('request', request.id, request.location_name)">Delete request</button>
+          }
+          @if (overflowSite(); as site) {
+            <button class="danger-menu-action" role="menuitem" type="button" [disabled]="!canDeleteSite(site)" [title]="canDeleteSite(site) ? 'Delete site' : 'Delete monitoring units first'" (click)="confirmDelete('site', site.id, site.name)">Delete site</button>
+          }
+          @if (overflowNode(); as node) {
+            <button class="danger-menu-action" role="menuitem" type="button" [disabled]="!canDeleteNode(node)" [title]="canDeleteNode(node) ? 'Delete node' : 'Only unassigned nodes can be deleted'" (click)="confirmDelete('node', node.id, node.serial_number)">Delete node</button>
+          }
+        </div>
+      </div>
+    }
+
+    @if (modal()) {
+      <div class="modal-backdrop" (mousedown)="closeFromBackdrop($event)">
+        <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title" (keydown)="trapFocus($event)">
+          <header class="modal-header">
+            <div class="modal-title-block">
+              <div>
+                <h2 id="modal-title">
+                  @switch (modal()) {
+                    @case ('review-intake') { {{ intakeReviewTarget()?.disposition === 'spam' ? 'Mark as spam' : 'Reject intake' }} }
+                    @case ('invite-customer') { Invite customer }
+                    @case ('route-request') { @if (routeSourceRequest()?.request_type === 'Request repair') { Select monitoring units } @else if (routeSourceRequest()?.request_type === 'Request more sensors') { Plan coverage targets } @else { Select destination } }
+                    @case ('installation-unit-plan') { Plan monitoring units }
+                    @case ('service-target-plan') { Coverage plan }
+                    @case ('replace-node') { Replace node }
+                    @case ('create-site') { Create site }
+                    @case ('edit-site') { Edit site }
+                    @case ('create-unit') { Create unit }
+                    @case ('edit-unit') { Edit unit }
+                    @case ('create-node') { Register node }
+                    @case ('deploy-node') { Assign node }
+                    @case ('manifest') { Assigned nodes }
+                    @case ('hardware-setup') { Hardware setup }
+                    @case ('commissioning') { Field checks }
+                    @case ('close-request') { {{ closeRequestTarget()?.actionLabel }} }
+                    @case ('delete') { Delete record }
+                  }
+                </h2>
+              </div>
+            </div>
+            <button class="icon-button modal-close" type="button" aria-label="Close dialog" title="Close" [disabled]="loading()" (click)="closeModal()">×</button>
+          </header>
+
+          @if (modal() === 'review-intake' && intakeReviewTarget(); as target) {
+            <form class="modal-form" (ngSubmit)="reviewIntake()">
+              <div class="source-summary compact"><div><span>{{ target.intake.name }}</span><strong>{{ target.intake.location_name }}</strong></div></div>
+              <label><span>Reason <b class="required-mark" aria-hidden="true">*</b></span><textarea name="intakeReviewReason" [(ngModel)]="intakeReviewReason" minlength="3" [placeholder]="target.disposition === 'spam' ? 'What indicates spam?' : 'Why is this request not suitable?'" required aria-required="true" autofocus></textarea><small class="field-help">This is an intake decision, not a work cancellation.</small></label>
+              <div class="modal-actions"><button class="secondary-button" type="button" (click)="closeModal()">Keep pending</button><button class="danger-button solid" type="submit" [disabled]="loading() || intakeReviewReason.trim().length < 3">{{ loading() ? 'Saving...' : (target.disposition === 'spam' ? 'Mark spam' : 'Reject intake') }}</button></div>
+            </form>
+          }
+
+          @if (modal() === 'invite-customer' && inviteCustomerSite(); as site) {
+            <form class="modal-form invite-customer-form" (ngSubmit)="sendCustomerInvitation()">
+              <div class="source-summary compact"><div><span>Monitoring site</span><strong>{{ site.name }}</strong></div></div>
+              <label><span>Customer name <b class="required-mark" aria-hidden="true">*</b></span><input name="inviteCustomerName" [(ngModel)]="inviteCustomerName" minlength="2" maxlength="100" required aria-required="true" autofocus /></label>
+              <label><span>Email <b class="required-mark" aria-hidden="true">*</b></span><input name="inviteCustomerEmail" type="email" [ngModel]="inviteCustomerEmail" (ngModelChange)="onInviteCustomerEmailChange($event)" maxlength="254" placeholder="customer@example.com" inputmode="email" autocapitalize="none" autocomplete="email" [spellcheck]="false" required aria-required="true" /></label>
+              <label><span>Mobile number <b class="required-mark" aria-hidden="true">*</b></span><input name="inviteCustomerPhone" type="tel" [ngModel]="inviteCustomerPhone" (ngModelChange)="onInviteCustomerPhoneChange($event)" maxlength="13" placeholder="0912 345 6789" inputmode="numeric" autocomplete="tel" required aria-required="true" /></label>
+              <label><span>Company <small>Optional</small></span><input name="inviteCustomerCompany" [(ngModel)]="inviteCustomerCompany" maxlength="120" autocomplete="organization" /></label>
+              <small class="field-help">The email link creates access only to this site.</small>
+              <div class="modal-actions"><button class="secondary-button" type="button" (click)="closeModal()">Cancel</button><button class="primary-button" type="submit" [disabled]="loading() || !inviteCustomerFormValid()">{{ loading() ? 'Sending...' : 'Send invitation' }}</button></div>
+            </form>
+          }
+
+          @if (modal() === 'route-request') {
+            <form class="modal-form" (ngSubmit)="saveRequestRoute()">
+              @if (routeSourceRequest(); as source) {
+                <div class="source-summary compact"><div><span>{{ requestTypeLabel(source.request_type) }}</span><strong>{{ source.location_name }}</strong>@if (source.site_id) {<small>Customer site: {{ siteName(source.site_id) }}</small>}</div></div>
+                @if (source.request_type === 'Request repair') {
+                  <div class="coverage-target-editor">
+                    @for (target of coverageTargets; track $index; let i = $index) {
+                      <div class="coverage-target-row">
+                        <label><span>Monitoring unit {{ i + 1 }} <b class="required-mark" aria-hidden="true">*</b></span><div class="node-picker route-picker" (focusout)="closeRoutePicker()"><span class="search-field"><input [name]="'repairPipeSearch' + i" [ngModel]="routeUnitQueries[i]" (ngModelChange)="onRouteUnitQueryChange(i, $event)" (focus)="openRoutePicker('unit', i)" placeholder="Search monitoring unit" autocomplete="off" required aria-required="true" /></span>@if (routePickerIsOpen('unit', i)) {<div class="node-picker-results" role="listbox">@if (unitOptionsLoading()) {<div class="dropdown-loading" aria-label="Loading monitoring units"><span></span><span></span><span></span></div>} @else {@if (!unitOptions().length) {<p>{{ pickerEmptyMessage(routeUnitQueries[i]) }}</p>}@for (unit of unitOptions(); track unit.id) {<button type="button" role="option" [attr.aria-selected]="target.pipe_id === unit.id" (mousedown)="$event.preventDefault()" (click)="selectRouteUnit(i, unit)"><strong>{{ unit.name }}</strong><span>{{ unit.site_name || siteName(unit.site_id) }} · {{ unit.deployment_status }}</span></button>}}</div>}</div></label>
+                        @if (coverageTargets.length > 1) {<button class="danger-button compact-button" type="button" (click)="removeCoverageTarget(i)">Remove unit</button>}
+                      </div>
+                    }
+                    <button class="secondary-button compact-button" type="button" (click)="addCoverageTarget()">Add another monitoring unit</button>
+                  </div>
+                }
+                @if (source.request_type === 'Request more sensors') {
+                  <div class="coverage-target-editor">
+                    @for (target of coverageTargets; track $index; let i = $index) {
+                      <div class="coverage-target-row">
+                        <label><span>Coverage target {{ i + 1 }} <b class="required-mark" aria-hidden="true">*</b></span><app-select ariaLabel="Target type" [value]="target.target_kind" [options]="targetKindOptions" [autoFocus]="i === 0" (valueChange)="setTargetKind(i, $event)" /></label>
+                        @if (target.target_kind === 'existing_unit') {
+                          <label><span>Monitoring unit <b class="required-mark" aria-hidden="true">*</b></span><div class="node-picker route-picker" (focusout)="closeRoutePicker()"><span class="search-field"><input [name]="'targetPipeSearch' + i" [ngModel]="routeUnitQueries[i]" (ngModelChange)="onRouteUnitQueryChange(i, $event)" (focus)="openRoutePicker('unit', i)" placeholder="Search monitoring unit" autocomplete="off" required aria-required="true" /></span>@if (routePickerIsOpen('unit', i)) {<div class="node-picker-results" role="listbox">@if (unitOptionsLoading()) {<div class="dropdown-loading" aria-label="Loading monitoring units"><span></span><span></span><span></span></div>} @else {@if (!unitOptions().length) {<p>{{ pickerEmptyMessage(routeUnitQueries[i]) }}</p>}@for (unit of unitOptions(); track unit.id) {<button type="button" role="option" [attr.aria-selected]="target.pipe_id === unit.id" (mousedown)="$event.preventDefault()" (click)="selectRouteUnit(i, unit)"><strong>{{ unit.name }}</strong><span>{{ unit.site_name || siteName(unit.site_id) }} · {{ unit.deployment_status }}</span></button>}}</div>}</div></label>
+                        } @else {
+                          <div class="fixed-target-site"><span>Customer site</span><strong>{{ siteName(target.site_id || source.site_id) }}</strong></div>
+                        }
+                        @if (coverageTargets.length > 1) {<button class="danger-button compact-button" type="button" (click)="removeCoverageTarget(i)">Remove target</button>}
+                      </div>
+                    }
+                    <button class="secondary-button compact-button" type="button" (click)="addCoverageTarget()">Add another target</button>
+                  </div>
+                }
+              }
+              <div class="modal-actions"><button class="secondary-button" type="button" (click)="closeModal()">Cancel</button><button class="primary-button" type="submit" [disabled]="loading()">{{ routeSourceRequest()?.request_type === 'Request repair' ? 'Save repair targets' : routeSourceRequest()?.request_type === 'Request more sensors' ? 'Save coverage targets' : 'Save destination' }}</button></div>
+            </form>
+          }
+
+          @if (modal() === 'installation-unit-plan' && installationUnitPlanRequest(); as request) {
+            <form class="modal-form installation-unit-plan" (ngSubmit)="saveInstallationUnitPlan()">
+              <div class="source-summary compact"><div><span>Installation site</span><strong>{{ request.created_site_name || siteName(request.created_site_id) }}</strong></div></div>
+              <div class="coverage-target-editor" aria-label="Installation units">
+                <div class="field-heading"><span>Monitoring units to install</span><small>{{ installationUnitPlanTargets.length }} planned</small></div>
+                @for (target of installationUnitPlanTargets; track target.key; let i = $index) {
+                  <div class="coverage-target-row installation-target-row">
+                    <label><span>Unit {{ i + 1 }} name <b class="required-mark" aria-hidden="true">*</b></span><input [name]="'installationUnitName' + i" [(ngModel)]="target.name" minlength="2" maxlength="100" placeholder="e.g. North wing" required aria-required="true" [autofocus]="i === 0" /></label>
+                    @if (installationUnitPlanTargets.length > 1) {<button class="danger-button compact-button" type="button" (click)="removeInstallationUnitPlanTarget(i)">Remove unit</button>}
+                  </div>
+                }
+                @if (installationUnitPlanTargets.length < 64) {<button class="secondary-button compact-button" type="button" (click)="addInstallationUnitPlanTarget()">Add another monitoring unit</button>}
+              </div>
+              <small class="field-help">Saving creates these named units at the site. Hardware setup and field checks come next.</small>
+              <div class="modal-actions"><button class="secondary-button" type="button" (click)="closeModal()">Cancel</button><button class="primary-button" type="submit" [disabled]="loading() || !installationUnitPlanValid()">Create planned units</button></div>
+            </form>
+          }
+
+          @if (modal() === 'service-target-plan' && serviceTargetPlan(); as target) {
+            <form class="modal-form" (ngSubmit)="saveServiceTargetPlan()">
+              <div class="source-summary compact"><div><span>Monitoring unit</span><strong>{{ target.pipe_name || unitName(target.pipe_id) }}</strong></div></div>
+              <label><span>Nodes to add <b class="required-mark" aria-hidden="true">*</b></span><input name="serviceTargetNodeCount" type="number" min="1" max="64" [(ngModel)]="serviceTargetNodeCountInput" required aria-required="true" autofocus /></label>
+              <div class="modal-actions"><button class="secondary-button" type="button" (click)="closeModal()">Cancel</button><button class="primary-button" type="submit" [disabled]="loading()">Save coverage plan</button></div>
+            </form>
+          }
+
+          @if (modal() === 'replace-node') {
+            <form class="modal-form" (ngSubmit)="replaceNode()">
+              <div class="source-summary compact"><div><span>Unit</span><strong>{{ unitName(replacementUnitId) }}</strong></div></div>
+              <label><span>Broken node <b class="required-mark" aria-hidden="true">*</b></span>@if (replacementUnitNodesLoading()) {<span class="skeleton-control" aria-label="Loading unit nodes"></span>} @else {<app-select ariaLabel="Broken node" [value]="replacementSensorNodeId" [options]="replacementSensorOptions()" [autoFocus]="true" (valueChange)="setReplacementSensorNode($event)" />}<small class="field-help">Position and gateway role stay unchanged.</small></label>
+              <label><span>Replacement node <b class="required-mark" aria-hidden="true">*</b></span><div class="node-picker search-only" (focusout)="closeReplacementNodePicker()"><span class="search-field"><input name="replacementNodeSearch" [(ngModel)]="replacementNodeQuery" (ngModelChange)="onReplacementNodeQueryChange($event)" (focus)="openReplacementNodePicker()" placeholder="Search serial or MAC" autocomplete="off" required aria-required="true" /></span>@if (replacementNodePickerOpen) {<div class="node-picker-results" role="listbox">@if (replacementNodeOptionsLoading()) {<div class="dropdown-loading" aria-label="Loading replacement nodes"><span></span><span></span><span></span></div>} @else {@if (!replacementNodeOptions().length) {<p>{{ pickerEmptyMessage(replacementNodeQuery) }}</p>}@for (node of replacementNodeOptions(); track node.id) {<button type="button" role="option" [attr.aria-selected]="replacementRegistryId === node.id" (mousedown)="$event.preventDefault()" (click)="selectReplacementNode(node)"><strong>{{ node.serial_number }}</strong><span>{{ node.mac_addr }}</span></button>}}</div>}</div></label>
+              <div class="modal-actions"><button class="secondary-button" type="button" (click)="closeModal()">Cancel</button><button class="primary-button" type="submit" [disabled]="loading()">Replace node</button></div>
+            </form>
+          }
+
+          @if (modal() === 'create-site' || modal() === 'edit-site') {
+            <form class="modal-form" (ngSubmit)="saveSite()">
+              @if (modal() === 'create-site' && siteSourceRequest(); as source) {
+                <div class="source-summary">
+                  <div><strong>{{ source.location_name }}</strong><span>{{ source.location_label || 'Approximate pin' }}</span></div>
+                </div>
+              }
+              <label><span>Site name <b class="required-mark" aria-hidden="true">*</b></span><input name="siteName" [(ngModel)]="siteNameInput" required aria-required="true" autofocus /></label>
+              <div class="modal-actions"><button class="secondary-button" type="button" (click)="closeModal()">Cancel</button><button class="primary-button" type="submit" [disabled]="loading() || (modal() === 'create-site' && !selectedSiteRequestId)">{{ modal() === 'create-site' ? 'Create site from request' : 'Save changes' }}</button></div>
+            </form>
+          }
+
+          @if (modal() === 'create-unit' || modal() === 'edit-unit') {
+            <form class="modal-form" (ngSubmit)="saveUnit()">
+              <div class="source-summary compact"><div><span>Site</span><strong>{{ siteName(unitSiteId) }}</strong></div></div>
+              <label><span>Unit name <b class="required-mark" aria-hidden="true">*</b></span><input name="unitName" [(ngModel)]="unitNameInput" required aria-required="true" autofocus /></label>
+              <label><span>Alert threshold (degrees) <b class="required-mark" aria-hidden="true">*</b></span><input name="unitThreshold" type="number" min="0.1" max="45" step="0.1" [(ngModel)]="unitThresholdInput" required aria-required="true" /><small class="field-help">Alerts when measured tilt reaches this unit-specific value. Range: 0.1–45°.</small></label>
+              <div class="modal-actions"><button class="secondary-button" type="button" (click)="closeModal()">Cancel</button><button class="primary-button" type="submit" [disabled]="loading()">{{ modal() === 'create-unit' ? 'Add monitoring unit' : 'Save changes' }}</button></div>
+            </form>
+          }
+
+          @if (modal() === 'create-node') {
+            <form class="modal-form" (ngSubmit)="saveNode()">
+              <label><span>MAC address <b class="required-mark" aria-hidden="true">*</b></span><input class="mono" name="nodeMac" [value]="nodeMacInput" (input)="formatMacInputEvent($event)" placeholder="AA:BB:CC:DD:EE:FF" autocapitalize="characters" autocomplete="off" inputmode="text" [spellcheck]="false" required aria-required="true" autofocus /><small class="field-help">From the device label.</small></label>
+              <div class="modal-actions"><button class="secondary-button" type="button" (click)="closeModal()">Cancel</button><button class="primary-button" type="submit" [disabled]="loading()">Save node</button></div>
+            </form>
+          }
+
+          @if (modal() === 'deploy-node') {
+            <form class="modal-form" (ngSubmit)="deployNode()">
+              <div class="source-summary compact"><div><span>Unit</span><strong>{{ unitName(deployUnitId) }}</strong></div></div>
+              <label><span>Hardware <b class="required-mark" aria-hidden="true">*</b></span><span class="node-picker search-only"><span class="search-field"><input name="deployNodeSearch" [ngModel]="deployNodeQuery" (ngModelChange)="onDeployNodeQueryChange($event)" (focus)="openDeployNodePicker()" (blur)="closeDeployNodePicker()" (keydown)="onDeployNodeKeydown($event)" placeholder="Search serial or MAC" autocomplete="off" autofocus [attr.aria-expanded]="deployNodePickerIsOpen()" aria-controls="deploy-node-options" role="combobox" /></span>@if (deployNodePickerIsOpen()) {<span class="node-picker-results" id="deploy-node-options" role="listbox">@if (availableNodeOptionsLoading()) {<span class="dropdown-loading" aria-label="Loading available nodes"><span></span><span></span><span></span></span>} @else {@if (!availableNodes().length) {<p>{{ pickerEmptyMessage(deployNodeQuery) }}</p>} @for (node of availableNodes(); track node.id; let nodeIndex = $index) {<button type="button" role="option" [attr.aria-selected]="deployNodeId === node.id" [class.active]="deployNodeActiveIndex === nodeIndex" (mousedown)="$event.preventDefault()" (click)="selectDeployNode(node)"><strong>{{ node.serial_number }}</strong><span>{{ node.mac_addr }}</span></button>}}</span>}</span><input class="sr-only" name="deployNode" type="text" [value]="deployNodeId" required aria-label="Selected node" /></label>
+              <label><span>Chain position <b class="required-mark" aria-hidden="true">*</b></span><input name="deployPosition" type="number" min="1" [(ngModel)]="deployPosition" required aria-required="true" /></label>
+              <div class="modal-actions"><button class="secondary-button" type="button" (click)="closeModal()">Cancel</button><button class="primary-button" type="submit" [disabled]="loading()">{{ isAddingToActiveUnit() ? 'Add node' : 'Assign node' }}</button></div>
+            </form>
+          }
+
+          @if (modal() === 'hardware-setup' && manifestUnit(); as unit) {
+            <form class="modal-form hardware-setup" (ngSubmit)="saveHardwareSetup()">
+              <section class="hardware-plan-summary" aria-labelledby="hardware-progress-title">
+                <div class="hardware-context-line"><span id="hardware-progress-title">{{ unit.name }}</span><span class="hardware-progress" [attr.aria-label]="manifestDraft.length + ' of ' + unitNodeCountInput + ' nodes assigned'"><strong>{{ manifestDraft.length }}/{{ unitNodeCountInput }} nodes</strong><small>{{ unitNodeCountInput - manifestDraft.length }} left</small></span></div>
+                <label class="hardware-target-control"><span>Target</span><span class="number-stepper"><input name="hardwareTarget" type="number" inputmode="numeric" pattern="[0-9]*" autocomplete="off" [min]="manifestDraft.length || 1" max="64" [ngModel]="unitNodeCountInput" (ngModelChange)="setHardwareTarget($event)" (focus)="focusHardwareTarget($event)" required aria-required="true" /><span class="number-stepper-actions"><button type="button" aria-label="Increase target" title="Increase target" (click)="changeHardwareTarget(1)">↑</button><button type="button" aria-label="Decrease target" title="Decrease target" (click)="changeHardwareTarget(-1)">↓</button></span></span></label>
+              </section>
+
+              @if (hardwareSetupIssue(); as setupIssue) {<p class="hardware-setup-warning" role="status">{{ setupIssue }}</p>}
+
+              @if (manifestLoading()) {
+                <div class="manifest-loading-skeleton" aria-label="Loading assigned nodes"><span class="skeleton-table-head"></span><span></span><span></span><span></span></div>
+              } @else {
+                <div class="hardware-manifest-scroll" role="table" aria-label="Assigned hardware ordered from excavation opening to deepest node">
+                  <div class="manifest-table-header" role="row"><span role="columnheader">Move</span><span role="columnheader">Node</span><span role="columnheader">Action</span></div>
+                  <div class="manifest-edit-list" role="rowgroup">
+                    @for (draft of manifestDraft; track draft.registry_id; let i = $index) {
+                      <div class="manifest-edit-row" role="row">
+                        <div class="manifest-reorder-control" role="cell"><button class="move-button" type="button" [disabled]="i === 0" aria-label="Move {{ manifestNodeLabel(draft.registry_id).split('|')[0] }} toward the opening" title="Move toward opening" (click)="moveManifestNode(draft.registry_id, -1)">↑</button><button class="move-button" type="button" [disabled]="i === manifestDraft.length - 1" aria-label="Move {{ manifestNodeLabel(draft.registry_id).split('|')[0] }} deeper" title="Move deeper" (click)="moveManifestNode(draft.registry_id, 1)">↓</button></div>
+                        <div class="manifest-node-identity" role="cell"><span class="manifest-node-title"><strong>{{ manifestNodeLabel(draft.registry_id).split('|')[0] }}</strong>@if (draft.position === 1) {<span class="gateway-badge">Gateway</span>}</span><small class="mono">{{ manifestNodeLabel(draft.registry_id).split('|')[1] }}</small></div>
+                        <div class="manifest-action-control" role="cell"><button class="danger-button compact-button manifest-remove-control" type="button" (click)="removeManifestNode(i)">Remove</button></div>
+                      </div>
+                    } @empty {
+                      <div class="manifest-setup-empty">
+                        <strong>No nodes assigned</strong>
+                        <span>Search for a MAC address below to add a node.</span>
+                      </div>
+                    }
+                  </div>
+                  <section class="manifest-add-panel" aria-labelledby="add-node-title">
+                  <h3 id="add-node-title">Add node</h3>
+                  @if (manifestDraft.length >= unitNodeCountInput) {
+                    <p class="target-reached-note">Target reached</p>
+                  } @else {
+                    <div class="hardware-add-desktop">
+                    <div class="manifest-add-grid">
+                      <label class="manifest-add-node"><span class="sr-only">Available node</span><div class="node-picker search-only" (focusout)="closeDeployNodePicker()"><span class="search-field"><input name="hardwareNodeSearch" [ngModel]="deployNodeQuery" (ngModelChange)="onDeployNodeQueryChange($event)" (focus)="openDeployNodePicker()" (keydown)="onDeployNodeKeydown($event)" placeholder="Search serial or MAC" autocomplete="off" [attr.aria-expanded]="deployNodePickerIsOpen()" aria-controls="hardware-node-options" role="combobox" /></span>@if (deployNodePickerIsOpen()) {<div class="node-picker-results" id="hardware-node-options" role="listbox">@if (availableNodeOptionsLoading()) {<div class="dropdown-loading" aria-label="Loading available nodes"><span></span><span></span><span></span></div>} @else {@if (!availableNodes().length) {<p>{{ pickerEmptyMessage(deployNodeQuery) }}</p>}@for (node of availableNodes(); track node.id; let nodeIndex = $index) {<button type="button" role="option" [attr.aria-selected]="deployNodeId === node.id" [class.active]="deployNodeActiveIndex === nodeIndex" (mousedown)="$event.preventDefault()" (click)="selectDeployNode(node)"><strong>{{ node.serial_number }}</strong><span>{{ node.mac_addr }}</span></button>}}</div>}</div></label>
+                      <button class="secondary-button manifest-add-button" type="button" [disabled]="!deployNodeId" (click)="addNodeToManifestDraft()">Add to plan</button>
+                    </div>
+                    </div>
+                    <button class="secondary-button hardware-add-mobile-trigger" type="button" (click)="openNodeAddSheet()">Add node</button>
+                  }
+                  </section>
+
+                  @if (nodeAddSheetOpen) {
+                    <div class="node-add-sheet-backdrop" (mousedown)="closeNodeAddSheet()">
+                      <section class="node-add-sheet" role="dialog" aria-modal="true" aria-labelledby="node-add-sheet-title" (mousedown)="$event.stopPropagation()">
+                        <header><h2 id="node-add-sheet-title">Add node</h2><button class="icon-button" type="button" aria-label="Close add node" title="Close" (click)="closeNodeAddSheet()">×</button></header>
+                        <label class="node-add-sheet-search"><span>Hardware</span><span class="search-field"><input name="hardwareNodeSheetSearch" [ngModel]="deployNodeQuery" (ngModelChange)="onDeployNodeQueryChange($event)" (keydown)="onDeployNodeKeydown($event)" placeholder="Search serial or MAC" autocomplete="off" autofocus role="combobox" aria-controls="hardware-node-sheet-options" [attr.aria-expanded]="true" /></span></label>
+                        <div class="node-add-sheet-results" id="hardware-node-sheet-options" role="listbox">@if (availableNodeOptionsLoading()) {<div class="dropdown-loading" aria-label="Loading available nodes"><span></span><span></span><span></span></div>} @else {@if (!availableNodes().length) {<p>{{ pickerEmptyMessage(deployNodeQuery) }}</p>}@for (node of availableNodes(); track node.id; let nodeIndex = $index) {<button type="button" role="option" [attr.aria-selected]="deployNodeId === node.id" [class.active]="deployNodeActiveIndex === nodeIndex" (click)="selectDeployNode(node)"><strong>{{ node.serial_number }}</strong><span>{{ node.mac_addr }}</span></button>}}</div>
+                      </section>
+                    </div>
+                  }
+                </div>
+              }
+
+              <div class="modal-actions manifest-modal-actions"><button class="secondary-button" type="button" (click)="closeModal()">Cancel</button><button class="primary-button" type="submit" [disabled]="loading() || manifestLoading() || !!hardwareSetupIssue()">Save hardware setup</button></div>
+            </form>
+          }
+
+          @if (modal() === 'manifest' && manifestUnit(); as unit) {
+            <div class="manifest-detail">
+              <div class="source-summary compact"><div><span>{{ unit.site_name || 'Unknown site' }}</span><strong>{{ unit.name }}</strong></div></div>
+              @if (manifestLoading()) {
+                <div class="manifest-loading-skeleton compact" aria-label="Loading assigned nodes"><span></span><span></span><span></span></div>
+              } @else {
+                <ol class="node-chain">
+                  @for (node of manifestNodes(); track node.id) {
+                    <li><span>{{ node.position_in_pipe }}</span><div><strong>{{ node.serial_number }}</strong><small class="mono">{{ node.mac_addr }}</small></div>@if (node.position_in_pipe === 1) {<b>Gateway</b>}</li>
+                  } @empty {<li class="manifest-empty">No nodes are assigned.</li>}
+                </ol>
+              }
+              <div class="modal-actions"><button class="secondary-button" type="button" (click)="closeModal()">Close</button></div>
+            </div>
+          }
+
+          @if (modal() === 'commissioning') {
+            <form class="modal-form commissioning-form" (ngSubmit)="saveCommissioning(true)">
+              <div class="source-summary compact"><div><span>Unit</span><strong>{{ unitName(commissioningUnitId) }}</strong></div></div>
+              <fieldset class="checklist">
+                <legend class="sr-only">Field checks</legend>
+                <label class="check-item"><input name="hardwareMounted" type="checkbox" [(ngModel)]="hardwareMountedCheck" autofocus /><span><strong>Hardware secured</strong></span></label>
+                <label class="check-item"><input name="rs485" type="checkbox" [(ngModel)]="rs485Check" /><span><strong>RS-485 chain responding</strong></span></label>
+                <label class="check-item"><input name="gatewayOnline" type="checkbox" [(ngModel)]="gatewayOnlineCheck" /><span><strong>Gateway online</strong></span></label>
+                <label class="check-item"><input name="readingsReceived" type="checkbox" [(ngModel)]="readingsReceivedCheck" /><span><strong>Live readings received</strong></span></label>
+                <label class="check-item"><input name="baselineCaptured" type="checkbox" [(ngModel)]="baselineCapturedCheck" /><span><strong>Baseline captured</strong></span></label>
+              </fieldset>
+              <label><span>Internal notes <small>Optional</small></span><textarea name="commissioningNotes" [(ngModel)]="commissioningNotesInput" placeholder="Record installation details or issues"></textarea></label>
+              @if (!allCommissioningChecksComplete()) {<p class="completion-help">Five checks required to activate.</p>}
+              <div class="modal-actions commissioning-actions"><button class="secondary-button" type="button" (click)="closeModal()">Cancel</button><button class="secondary-button" type="button" [disabled]="loading()" (click)="saveCommissioning(false)">Save progress</button><button class="primary-button" type="submit" [disabled]="loading() || !allCommissioningChecksComplete()">Activate monitoring</button></div>
+            </form>
+          }
+
+          @if (modal() === 'close-request' && closeRequestTarget(); as target) {
+            <form class="modal-form" (ngSubmit)="closeServiceRequest()">
+              <div class="source-summary compact"><div><span>{{ requestTypeLabel(target.request.request_type) }}</span><strong>{{ target.request.location_name }}</strong></div></div>
+              <p class="request-close-impact">{{ requestCloseImpact(target) }}</p>
+              <label><span>Reason <b class="required-mark" aria-hidden="true">*</b></span><textarea name="closeRequestReason" [(ngModel)]="closeRequestReason" minlength="3" placeholder="Why is this request being closed?" required aria-required="true" autofocus></textarea><small class="field-help">Saved with the request for staff reference.</small></label>
+              <div class="modal-actions"><button class="secondary-button" type="button" (click)="closeModal()">Keep open</button><button class="danger-button solid" type="submit" [disabled]="loading() || closeRequestReason.trim().length < 3">{{ loading() ? 'Saving...' : target.actionLabel }}</button></div>
+            </form>
+          }
+
+          @if (modal() === 'delete' && deleteTarget(); as target) {
+            <div class="delete-confirmation">
+              <p>Delete <strong>{{ target.label }}</strong>?</p>
+              <p>{{ target.warning }}</p>
+              <div class="modal-actions"><button class="secondary-button" type="button" (click)="closeModal()">Cancel</button><button class="danger-button solid" type="button" [disabled]="loading()" (click)="deleteConfirmed()">{{ loading() ? 'Deleting...' : 'Delete permanently' }}</button></div>
+            </div>
+          }
+        </section>
+      </div>
+    }
+  </div>
+}
+
+@if (error() || notice()) {
+  <aside class="feedback-toast" [attr.data-tone]="error() ? 'error' : 'success'" [attr.role]="error() ? 'alert' : 'status'">
+    <div><strong>{{ error() ? 'Could not complete action' : 'Saved' }}</strong><span>{{ error() || notice() }}</span></div>
+    <button type="button" aria-label="Dismiss message" title="Dismiss" (click)="dismissFeedback()">×</button>
+  </aside>
+}

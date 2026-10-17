@@ -1,0 +1,32 @@
+<!--
+  ExcaVision password recovery (PRODUCTION).
+  Where it is used: Supabase Auth "Reset password" email for the PRODUCTION project.
+  Placeholders are Supabase Auth template variables — do not rename them.
+  Applied in: Dashboard → Authentication → Email Templates → Reset password.
+  The /confirm route verifies the token, then forwards to /reset-password.
+-->
+<!doctype html>
+<html lang="en">
+  <body style="margin:0;background:#f7f9fb;color:#12161a;font-family:Inter,Arial,Helvetica,sans-serif">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f7f9fb">
+      <tr><td align="center" style="padding:32px 16px">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:560px;background:#ffffff;border:1px solid #d9e1e5">
+          <tr><td style="padding:24px 32px;background:#f7f9fb;border-bottom:1px solid #d9e1e5">
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0"><tr>
+              <td valign="middle" style="padding-right:12px"><img src="https://excavision.cc/logo.svg" alt="ExcaVision" width="48" height="48" style="display:block"></td>
+              <td valign="middle"><div style="font-size:24px;font-weight:600;letter-spacing:-0.03em;color:#12161a">ExcaVision</div></td>
+            </tr></table>
+          </td></tr>
+          <tr><td style="padding:32px 24px;background:#ffffff">
+            <h2 style="margin:0;font-weight:600;color:#12161a">Reset your ExcaVision password</h2>
+            <p style="color:#425466">We received a request to reset your monitoring account password. Choose a new password using the button below.</p>
+            <p><a href="{{ .SiteURL }}/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password" style="display:inline-block;padding:13px 20px;background:#ff7a22;color:#ffffff;text-decoration:none;font-weight:600">Reset password</a></p>
+            <p style="font-size:13px;color:#617579;word-break:break-all">If the button does not work, use this link:<br>{{ .SiteURL }}/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/reset-password</p>
+            <p style="font-size:13px;color:#617579">If you did not request this, you can safely ignore this email.</p>
+          </td></tr>
+          <tr><td style="padding:20px 24px;background:#f3f6f6;font-size:12px;color:#617579">ExcaVision · Site movement monitoring</td></tr>
+        </table>
+      </td></tr>
+    </table>
+  </body>
+</html>

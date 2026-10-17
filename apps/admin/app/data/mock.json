@@ -1,0 +1,952 @@
+{
+  "current_profile_id": "PROFILE-ADMIN",
+  "profiles": [
+    {
+      "id": "PROFILE-ADMIN",
+      "auth_user_id": "AUTH-ADMIN",
+      "role": "admin",
+      "full_name": "Demo Person 01",
+      "email": "demo-user-01@example.invalid",
+      "phone": "00000000001",
+      "company_name": "Example Organization 01",
+      "account_status": "active",
+      "created_at": "2026-09-16T05:00:00.000Z",
+      "updated_at": "2026-09-16T05:00:00.000Z"
+    },
+    {
+      "id": "PROFILE-001",
+      "auth_user_id": "AUTH-001",
+      "role": "customer",
+      "full_name": "Demo Person 02",
+      "email": "demo-user-02@example.invalid",
+      "phone": "00000000002",
+      "company_name": "Example Organization 02",
+      "account_status": "active",
+      "created_at": "2026-09-16T05:00:00.000Z",
+      "updated_at": "2026-09-16T05:00:00.000Z"
+    },
+    {
+      "id": "PROFILE-002",
+      "auth_user_id": null,
+      "role": "customer",
+      "full_name": "Demo Person 03",
+      "email": "demo-user-03@example.invalid",
+      "phone": "00000000003",
+      "company_name": "Example Organization 03",
+      "account_status": "pending",
+      "created_at": "2026-09-16T05:00:00.000Z",
+      "updated_at": "2026-09-16T05:00:00.000Z"
+    },
+    {
+      "id": "PROFILE-003",
+      "auth_user_id": null,
+      "role": "customer",
+      "full_name": "Demo Person 04",
+      "email": "demo-user-04@example.invalid",
+      "phone": "00000000004",
+      "company_name": "Example Organization 04",
+      "account_status": "pending",
+      "created_at": "2026-09-16T05:00:00.000Z",
+      "updated_at": "2026-09-16T05:00:00.000Z"
+    }
+  ],
+  "service_requests": [
+    {
+      "id": "REQ-1042",
+      "request_type": "site_installation",
+      "status": "new",
+      "requester_id": null,
+      "requester_name": "Demo Person 05",
+      "company_name": "Example Organization 05",
+      "contact_email": "demo-user-05@example.invalid",
+      "contact_phone": "00000000005",
+      "site_id": null,
+      "site_name": "Demo Site 01",
+      "address_label": "Example Location 01 (synthetic)",
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "details": "Synthetic demonstration request; no real customer or site data.",
+      "submitted_at": "2026-09-16T01:24:00.000Z",
+      "reviewed_at": null
+    },
+    {
+      "id": "REQ-1041",
+      "request_type": "site_installation",
+      "status": "reviewed",
+      "requester_id": "PROFILE-001",
+      "requester_name": "Demo Person 02",
+      "company_name": "Example Organization 02",
+      "contact_email": "demo-user-02@example.invalid",
+      "contact_phone": "00000000002",
+      "site_id": "SITE-001",
+      "site_name": "Demo Site 02",
+      "address_label": "Example Location 02 (synthetic)",
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "details": "Synthetic demonstration request; no real customer or site data.",
+      "submitted_at": "2026-09-16T00:10:00.000Z",
+      "reviewed_at": "2026-09-16T00:10:00.000Z"
+    },
+    {
+      "id": "REQ-1040",
+      "request_type": "add_unit",
+      "status": "reviewed",
+      "requester_id": "PROFILE-002",
+      "requester_name": "Demo Person 03",
+      "company_name": "Example Organization 03",
+      "contact_email": "demo-user-03@example.invalid",
+      "contact_phone": "00000000003",
+      "site_id": "SITE-002",
+      "site_name": "Demo Site 03",
+      "address_label": "Example Location 03 (synthetic)",
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "details": "Synthetic demonstration request; no real customer or site data.",
+      "submitted_at": "2026-09-15T07:40:00.000Z",
+      "reviewed_at": "2026-09-15T07:40:00.000Z"
+    },
+    {
+      "id": "REQ-1039",
+      "request_type": "add_nodes",
+      "status": "reviewed",
+      "requester_id": "PROFILE-003",
+      "requester_name": "Demo Person 04",
+      "company_name": "Example Organization 04",
+      "contact_email": "demo-user-04@example.invalid",
+      "contact_phone": "00000000004",
+      "site_id": "SITE-003",
+      "site_name": "Demo Site 04",
+      "address_label": "Example Location 04 (synthetic)",
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "details": "Synthetic demonstration request; no real customer or site data.",
+      "submitted_at": "2026-09-12T03:35:00.000Z",
+      "reviewed_at": "2026-09-12T03:35:00.000Z"
+    },
+    {
+      "id": "REQ-1038",
+      "request_type": "repair",
+      "status": "new",
+      "requester_id": "PROFILE-001",
+      "requester_name": "Demo Person 02",
+      "company_name": "Example Organization 02",
+      "contact_email": "demo-user-02@example.invalid",
+      "contact_phone": "00000000002",
+      "site_id": "SITE-001",
+      "site_name": "Demo Site 02",
+      "address_label": "Example Location 02 (synthetic)",
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "details": "Synthetic demonstration request; no real customer or site data.",
+      "submitted_at": "2026-09-11T08:20:00.000Z",
+      "reviewed_at": null
+    },
+    {
+      "id": "REQ-1037",
+      "request_type": "site_installation",
+      "status": "spam",
+      "requester_id": null,
+      "requester_name": "Demo Person 06",
+      "company_name": "",
+      "contact_email": "demo-user-06@example.invalid",
+      "contact_phone": "00000000006",
+      "site_id": null,
+      "site_name": "Demo Site 05",
+      "address_label": "Example Location 05 (synthetic)",
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "details": "Synthetic demonstration request; no real customer or site data.",
+      "submitted_at": "2026-09-16T05:00:00.000Z",
+      "reviewed_at": "2026-09-16T05:00:00.000Z"
+    },
+    {
+      "id": "SR-318",
+      "request_type": "repair",
+      "status": "reviewed",
+      "requester_id": "PROFILE-001",
+      "requester_name": "Demo Person 02",
+      "company_name": "Example Organization 02",
+      "contact_email": "demo-user-02@example.invalid",
+      "contact_phone": "00000000002",
+      "site_id": "SITE-001",
+      "site_name": "Demo Site 02",
+      "address_label": "Example Location 02 (synthetic)",
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "details": "Synthetic demonstration request; no real customer or site data.",
+      "submitted_at": "2026-09-16T08:00:00+08:00",
+      "reviewed_at": "2026-09-16T08:00:00+08:00"
+    },
+    {
+      "id": "SR-317",
+      "request_type": "add_nodes",
+      "status": "reviewed",
+      "requester_id": "PROFILE-001",
+      "requester_name": "Demo Person 02",
+      "company_name": "Example Organization 02",
+      "contact_email": "demo-user-02@example.invalid",
+      "contact_phone": "00000000002",
+      "site_id": "SITE-001",
+      "site_name": "Demo Site 02",
+      "address_label": "Example Location 02 (synthetic)",
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "details": "Synthetic demonstration request; no real customer or site data.",
+      "submitted_at": "2026-09-12T08:00:00+08:00",
+      "reviewed_at": "2026-09-12T08:00:00+08:00"
+    },
+    {
+      "id": "SR-316",
+      "request_type": "repair",
+      "status": "new",
+      "requester_id": "PROFILE-001",
+      "requester_name": "Demo Person 02",
+      "company_name": "Example Organization 02",
+      "contact_email": "demo-user-02@example.invalid",
+      "contact_phone": "00000000002",
+      "site_id": "SITE-001",
+      "site_name": "Demo Site 02",
+      "address_label": "Example Location 02 (synthetic)",
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "details": "Synthetic demonstration request; no real customer or site data.",
+      "submitted_at": "2026-09-10T08:00:00+08:00",
+      "reviewed_at": null
+    },
+    {
+      "id": "SR-315",
+      "request_type": "add_unit",
+      "status": "reviewed",
+      "requester_id": "PROFILE-001",
+      "requester_name": "Demo Person 02",
+      "company_name": "Example Organization 02",
+      "contact_email": "demo-user-02@example.invalid",
+      "contact_phone": "00000000002",
+      "site_id": "SITE-001",
+      "site_name": "Demo Site 02",
+      "address_label": "Example Location 02 (synthetic)",
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "details": "Synthetic demonstration request; no real customer or site data.",
+      "submitted_at": "2026-09-04T08:00:00+08:00",
+      "reviewed_at": "2026-09-04T08:00:00+08:00"
+    }
+  ],
+  "request_attachments": [
+    {
+      "id": "ATT-001",
+      "request_id": "REQ-1042",
+      "file_name": "demo-attachment-01.jpg",
+      "storage_path": "demo/attachment-01.jpg",
+      "mime_type": "image/jpeg",
+      "size_bytes": 1887436.8,
+      "created_at": "2026-09-16T01:24:00.000Z"
+    },
+    {
+      "id": "ATT-002",
+      "request_id": "REQ-1042",
+      "file_name": "demo-attachment-02.jpg",
+      "storage_path": "demo/attachment-02.jpg",
+      "mime_type": "image/jpeg",
+      "size_bytes": 1258291.2,
+      "created_at": "2026-09-16T01:24:00.000Z"
+    },
+    {
+      "id": "ATT-003",
+      "request_id": "REQ-1040",
+      "file_name": "demo-attachment-03.jpg",
+      "storage_path": "demo/attachment-03.jpg",
+      "mime_type": "image/jpeg",
+      "size_bytes": 2516582.4,
+      "created_at": "2026-09-15T07:40:00.000Z"
+    }
+  ],
+  "sites": [
+    {
+      "id": "SITE-001",
+      "slug": "demo-site-01",
+      "name": "Demo Site 02",
+      "address_label": "Example Location 02 (synthetic)",
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "company_name": "Example Organization 02",
+      "customer_id": "PROFILE-001",
+      "source_request_id": "REQ-1041",
+      "invitation_status": "activated",
+      "invitation_sent_at": "2026-09-16T05:00:00.000Z",
+      "archived_at": null,
+      "created_at": "2026-09-16T05:00:00.000Z",
+      "updated_at": "2026-09-16T05:00:00.000Z"
+    },
+    {
+      "id": "SITE-002",
+      "slug": "demo-site-02",
+      "name": "Demo Site 03",
+      "address_label": "Example Location 03 (synthetic)",
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "company_name": "Example Organization 03",
+      "customer_id": "PROFILE-002",
+      "source_request_id": "REQ-1040",
+      "invitation_status": "invited",
+      "invitation_sent_at": "2026-09-16T05:00:00.000Z",
+      "archived_at": null,
+      "created_at": "2026-09-16T05:00:00.000Z",
+      "updated_at": "2026-09-16T05:00:00.000Z"
+    },
+    {
+      "id": "SITE-003",
+      "slug": "demo-site-03",
+      "name": "Demo Site 04",
+      "address_label": "Example Location 04 (synthetic)",
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "company_name": "Example Organization 04",
+      "customer_id": "PROFILE-003",
+      "source_request_id": "REQ-1039",
+      "invitation_status": "not_invited",
+      "invitation_sent_at": null,
+      "archived_at": null,
+      "created_at": "2026-09-16T05:00:00.000Z",
+      "updated_at": "2026-09-16T05:00:00.000Z"
+    }
+  ],
+  "units": [
+    {
+      "id": "UNIT-001",
+      "slug": "demo-site-04",
+      "site_id": "SITE-001",
+      "name": "Demo Unit 01",
+      "status": "active",
+      "alert_threshold_deg": 1.5,
+      "archived_at": null,
+      "created_at": "2026-09-01T00:00:00.000Z",
+      "updated_at": "2026-09-16T07:00:00.000Z"
+    },
+    {
+      "id": "UNIT-002",
+      "slug": "demo-site-05",
+      "site_id": "SITE-001",
+      "name": "Demo Unit 02",
+      "status": "active",
+      "alert_threshold_deg": 1.8,
+      "archived_at": null,
+      "created_at": "2026-09-01T00:00:00.000Z",
+      "updated_at": "2026-09-16T07:00:00.000Z"
+    },
+    {
+      "id": "UNIT-003",
+      "slug": "demo-site-06",
+      "site_id": "SITE-002",
+      "name": "Demo Unit 03",
+      "status": "active",
+      "alert_threshold_deg": 2,
+      "archived_at": null,
+      "created_at": "2026-09-16T05:00:00.000Z",
+      "updated_at": "2026-09-16T05:00:00.000Z"
+    },
+    {
+      "id": "UNIT-004",
+      "slug": "demo-site-07",
+      "site_id": "SITE-003",
+      "name": "Demo Unit 04",
+      "status": "setup_pending",
+      "alert_threshold_deg": 2,
+      "archived_at": null,
+      "created_at": "2026-09-16T05:00:00.000Z",
+      "updated_at": "2026-09-16T05:00:00.000Z"
+    },
+    {
+      "id": "UNIT-005",
+      "slug": "demo-site-08",
+      "site_id": "SITE-001",
+      "name": "Demo Unit 05",
+      "status": "active",
+      "alert_threshold_deg": 1.5,
+      "archived_at": null,
+      "created_at": "2026-09-01T00:00:00.000Z",
+      "updated_at": "2026-09-16T07:00:00.000Z"
+    },
+    {
+      "id": "UNIT-006",
+      "slug": "demo-site-09",
+      "site_id": "SITE-001",
+      "name": "Demo Unit 06",
+      "status": "active",
+      "alert_threshold_deg": 1.4,
+      "archived_at": null,
+      "created_at": "2026-09-01T00:00:00.000Z",
+      "updated_at": "2026-09-16T07:00:00.000Z"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "NODE-001",
+      "mac_address": "02:00:00:00:00:01",
+      "status": "assigned",
+      "unit_id": "UNIT-001",
+      "position": 1,
+      "connection_state": "cloud_online",
+      "last_seen_at": "2026-09-16T06:59:42.000Z",
+      "archived_at": null,
+      "created_at": "2026-09-01T00:00:00.000Z",
+      "updated_at": "2026-09-16T06:59:42.000Z"
+    },
+    {
+      "id": "NODE-002",
+      "mac_address": "02:00:00:00:00:02",
+      "status": "assigned",
+      "unit_id": "UNIT-001",
+      "position": 2,
+      "connection_state": "local_reporting",
+      "last_seen_at": "2026-09-16T06:59:18.000Z",
+      "archived_at": null,
+      "created_at": "2026-09-01T00:00:00.000Z",
+      "updated_at": "2026-09-16T06:59:18.000Z"
+    },
+    {
+      "id": "NODE-003",
+      "mac_address": "02:00:00:00:00:03",
+      "status": "assigned",
+      "unit_id": "UNIT-001",
+      "position": 3,
+      "connection_state": "local_reporting",
+      "last_seen_at": "2026-09-16T06:59:25.000Z",
+      "archived_at": null,
+      "created_at": "2026-09-01T00:00:00.000Z",
+      "updated_at": "2026-09-16T06:59:25.000Z"
+    },
+    {
+      "id": "NODE-004",
+      "mac_address": "02:00:00:00:00:04",
+      "status": "assigned",
+      "unit_id": "UNIT-003",
+      "position": 1,
+      "archived_at": null,
+      "created_at": "2026-09-16T05:00:00.000Z",
+      "updated_at": "2026-09-16T05:00:00.000Z",
+      "connection_state": "unknown",
+      "last_seen_at": null
+    },
+    {
+      "id": "NODE-005",
+      "mac_address": "02:00:00:00:00:05",
+      "status": "unassigned",
+      "unit_id": null,
+      "position": null,
+      "archived_at": null,
+      "created_at": "2026-09-16T05:00:00.000Z",
+      "updated_at": "2026-09-16T05:00:00.000Z",
+      "connection_state": "unknown",
+      "last_seen_at": null
+    },
+    {
+      "id": "NODE-006",
+      "mac_address": "02:00:00:00:00:06",
+      "status": "unassigned",
+      "unit_id": null,
+      "position": null,
+      "archived_at": null,
+      "created_at": "2026-09-16T05:00:00.000Z",
+      "updated_at": "2026-09-16T05:00:00.000Z",
+      "connection_state": "unknown",
+      "last_seen_at": null
+    },
+    {
+      "id": "NODE-10",
+      "mac_address": "02:00:00:00:00:07",
+      "status": "assigned",
+      "unit_id": "UNIT-005",
+      "position": 1,
+      "connection_state": "cloud_online",
+      "last_seen_at": "2026-09-16T06:59:48.000Z",
+      "archived_at": null,
+      "created_at": "2026-09-01T00:00:00.000Z",
+      "updated_at": "2026-09-16T06:59:48.000Z"
+    },
+    {
+      "id": "NODE-11",
+      "mac_address": "02:00:00:00:00:08",
+      "status": "assigned",
+      "unit_id": "UNIT-005",
+      "position": 2,
+      "connection_state": "local_reporting",
+      "last_seen_at": "2026-09-16T06:59:48.000Z",
+      "archived_at": null,
+      "created_at": "2026-09-01T00:00:00.000Z",
+      "updated_at": "2026-09-16T06:59:48.000Z"
+    },
+    {
+      "id": "NODE-12",
+      "mac_address": "02:00:00:00:00:09",
+      "status": "assigned",
+      "unit_id": "UNIT-005",
+      "position": 3,
+      "connection_state": "local_reporting",
+      "last_seen_at": "2026-09-16T06:59:48.000Z",
+      "archived_at": null,
+      "created_at": "2026-09-01T00:00:00.000Z",
+      "updated_at": "2026-09-16T06:59:48.000Z"
+    },
+    {
+      "id": "NODE-13",
+      "mac_address": "02:00:00:00:00:0A",
+      "status": "assigned",
+      "unit_id": "UNIT-002",
+      "position": 1,
+      "connection_state": "offline",
+      "last_seen_at": "2026-09-16T06:59:41.000Z",
+      "archived_at": null,
+      "created_at": "2026-09-01T00:00:00.000Z",
+      "updated_at": "2026-09-16T06:59:41.000Z"
+    },
+    {
+      "id": "NODE-14",
+      "mac_address": "02:00:00:00:00:0B",
+      "status": "assigned",
+      "unit_id": "UNIT-002",
+      "position": 2,
+      "connection_state": "unknown",
+      "last_seen_at": "2026-09-16T06:59:41.000Z",
+      "archived_at": null,
+      "created_at": "2026-09-01T00:00:00.000Z",
+      "updated_at": "2026-09-16T06:59:41.000Z"
+    },
+    {
+      "id": "NODE-15",
+      "mac_address": "02:00:00:00:00:0C",
+      "status": "assigned",
+      "unit_id": "UNIT-002",
+      "position": 3,
+      "connection_state": "unknown",
+      "last_seen_at": "2026-09-16T06:59:41.000Z",
+      "archived_at": null,
+      "created_at": "2026-09-01T00:00:00.000Z",
+      "updated_at": "2026-09-16T06:59:41.000Z"
+    },
+    {
+      "id": "NODE-16",
+      "mac_address": "02:00:00:00:00:0D",
+      "status": "assigned",
+      "unit_id": "UNIT-006",
+      "position": 1,
+      "connection_state": "cloud_online",
+      "last_seen_at": "2026-09-16T06:59:44.000Z",
+      "archived_at": null,
+      "created_at": "2026-09-01T00:00:00.000Z",
+      "updated_at": "2026-09-16T06:59:44.000Z"
+    },
+    {
+      "id": "NODE-17",
+      "mac_address": "02:00:00:00:00:0E",
+      "status": "assigned",
+      "unit_id": "UNIT-006",
+      "position": 2,
+      "connection_state": "local_reporting",
+      "last_seen_at": "2026-09-16T06:59:44.000Z",
+      "archived_at": null,
+      "created_at": "2026-09-01T00:00:00.000Z",
+      "updated_at": "2026-09-16T06:59:44.000Z"
+    },
+    {
+      "id": "NODE-18",
+      "mac_address": "02:00:00:00:00:0F",
+      "status": "assigned",
+      "unit_id": "UNIT-006",
+      "position": 3,
+      "connection_state": "offline",
+      "last_seen_at": "2026-09-16T06:59:52.000Z",
+      "archived_at": null,
+      "created_at": "2026-09-01T00:00:00.000Z",
+      "updated_at": "2026-09-16T06:59:52.000Z"
+    }
+  ],
+  "sensors": [
+    {
+      "id": "SENSOR-001-1",
+      "node_id": "NODE-001",
+      "position": 1,
+      "label": "Sensor 1",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-001-2",
+      "node_id": "NODE-001",
+      "position": 2,
+      "label": "Sensor 2",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-001-3",
+      "node_id": "NODE-001",
+      "position": 3,
+      "label": "Sensor 3",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-001-4",
+      "node_id": "NODE-001",
+      "position": 4,
+      "label": "Sensor 4",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-002-1",
+      "node_id": "NODE-002",
+      "position": 1,
+      "label": "Sensor 1",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-002-2",
+      "node_id": "NODE-002",
+      "position": 2,
+      "label": "Sensor 2",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-002-3",
+      "node_id": "NODE-002",
+      "position": 3,
+      "label": "Sensor 3",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-002-4",
+      "node_id": "NODE-002",
+      "position": 4,
+      "label": "Sensor 4",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-003-1",
+      "node_id": "NODE-003",
+      "position": 1,
+      "label": "Sensor 1",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-003-2",
+      "node_id": "NODE-003",
+      "position": 2,
+      "label": "Sensor 2",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-003-3",
+      "node_id": "NODE-003",
+      "position": 3,
+      "label": "Sensor 3",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-003-4",
+      "node_id": "NODE-003",
+      "position": 4,
+      "label": "Sensor 4",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-10-1",
+      "node_id": "NODE-10",
+      "position": 1,
+      "label": "Sensor 1",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-10-2",
+      "node_id": "NODE-10",
+      "position": 2,
+      "label": "Sensor 2",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-10-3",
+      "node_id": "NODE-10",
+      "position": 3,
+      "label": "Sensor 3",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-10-4",
+      "node_id": "NODE-10",
+      "position": 4,
+      "label": "Sensor 4",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-11-1",
+      "node_id": "NODE-11",
+      "position": 1,
+      "label": "Sensor 1",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-11-2",
+      "node_id": "NODE-11",
+      "position": 2,
+      "label": "Sensor 2",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-11-3",
+      "node_id": "NODE-11",
+      "position": 3,
+      "label": "Sensor 3",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-11-4",
+      "node_id": "NODE-11",
+      "position": 4,
+      "label": "Sensor 4",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-12-1",
+      "node_id": "NODE-12",
+      "position": 1,
+      "label": "Sensor 1",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-12-2",
+      "node_id": "NODE-12",
+      "position": 2,
+      "label": "Sensor 2",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-12-3",
+      "node_id": "NODE-12",
+      "position": 3,
+      "label": "Sensor 3",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-12-4",
+      "node_id": "NODE-12",
+      "position": 4,
+      "label": "Sensor 4",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-13-1",
+      "node_id": "NODE-13",
+      "position": 1,
+      "label": "Sensor 1",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-13-2",
+      "node_id": "NODE-13",
+      "position": 2,
+      "label": "Sensor 2",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-13-3",
+      "node_id": "NODE-13",
+      "position": 3,
+      "label": "Sensor 3",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-13-4",
+      "node_id": "NODE-13",
+      "position": 4,
+      "label": "Sensor 4",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-14-1",
+      "node_id": "NODE-14",
+      "position": 1,
+      "label": "Sensor 1",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-14-2",
+      "node_id": "NODE-14",
+      "position": 2,
+      "label": "Sensor 2",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-14-3",
+      "node_id": "NODE-14",
+      "position": 3,
+      "label": "Sensor 3",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-14-4",
+      "node_id": "NODE-14",
+      "position": 4,
+      "label": "Sensor 4",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-15-1",
+      "node_id": "NODE-15",
+      "position": 1,
+      "label": "Sensor 1",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-15-2",
+      "node_id": "NODE-15",
+      "position": 2,
+      "label": "Sensor 2",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-15-3",
+      "node_id": "NODE-15",
+      "position": 3,
+      "label": "Sensor 3",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-15-4",
+      "node_id": "NODE-15",
+      "position": 4,
+      "label": "Sensor 4",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-16-1",
+      "node_id": "NODE-16",
+      "position": 1,
+      "label": "Sensor 1",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-16-2",
+      "node_id": "NODE-16",
+      "position": 2,
+      "label": "Sensor 2",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-16-3",
+      "node_id": "NODE-16",
+      "position": 3,
+      "label": "Sensor 3",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-16-4",
+      "node_id": "NODE-16",
+      "position": 4,
+      "label": "Sensor 4",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-17-1",
+      "node_id": "NODE-17",
+      "position": 1,
+      "label": "Sensor 1",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-17-2",
+      "node_id": "NODE-17",
+      "position": 2,
+      "label": "Sensor 2",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-17-3",
+      "node_id": "NODE-17",
+      "position": 3,
+      "label": "Sensor 3",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-17-4",
+      "node_id": "NODE-17",
+      "position": 4,
+      "label": "Sensor 4",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-18-1",
+      "node_id": "NODE-18",
+      "position": 1,
+      "label": "Sensor 1",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-18-2",
+      "node_id": "NODE-18",
+      "position": 2,
+      "label": "Sensor 2",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-18-3",
+      "node_id": "NODE-18",
+      "position": 3,
+      "label": "Sensor 3",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "SENSOR-18-4",
+      "node_id": "NODE-18",
+      "position": 4,
+      "label": "Sensor 4",
+      "created_at": "2026-09-01T00:00:00.000Z"
+    }
+  ],
+  "threshold_events": [
+    {
+      "id": "ALERT-204",
+      "unit_id": "UNIT-001",
+      "sensor_id": "SENSOR-001-1",
+      "observed_value_deg": 1.57,
+      "threshold_deg": 1.5,
+      "detected_at": "2026-09-16T15:00:00+08:00",
+      "acknowledged_at": null
+    },
+    {
+      "id": "ALERT-202",
+      "unit_id": "UNIT-006",
+      "sensor_id": "SENSOR-001-1",
+      "observed_value_deg": 1.43,
+      "threshold_deg": 1.4,
+      "detected_at": "2026-09-16T13:00:00+08:00",
+      "acknowledged_at": "2026-09-16T13:00:00+08:00"
+    }
+  ],
+  "anomaly_events": [
+    {
+      "id": "MODEL-031",
+      "unit_id": "UNIT-001",
+      "node_id": "NODE-002",
+      "sensor_id": "SENSOR-002-2",
+      "detection_method": "isolation_forest",
+      "observed_value_deg": 1.57,
+      "baseline_value_deg": 1.02,
+      "anomaly_score": 0.72,
+      "anomalous_readings": 2,
+      "window_size": 3,
+      "detected_at": "2026-09-16T15:00:00+08:00",
+      "acknowledged_at": null
+    },
+    {
+      "id": "MODEL-030",
+      "unit_id": "UNIT-005",
+      "node_id": "NODE-11",
+      "sensor_id": "SENSOR-11-2",
+      "detection_method": "isolation_forest",
+      "observed_value_deg": 1.18,
+      "baseline_value_deg": 0.73,
+      "anomaly_score": 0.68,
+      "anomalous_readings": 2,
+      "window_size": 3,
+      "detected_at": "2026-09-16T14:42:00+08:00",
+      "acknowledged_at": null
+    }
+  ]
+}

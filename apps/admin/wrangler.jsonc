@@ -1,0 +1,7 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "excavision-admin",
+  "pages_build_output_dir": "dist",
+  "compatibility_date": "2025-07-15",
+  "compatibility_flags": ["nodejs_compat"]
+}

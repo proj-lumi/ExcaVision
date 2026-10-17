@@ -1,0 +1,28 @@
+{
+  "name": "@excavision/nuxt-ui-admin-prototype",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev --port 3001 --dotenv .env.staging",
+    "build": "nuxt build --dotenv .env.production",
+    "build:production": "nuxt build --dotenv .env.production",
+    "build:staging": "nuxt build --dotenv .env.staging",
+    "generate": "nuxt generate --dotenv .env.production",
+    "generate:staging": "nuxt generate --dotenv .env.staging",
+    "preview": "nuxt preview --port 3001 --dotenv .env.production",
+    "preview:staging": "nuxt preview --port 3001 --dotenv .env.staging",
+    "typecheck": "nuxt typecheck --dotenv .env.production",
+    "typecheck:staging": "nuxt typecheck --dotenv .env.staging"
+  },
+  "dependencies": {
+    "@nuxt/ui": "4.11.1",
+    "@nuxtjs/supabase": "^2.0.10",
+    "nuxt": "4.5.2",
+    "tailwindcss": "^4.2.2"
+  },
+  "devDependencies": {
+    "@iconify-json/lucide": "^1.2.98",
+    "typescript": "^5.9.3",
+    "vue-tsc": "^3.2.6"
+  }
+}

@@ -1,0 +1,1857 @@
+{
+  "profile": {
+    "id": "PROFILE-001",
+    "auth_user_id": "AUTH-001",
+    "role": "customer",
+    "full_name": "Demo Person 02",
+    "email": "demo-user-02@example.invalid",
+    "phone": "00000000002",
+    "company_name": "Example Organization 02",
+    "account_status": "active",
+    "created_at": "2026-09-16T05:00:00.000Z",
+    "updated_at": "2026-09-16T05:00:00.000Z"
+  },
+  "site": {
+    "id": "SITE-001",
+    "slug": "demo-site-01",
+    "name": "Demo Site 02",
+    "address_label": "Example Location 02 (synthetic)",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "company_name": "Example Organization 02",
+    "customer_id": "PROFILE-001",
+    "source_request_id": "REQ-1041",
+    "invitation_status": "activated",
+    "invitation_sent_at": "2026-09-16T05:00:00.000Z",
+    "archived_at": null,
+    "created_at": "2026-09-16T05:00:00.000Z",
+    "updated_at": "2026-09-16T05:00:00.000Z"
+  },
+  "units": [
+    {
+      "id": "UNIT-001",
+      "slug": "demo-site-04",
+      "site_id": "SITE-001",
+      "name": "Demo Unit 01",
+      "status": "active",
+      "alert_threshold_deg": 1.5,
+      "archived_at": null,
+      "created_at": "2026-09-01T00:00:00.000Z",
+      "updated_at": "2026-09-16T07:00:00.000Z",
+      "trend": [
+        {
+          "recorded_at": "2026-09-16T08:00:00+08:00",
+          "value_deg": 0.88
+        },
+        {
+          "recorded_at": "2026-09-16T09:00:00+08:00",
+          "value_deg": 0.96
+        },
+        {
+          "recorded_at": "2026-09-16T10:00:00+08:00",
+          "value_deg": 1.08
+        },
+        {
+          "recorded_at": "2026-09-16T11:00:00+08:00",
+          "value_deg": 1.21
+        },
+        {
+          "recorded_at": "2026-09-16T12:00:00+08:00",
+          "value_deg": 1.31
+        },
+        {
+          "recorded_at": "2026-09-16T13:00:00+08:00",
+          "value_deg": 1.42
+        },
+        {
+          "recorded_at": "2026-09-16T14:00:00+08:00",
+          "value_deg": 1.51
+        },
+        {
+          "recorded_at": "2026-09-16T15:00:00+08:00",
+          "value_deg": 1.57
+        }
+      ],
+      "nodes": [
+        {
+          "id": "NODE-001",
+          "mac_address": "02:00:00:00:00:01",
+          "status": "assigned",
+          "unit_id": "UNIT-001",
+          "position": 1,
+          "connection_state": "cloud_online",
+          "last_seen_at": "2026-09-16T06:59:42.000Z",
+          "archived_at": null,
+          "created_at": "2026-09-01T00:00:00.000Z",
+          "updated_at": "2026-09-16T06:59:42.000Z",
+          "sensors": [
+            {
+              "id": "SENSOR-001-1",
+              "node_id": "NODE-001",
+              "position": 1,
+              "label": "Sensor 1",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.43,
+              "baseline_value_deg": 1.05,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.35
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.38
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.41
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.43
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-001-2",
+              "node_id": "NODE-001",
+              "position": 2,
+              "label": "Sensor 2",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.43,
+              "baseline_value_deg": 1.08,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.35
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.38
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.41
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.43
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-001-3",
+              "node_id": "NODE-001",
+              "position": 3,
+              "label": "Sensor 3",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.43,
+              "baseline_value_deg": 1.04,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.35
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.38
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.41
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.43
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-001-4",
+              "node_id": "NODE-001",
+              "position": 4,
+              "label": "Sensor 4",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.43,
+              "baseline_value_deg": 1.06,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.35
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.38
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.41
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.43
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "NODE-002",
+          "mac_address": "02:00:00:00:00:02",
+          "status": "assigned",
+          "unit_id": "UNIT-001",
+          "position": 2,
+          "connection_state": "local_reporting",
+          "last_seen_at": "2026-09-16T06:59:18.000Z",
+          "archived_at": null,
+          "created_at": "2026-09-01T00:00:00.000Z",
+          "updated_at": "2026-09-16T06:59:18.000Z",
+          "sensors": [
+            {
+              "id": "SENSOR-002-1",
+              "node_id": "NODE-002",
+              "position": 1,
+              "label": "Sensor 1",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.57,
+              "baseline_value_deg": 1.08,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.49
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.52
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.55
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.57
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-002-2",
+              "node_id": "NODE-002",
+              "position": 2,
+              "label": "Sensor 2",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.57,
+              "baseline_value_deg": 1.02,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.49
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.52
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.55
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.57
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-002-3",
+              "node_id": "NODE-002",
+              "position": 3,
+              "label": "Sensor 3",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "missing",
+              "current_value_deg": null,
+              "baseline_value_deg": 1.06,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.49
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.52
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.55
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.57
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-002-4",
+              "node_id": "NODE-002",
+              "position": 4,
+              "label": "Sensor 4",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.57,
+              "baseline_value_deg": 1.04,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.49
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.52
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.55
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.57
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "NODE-003",
+          "mac_address": "02:00:00:00:00:03",
+          "status": "assigned",
+          "unit_id": "UNIT-001",
+          "position": 3,
+          "connection_state": "local_reporting",
+          "last_seen_at": "2026-09-16T06:59:25.000Z",
+          "archived_at": null,
+          "created_at": "2026-09-01T00:00:00.000Z",
+          "updated_at": "2026-09-16T06:59:25.000Z",
+          "sensors": [
+            {
+              "id": "SENSOR-003-1",
+              "node_id": "NODE-003",
+              "position": 1,
+              "label": "Sensor 1",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.46,
+              "baseline_value_deg": 1.04,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.38
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.41
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.44
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.46
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-003-2",
+              "node_id": "NODE-003",
+              "position": 2,
+              "label": "Sensor 2",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.46,
+              "baseline_value_deg": 1.07,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.38
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.41
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.44
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.46
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-003-3",
+              "node_id": "NODE-003",
+              "position": 3,
+              "label": "Sensor 3",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.46,
+              "baseline_value_deg": 1.03,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.38
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.41
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.44
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.46
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-003-4",
+              "node_id": "NODE-003",
+              "position": 4,
+              "label": "Sensor 4",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.46,
+              "baseline_value_deg": 1.05,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.38
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.41
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.44
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.46
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UNIT-005",
+      "slug": "demo-site-08",
+      "site_id": "SITE-001",
+      "name": "Demo Unit 05",
+      "status": "active",
+      "alert_threshold_deg": 1.5,
+      "archived_at": null,
+      "created_at": "2026-09-01T00:00:00.000Z",
+      "updated_at": "2026-09-16T07:00:00.000Z",
+      "trend": [
+        {
+          "recorded_at": "2026-09-16T08:00:00+08:00",
+          "value_deg": 0.62
+        },
+        {
+          "recorded_at": "2026-09-16T09:00:00+08:00",
+          "value_deg": 0.69
+        },
+        {
+          "recorded_at": "2026-09-16T10:00:00+08:00",
+          "value_deg": 0.77
+        },
+        {
+          "recorded_at": "2026-09-16T11:00:00+08:00",
+          "value_deg": 0.83
+        },
+        {
+          "recorded_at": "2026-09-16T12:00:00+08:00",
+          "value_deg": 0.91
+        },
+        {
+          "recorded_at": "2026-09-16T13:00:00+08:00",
+          "value_deg": 1.02
+        },
+        {
+          "recorded_at": "2026-09-16T14:00:00+08:00",
+          "value_deg": 1.11
+        },
+        {
+          "recorded_at": "2026-09-16T15:00:00+08:00",
+          "value_deg": 1.18
+        }
+      ],
+      "nodes": [
+        {
+          "id": "NODE-10",
+          "mac_address": "02:00:00:00:00:07",
+          "status": "assigned",
+          "unit_id": "UNIT-005",
+          "position": 1,
+          "connection_state": "cloud_online",
+          "last_seen_at": "2026-09-16T06:59:48.000Z",
+          "archived_at": null,
+          "created_at": "2026-09-01T00:00:00.000Z",
+          "updated_at": "2026-09-16T06:59:48.000Z",
+          "sensors": [
+            {
+              "id": "SENSOR-10-1",
+              "node_id": "NODE-10",
+              "position": 1,
+              "label": "Sensor 1",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.12,
+              "baseline_value_deg": 0.78,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.04
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.07
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.1
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.12
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-10-2",
+              "node_id": "NODE-10",
+              "position": 2,
+              "label": "Sensor 2",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.12,
+              "baseline_value_deg": 0.8,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.04
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.07
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.1
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.12
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-10-3",
+              "node_id": "NODE-10",
+              "position": 3,
+              "label": "Sensor 3",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.12,
+              "baseline_value_deg": 0.76,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.04
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.07
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.1
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.12
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-10-4",
+              "node_id": "NODE-10",
+              "position": 4,
+              "label": "Sensor 4",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.12,
+              "baseline_value_deg": 0.79,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.04
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.07
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.1
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.12
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "NODE-11",
+          "mac_address": "02:00:00:00:00:08",
+          "status": "assigned",
+          "unit_id": "UNIT-005",
+          "position": 2,
+          "connection_state": "local_reporting",
+          "last_seen_at": "2026-09-16T06:59:48.000Z",
+          "archived_at": null,
+          "created_at": "2026-09-01T00:00:00.000Z",
+          "updated_at": "2026-09-16T06:59:48.000Z",
+          "sensors": [
+            {
+              "id": "SENSOR-11-1",
+              "node_id": "NODE-11",
+              "position": 1,
+              "label": "Sensor 1",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.18,
+              "baseline_value_deg": 0.76,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.1
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.13
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.16
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.18
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-11-2",
+              "node_id": "NODE-11",
+              "position": 2,
+              "label": "Sensor 2",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.18,
+              "baseline_value_deg": 0.73,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.1
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.13
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.16
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.18
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-11-3",
+              "node_id": "NODE-11",
+              "position": 3,
+              "label": "Sensor 3",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.18,
+              "baseline_value_deg": 0.79,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.1
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.13
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.16
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.18
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-11-4",
+              "node_id": "NODE-11",
+              "position": 4,
+              "label": "Sensor 4",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.18,
+              "baseline_value_deg": 0.75,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.1
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.13
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.16
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.18
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "NODE-12",
+          "mac_address": "02:00:00:00:00:09",
+          "status": "assigned",
+          "unit_id": "UNIT-005",
+          "position": 3,
+          "connection_state": "local_reporting",
+          "last_seen_at": "2026-09-16T06:59:48.000Z",
+          "archived_at": null,
+          "created_at": "2026-09-01T00:00:00.000Z",
+          "updated_at": "2026-09-16T06:59:48.000Z",
+          "sensors": [
+            {
+              "id": "SENSOR-12-1",
+              "node_id": "NODE-12",
+              "position": 1,
+              "label": "Sensor 1",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.13,
+              "baseline_value_deg": 0.75,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.05
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.08
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.11
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.13
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-12-2",
+              "node_id": "NODE-12",
+              "position": 2,
+              "label": "Sensor 2",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.13,
+              "baseline_value_deg": 0.77,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.05
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.08
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.11
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.13
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-12-3",
+              "node_id": "NODE-12",
+              "position": 3,
+              "label": "Sensor 3",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.13,
+              "baseline_value_deg": 0.74,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.05
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.08
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.11
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.13
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-12-4",
+              "node_id": "NODE-12",
+              "position": 4,
+              "label": "Sensor 4",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 1.13,
+              "baseline_value_deg": 0.76,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 1.05
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 1.08
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 1.11
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 1.13
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UNIT-002",
+      "slug": "demo-site-05",
+      "site_id": "SITE-001",
+      "name": "Demo Unit 02",
+      "status": "active",
+      "alert_threshold_deg": 1.8,
+      "archived_at": null,
+      "created_at": "2026-09-01T00:00:00.000Z",
+      "updated_at": "2026-09-16T07:00:00.000Z",
+      "trend": [
+        {
+          "recorded_at": "2026-09-16T13:30:00+08:00",
+          "value_deg": 0.31
+        },
+        {
+          "recorded_at": "2026-09-16T13:40:00+08:00",
+          "value_deg": 0.3
+        },
+        {
+          "recorded_at": "2026-09-16T13:50:00+08:00",
+          "value_deg": 0.32
+        },
+        {
+          "recorded_at": "2026-09-16T14:00:00+08:00",
+          "value_deg": 0.29
+        },
+        {
+          "recorded_at": "2026-09-16T14:10:00+08:00",
+          "value_deg": 0.3
+        },
+        {
+          "recorded_at": "2026-09-16T14:20:00+08:00",
+          "value_deg": 0.29
+        },
+        {
+          "recorded_at": "2026-09-16T14:30:00+08:00",
+          "value_deg": 0.29
+        },
+        {
+          "recorded_at": "2026-09-16T14:41:00+08:00",
+          "value_deg": 0.29
+        }
+      ],
+      "nodes": [
+        {
+          "id": "NODE-13",
+          "mac_address": "02:00:00:00:00:0A",
+          "status": "assigned",
+          "unit_id": "UNIT-002",
+          "position": 1,
+          "connection_state": "offline",
+          "last_seen_at": "2026-09-16T06:59:41.000Z",
+          "archived_at": null,
+          "created_at": "2026-09-01T00:00:00.000Z",
+          "updated_at": "2026-09-16T06:59:41.000Z",
+          "sensors": [
+            {
+              "id": "SENSOR-13-1",
+              "node_id": "NODE-13",
+              "position": 1,
+              "label": "Sensor 1",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "unknown",
+              "current_value_deg": null,
+              "baseline_value_deg": 0.24,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T13:30:00+08:00",
+                  "value_deg": 0.21
+                },
+                {
+                  "recorded_at": "2026-09-16T13:40:00+08:00",
+                  "value_deg": 0.24
+                },
+                {
+                  "recorded_at": "2026-09-16T13:50:00+08:00",
+                  "value_deg": 0.27
+                },
+                {
+                  "recorded_at": "2026-09-16T14:00:00+08:00",
+                  "value_deg": 0.29
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-13-2",
+              "node_id": "NODE-13",
+              "position": 2,
+              "label": "Sensor 2",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "unknown",
+              "current_value_deg": null,
+              "baseline_value_deg": 0.24,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T13:30:00+08:00",
+                  "value_deg": 0.21
+                },
+                {
+                  "recorded_at": "2026-09-16T13:40:00+08:00",
+                  "value_deg": 0.24
+                },
+                {
+                  "recorded_at": "2026-09-16T13:50:00+08:00",
+                  "value_deg": 0.27
+                },
+                {
+                  "recorded_at": "2026-09-16T14:00:00+08:00",
+                  "value_deg": 0.29
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-13-3",
+              "node_id": "NODE-13",
+              "position": 3,
+              "label": "Sensor 3",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "unknown",
+              "current_value_deg": null,
+              "baseline_value_deg": 0.24,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T13:30:00+08:00",
+                  "value_deg": 0.21
+                },
+                {
+                  "recorded_at": "2026-09-16T13:40:00+08:00",
+                  "value_deg": 0.24
+                },
+                {
+                  "recorded_at": "2026-09-16T13:50:00+08:00",
+                  "value_deg": 0.27
+                },
+                {
+                  "recorded_at": "2026-09-16T14:00:00+08:00",
+                  "value_deg": 0.29
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-13-4",
+              "node_id": "NODE-13",
+              "position": 4,
+              "label": "Sensor 4",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "unknown",
+              "current_value_deg": null,
+              "baseline_value_deg": 0.24,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T13:30:00+08:00",
+                  "value_deg": 0.21
+                },
+                {
+                  "recorded_at": "2026-09-16T13:40:00+08:00",
+                  "value_deg": 0.24
+                },
+                {
+                  "recorded_at": "2026-09-16T13:50:00+08:00",
+                  "value_deg": 0.27
+                },
+                {
+                  "recorded_at": "2026-09-16T14:00:00+08:00",
+                  "value_deg": 0.29
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "NODE-14",
+          "mac_address": "02:00:00:00:00:0B",
+          "status": "assigned",
+          "unit_id": "UNIT-002",
+          "position": 2,
+          "connection_state": "unknown",
+          "last_seen_at": "2026-09-16T06:59:41.000Z",
+          "archived_at": null,
+          "created_at": "2026-09-01T00:00:00.000Z",
+          "updated_at": "2026-09-16T06:59:41.000Z",
+          "sensors": [
+            {
+              "id": "SENSOR-14-1",
+              "node_id": "NODE-14",
+              "position": 1,
+              "label": "Sensor 1",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "unknown",
+              "current_value_deg": null,
+              "baseline_value_deg": 0.24,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T13:30:00+08:00",
+                  "value_deg": 0.21
+                },
+                {
+                  "recorded_at": "2026-09-16T13:40:00+08:00",
+                  "value_deg": 0.24
+                },
+                {
+                  "recorded_at": "2026-09-16T13:50:00+08:00",
+                  "value_deg": 0.27
+                },
+                {
+                  "recorded_at": "2026-09-16T14:00:00+08:00",
+                  "value_deg": 0.29
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-14-2",
+              "node_id": "NODE-14",
+              "position": 2,
+              "label": "Sensor 2",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "unknown",
+              "current_value_deg": null,
+              "baseline_value_deg": 0.24,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T13:30:00+08:00",
+                  "value_deg": 0.21
+                },
+                {
+                  "recorded_at": "2026-09-16T13:40:00+08:00",
+                  "value_deg": 0.24
+                },
+                {
+                  "recorded_at": "2026-09-16T13:50:00+08:00",
+                  "value_deg": 0.27
+                },
+                {
+                  "recorded_at": "2026-09-16T14:00:00+08:00",
+                  "value_deg": 0.29
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-14-3",
+              "node_id": "NODE-14",
+              "position": 3,
+              "label": "Sensor 3",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "unknown",
+              "current_value_deg": null,
+              "baseline_value_deg": 0.24,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T13:30:00+08:00",
+                  "value_deg": 0.21
+                },
+                {
+                  "recorded_at": "2026-09-16T13:40:00+08:00",
+                  "value_deg": 0.24
+                },
+                {
+                  "recorded_at": "2026-09-16T13:50:00+08:00",
+                  "value_deg": 0.27
+                },
+                {
+                  "recorded_at": "2026-09-16T14:00:00+08:00",
+                  "value_deg": 0.29
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-14-4",
+              "node_id": "NODE-14",
+              "position": 4,
+              "label": "Sensor 4",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "unknown",
+              "current_value_deg": null,
+              "baseline_value_deg": 0.24,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T13:30:00+08:00",
+                  "value_deg": 0.21
+                },
+                {
+                  "recorded_at": "2026-09-16T13:40:00+08:00",
+                  "value_deg": 0.24
+                },
+                {
+                  "recorded_at": "2026-09-16T13:50:00+08:00",
+                  "value_deg": 0.27
+                },
+                {
+                  "recorded_at": "2026-09-16T14:00:00+08:00",
+                  "value_deg": 0.29
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "NODE-15",
+          "mac_address": "02:00:00:00:00:0C",
+          "status": "assigned",
+          "unit_id": "UNIT-002",
+          "position": 3,
+          "connection_state": "unknown",
+          "last_seen_at": "2026-09-16T06:59:41.000Z",
+          "archived_at": null,
+          "created_at": "2026-09-01T00:00:00.000Z",
+          "updated_at": "2026-09-16T06:59:41.000Z",
+          "sensors": [
+            {
+              "id": "SENSOR-15-1",
+              "node_id": "NODE-15",
+              "position": 1,
+              "label": "Sensor 1",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "unknown",
+              "current_value_deg": null,
+              "baseline_value_deg": 0.25,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T13:30:00+08:00",
+                  "value_deg": 0.21
+                },
+                {
+                  "recorded_at": "2026-09-16T13:40:00+08:00",
+                  "value_deg": 0.24
+                },
+                {
+                  "recorded_at": "2026-09-16T13:50:00+08:00",
+                  "value_deg": 0.27
+                },
+                {
+                  "recorded_at": "2026-09-16T14:00:00+08:00",
+                  "value_deg": 0.29
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-15-2",
+              "node_id": "NODE-15",
+              "position": 2,
+              "label": "Sensor 2",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "unknown",
+              "current_value_deg": null,
+              "baseline_value_deg": 0.25,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T13:30:00+08:00",
+                  "value_deg": 0.21
+                },
+                {
+                  "recorded_at": "2026-09-16T13:40:00+08:00",
+                  "value_deg": 0.24
+                },
+                {
+                  "recorded_at": "2026-09-16T13:50:00+08:00",
+                  "value_deg": 0.27
+                },
+                {
+                  "recorded_at": "2026-09-16T14:00:00+08:00",
+                  "value_deg": 0.29
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-15-3",
+              "node_id": "NODE-15",
+              "position": 3,
+              "label": "Sensor 3",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "unknown",
+              "current_value_deg": null,
+              "baseline_value_deg": 0.25,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T13:30:00+08:00",
+                  "value_deg": 0.21
+                },
+                {
+                  "recorded_at": "2026-09-16T13:40:00+08:00",
+                  "value_deg": 0.24
+                },
+                {
+                  "recorded_at": "2026-09-16T13:50:00+08:00",
+                  "value_deg": 0.27
+                },
+                {
+                  "recorded_at": "2026-09-16T14:00:00+08:00",
+                  "value_deg": 0.29
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-15-4",
+              "node_id": "NODE-15",
+              "position": 4,
+              "label": "Sensor 4",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "unknown",
+              "current_value_deg": null,
+              "baseline_value_deg": 0.25,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T13:30:00+08:00",
+                  "value_deg": 0.21
+                },
+                {
+                  "recorded_at": "2026-09-16T13:40:00+08:00",
+                  "value_deg": 0.24
+                },
+                {
+                  "recorded_at": "2026-09-16T13:50:00+08:00",
+                  "value_deg": 0.27
+                },
+                {
+                  "recorded_at": "2026-09-16T14:00:00+08:00",
+                  "value_deg": 0.29
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UNIT-006",
+      "slug": "demo-site-09",
+      "site_id": "SITE-001",
+      "name": "Demo Unit 06",
+      "status": "active",
+      "alert_threshold_deg": 1.4,
+      "archived_at": null,
+      "created_at": "2026-09-01T00:00:00.000Z",
+      "updated_at": "2026-09-16T07:00:00.000Z",
+      "trend": [
+        {
+          "recorded_at": "2026-09-16T08:00:00+08:00",
+          "value_deg": 0.48
+        },
+        {
+          "recorded_at": "2026-09-16T09:00:00+08:00",
+          "value_deg": 0.5
+        },
+        {
+          "recorded_at": "2026-09-16T10:00:00+08:00",
+          "value_deg": 0.52
+        },
+        {
+          "recorded_at": "2026-09-16T11:00:00+08:00",
+          "value_deg": 0.54
+        },
+        {
+          "recorded_at": "2026-09-16T12:00:00+08:00",
+          "value_deg": 0.57
+        },
+        {
+          "recorded_at": "2026-09-16T13:00:00+08:00",
+          "value_deg": 1.43
+        },
+        {
+          "recorded_at": "2026-09-16T14:00:00+08:00",
+          "value_deg": 0.82
+        },
+        {
+          "recorded_at": "2026-09-16T15:00:00+08:00",
+          "value_deg": 0.64
+        }
+      ],
+      "nodes": [
+        {
+          "id": "NODE-16",
+          "mac_address": "02:00:00:00:00:0D",
+          "status": "assigned",
+          "unit_id": "UNIT-006",
+          "position": 1,
+          "connection_state": "cloud_online",
+          "last_seen_at": "2026-09-16T06:59:44.000Z",
+          "archived_at": null,
+          "created_at": "2026-09-01T00:00:00.000Z",
+          "updated_at": "2026-09-16T06:59:44.000Z",
+          "sensors": [
+            {
+              "id": "SENSOR-16-1",
+              "node_id": "NODE-16",
+              "position": 1,
+              "label": "Sensor 1",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 0.64,
+              "baseline_value_deg": 0.48,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 0.56
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 0.59
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 0.62
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 0.64
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-16-2",
+              "node_id": "NODE-16",
+              "position": 2,
+              "label": "Sensor 2",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 0.64,
+              "baseline_value_deg": 0.5,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 0.56
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 0.59
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 0.62
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 0.64
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-16-3",
+              "node_id": "NODE-16",
+              "position": 3,
+              "label": "Sensor 3",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 0.64,
+              "baseline_value_deg": 0.47,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 0.56
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 0.59
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 0.62
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 0.64
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-16-4",
+              "node_id": "NODE-16",
+              "position": 4,
+              "label": "Sensor 4",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 0.64,
+              "baseline_value_deg": 0.49,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 0.56
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 0.59
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 0.62
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 0.64
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "NODE-17",
+          "mac_address": "02:00:00:00:00:0E",
+          "status": "assigned",
+          "unit_id": "UNIT-006",
+          "position": 2,
+          "connection_state": "local_reporting",
+          "last_seen_at": "2026-09-16T06:59:44.000Z",
+          "archived_at": null,
+          "created_at": "2026-09-01T00:00:00.000Z",
+          "updated_at": "2026-09-16T06:59:44.000Z",
+          "sensors": [
+            {
+              "id": "SENSOR-17-1",
+              "node_id": "NODE-17",
+              "position": 1,
+              "label": "Sensor 1",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 0.62,
+              "baseline_value_deg": 0.49,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 0.54
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 0.57
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 0.6
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 0.62
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-17-2",
+              "node_id": "NODE-17",
+              "position": 2,
+              "label": "Sensor 2",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 0.62,
+              "baseline_value_deg": 0.51,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 0.54
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 0.57
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 0.6
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 0.62
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-17-3",
+              "node_id": "NODE-17",
+              "position": 3,
+              "label": "Sensor 3",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 0.62,
+              "baseline_value_deg": 0.48,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 0.54
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 0.57
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 0.6
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 0.62
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-17-4",
+              "node_id": "NODE-17",
+              "position": 4,
+              "label": "Sensor 4",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "reporting",
+              "current_value_deg": 0.62,
+              "baseline_value_deg": 0.5,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 0.54
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 0.57
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 0.6
+                },
+                {
+                  "recorded_at": "2026-09-16T11:00:00+08:00",
+                  "value_deg": 0.62
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "NODE-18",
+          "mac_address": "02:00:00:00:00:0F",
+          "status": "assigned",
+          "unit_id": "UNIT-006",
+          "position": 3,
+          "connection_state": "offline",
+          "last_seen_at": "2026-09-16T06:59:52.000Z",
+          "archived_at": null,
+          "created_at": "2026-09-01T00:00:00.000Z",
+          "updated_at": "2026-09-16T06:59:52.000Z",
+          "sensors": [
+            {
+              "id": "SENSOR-18-1",
+              "node_id": "NODE-18",
+              "position": 1,
+              "label": "Sensor 1",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "unknown",
+              "current_value_deg": null,
+              "baseline_value_deg": 0.5,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 0.56
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 0.59
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 0.62
+                },
+                {
+                  "recorded_at": "2026-09-16T14:52:00+08:00",
+                  "value_deg": 0.64
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-18-2",
+              "node_id": "NODE-18",
+              "position": 2,
+              "label": "Sensor 2",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "unknown",
+              "current_value_deg": null,
+              "baseline_value_deg": 0.5,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 0.56
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 0.59
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 0.62
+                },
+                {
+                  "recorded_at": "2026-09-16T14:52:00+08:00",
+                  "value_deg": 0.64
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-18-3",
+              "node_id": "NODE-18",
+              "position": 3,
+              "label": "Sensor 3",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "unknown",
+              "current_value_deg": null,
+              "baseline_value_deg": 0.5,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 0.56
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 0.59
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 0.62
+                },
+                {
+                  "recorded_at": "2026-09-16T14:52:00+08:00",
+                  "value_deg": 0.64
+                }
+              ]
+            },
+            {
+              "id": "SENSOR-18-4",
+              "node_id": "NODE-18",
+              "position": 4,
+              "label": "Sensor 4",
+              "created_at": "2026-09-01T00:00:00.000Z",
+              "reading_status": "unknown",
+              "current_value_deg": null,
+              "baseline_value_deg": 0.5,
+              "history": [
+                {
+                  "recorded_at": "2026-09-16T08:00:00+08:00",
+                  "value_deg": 0.56
+                },
+                {
+                  "recorded_at": "2026-09-16T09:00:00+08:00",
+                  "value_deg": 0.59
+                },
+                {
+                  "recorded_at": "2026-09-16T10:00:00+08:00",
+                  "value_deg": 0.62
+                },
+                {
+                  "recorded_at": "2026-09-16T14:52:00+08:00",
+                  "value_deg": 0.64
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "threshold_events": [
+    {
+      "id": "ALERT-204",
+      "unit_id": "UNIT-001",
+      "sensor_id": "SENSOR-001-1",
+      "observed_value_deg": 1.57,
+      "threshold_deg": 1.5,
+      "detected_at": "2026-09-16T15:00:00+08:00",
+      "acknowledged_at": null
+    },
+    {
+      "id": "ALERT-202",
+      "unit_id": "UNIT-006",
+      "sensor_id": "SENSOR-001-1",
+      "observed_value_deg": 1.43,
+      "threshold_deg": 1.4,
+      "detected_at": "2026-09-16T13:00:00+08:00",
+      "acknowledged_at": "2026-09-16T13:00:00+08:00"
+    }
+  ],
+  "anomaly_events": [
+    {
+      "id": "MODEL-031",
+      "unit_id": "UNIT-001",
+      "node_id": "NODE-002",
+      "sensor_id": "SENSOR-002-2",
+      "detection_method": "isolation_forest",
+      "observed_value_deg": 1.57,
+      "baseline_value_deg": 1.02,
+      "anomaly_score": 0.72,
+      "anomalous_readings": 2,
+      "window_size": 3,
+      "detected_at": "2026-09-16T15:00:00+08:00",
+      "acknowledged_at": null
+    },
+    {
+      "id": "MODEL-030",
+      "unit_id": "UNIT-005",
+      "node_id": "NODE-11",
+      "sensor_id": "SENSOR-11-2",
+      "detection_method": "isolation_forest",
+      "observed_value_deg": 1.18,
+      "baseline_value_deg": 0.73,
+      "anomaly_score": 0.68,
+      "anomalous_readings": 2,
+      "window_size": 3,
+      "detected_at": "2026-09-16T14:42:00+08:00",
+      "acknowledged_at": null
+    }
+  ],
+  "service_requests": [
+    {
+      "id": "SR-318",
+      "request_type": "repair",
+      "status": "reviewed",
+      "requester_id": "PROFILE-001",
+      "requester_name": "Demo Person 02",
+      "company_name": "Example Organization 02",
+      "contact_email": "demo-user-02@example.invalid",
+      "contact_phone": "00000000002",
+      "site_id": "SITE-001",
+      "site_name": "Demo Site 02",
+      "address_label": "Example Location 02 (synthetic)",
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "details": "Synthetic demonstration request; no real customer or site data.",
+      "submitted_at": "2026-09-16T08:00:00+08:00",
+      "reviewed_at": "2026-09-16T08:00:00+08:00"
+    },
+    {
+      "id": "SR-317",
+      "request_type": "add_nodes",
+      "status": "reviewed",
+      "requester_id": "PROFILE-001",
+      "requester_name": "Demo Person 02",
+      "company_name": "Example Organization 02",
+      "contact_email": "demo-user-02@example.invalid",
+      "contact_phone": "00000000002",
+      "site_id": "SITE-001",
+      "site_name": "Demo Site 02",
+      "address_label": "Example Location 02 (synthetic)",
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "details": "Synthetic demonstration request; no real customer or site data.",
+      "submitted_at": "2026-09-12T08:00:00+08:00",
+      "reviewed_at": "2026-09-12T08:00:00+08:00"
+    },
+    {
+      "id": "SR-316",
+      "request_type": "repair",
+      "status": "new",
+      "requester_id": "PROFILE-001",
+      "requester_name": "Demo Person 02",
+      "company_name": "Example Organization 02",
+      "contact_email": "demo-user-02@example.invalid",
+      "contact_phone": "00000000002",
+      "site_id": "SITE-001",
+      "site_name": "Demo Site 02",
+      "address_label": "Example Location 02 (synthetic)",
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "details": "Synthetic demonstration request; no real customer or site data.",
+      "submitted_at": "2026-09-10T08:00:00+08:00",
+      "reviewed_at": null
+    },
+    {
+      "id": "SR-315",
+      "request_type": "add_unit",
+      "status": "reviewed",
+      "requester_id": "PROFILE-001",
+      "requester_name": "Demo Person 02",
+      "company_name": "Example Organization 02",
+      "contact_email": "demo-user-02@example.invalid",
+      "contact_phone": "00000000002",
+      "site_id": "SITE-001",
+      "site_name": "Demo Site 02",
+      "address_label": "Example Location 02 (synthetic)",
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "details": "Synthetic demonstration request; no real customer or site data.",
+      "submitted_at": "2026-09-04T08:00:00+08:00",
+      "reviewed_at": "2026-09-04T08:00:00+08:00"
+    }
+  ],
+  "request_attachments": []
+}

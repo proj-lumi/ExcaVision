@@ -1,0 +1,35 @@
+# Dependencies and generated frontend output
+**/node_modules/
+**/.nuxt/
+**/.output/
+**/.astro/
+**/dist/
+
+# Local environment and credentials
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.production.example
+!**/.env.staging.example
+**/.dev.vars
+**/.wrangler/
+supabase/.temp/
+supabase/.branches/
+firmware/node/include/secrets.h
+firmware/node/include/secrets.production.h
+firmware/node/include/secrets.staging.h
+
+# Firmware build output
+**/.pio/
+firmware/node/compile_commands.json
+firmware/node/include/Environment.generated.h
+**/__pycache__/
+*.pyc
+*.bundle
+
+# Generated simulator credentials
+scripts/.env.mock-unit
+
+# Editor and OS files
+.DS_Store
+*.swp

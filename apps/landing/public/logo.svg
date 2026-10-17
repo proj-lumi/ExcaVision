@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">ExcaVision</title>
+  <desc id="desc">Orange excavation eye mark with a dark outline</desc>
+  <circle cx="256" cy="256" r="232" fill="#F2994A" stroke="#12161A" stroke-width="24"/>
+  <ellipse cx="256" cy="256" rx="143" ry="98" fill="#12161A"/>
+  <circle cx="256" cy="256" r="45" fill="#F7F5EF"/>
+  <path d="M128 128L384 384M384 128L128 384" fill="none" stroke="#F7F5EF" stroke-width="36" stroke-linecap="round"/>
+</svg>

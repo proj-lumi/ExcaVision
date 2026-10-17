@@ -1,0 +1,22 @@
+{
+  "name": "@excavision/landing",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ExcaVision public landing page and service-request entry point",
+  "scripts": {
+    "dev": "astro dev --mode staging",
+    "build": "astro build --mode production",
+    "build:production": "astro build --mode production",
+    "build:staging": "astro build --mode staging",
+    "preview": "astro preview --mode production",
+    "preview:staging": "astro preview --mode staging"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.3.0",
+    "astro": "^7.3.2",
+    "leaflet": "^1.9.4"
+  },
+  "devDependencies": {
+    "wrangler": "^4.135.0"
+  }
+}
